@@ -34,25 +34,32 @@ model Project {
 }
 
 model Task {
-  id            Int       @id @default(autoincrement())
-  name          String
-  status        String
-  description   String
-  project       Project   @relation(fields: [projectId], references: [id])
-  projectId     Int
-  subtasks      Subtask[]
-  blockedBy     Task?     @relation("BlockingTask", fields: [blockedById], references: [id])
-  blockedById   Int?
-  blockingTasks Task[]    @relation("BlockingTask")
+  id              Int       @id @default(autoincrement())
+  name            String
+  status          String
+  description     String
+  file_name       String
+  task_goal_start DateTime?
+  task_goal_end   DateTime?
+  project         Project   @relation(fields: [projectId], references: [id])
+  projectId       Int
+  subtasks        Subtask[]
+  blockedBy       Task?     @relation("BlockingTask", fields: [blockedById], references: [id])
+  blockedById     Int?
+  blockingTasks   Task[]    @relation("BlockingTask")
 }
 
 model Subtask {
-  id               Int       @id @default(autoincrement())
-  name             String
-  status           String
-  task             Task      @relation(fields: [taskId], references: [id])
-  taskId           Int
-  blockedBy        Subtask?  @relation("BlockingSubtask", fields: [blockedById], references: [id])
-  blockedById      Int?
-  blockingSubtasks Subtask[] @relation("BlockingSubtask")
+  id                 Int       @id @default(autoincrement())
+  name               String
+  status             String
+  subtask_goal_start DateTime?
+  subtask_goal_end   DateTime?
+  file_name          String
+  description        String
+  task               Task      @relation(fields: [taskId], references: [id])
+  taskId             Int
+  blockedBy          Subtask?  @relation("BlockingSubtask", fields: [blockedById], references: [id])
+  blockedById        Int?
+  blockingSubtasks   Subtask[] @relation("BlockingSubtask")
 }
