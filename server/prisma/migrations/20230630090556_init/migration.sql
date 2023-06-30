@@ -4,7 +4,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "name" TEXT,
     "password" TEXT NOT NULL,
-    "avatar_filename" TEXT NOT NULL
+    "avatar_filename" TEXT
 );
 
 -- CreateTable
@@ -25,6 +25,15 @@ CREATE TABLE "Project" (
 );
 
 -- CreateTable
+CREATE TABLE "ProjectAssignee" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" INTEGER NOT NULL,
+    "projectId" INTEGER NOT NULL,
+    CONSTRAINT "ProjectAssignee_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "ProjectAssignee_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Task" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
@@ -35,6 +44,7 @@ CREATE TABLE "Task" (
     "task_goal_end" DATETIME,
     "projectId" INTEGER NOT NULL,
     "blockedById" INTEGER,
+    "assigneeId" INTEGER,
     CONSTRAINT "Task_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Task_blockedById_fkey" FOREIGN KEY ("blockedById") REFERENCES "Task" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -50,6 +60,7 @@ CREATE TABLE "Subtask" (
     "description" TEXT NOT NULL,
     "taskId" INTEGER NOT NULL,
     "blockedById" INTEGER,
+    "assigneeId" INTEGER,
     CONSTRAINT "Subtask_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Subtask_blockedById_fkey" FOREIGN KEY ("blockedById") REFERENCES "Subtask" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );

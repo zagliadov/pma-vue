@@ -14,10 +14,7 @@ model User {
   password         String
   workspace        Workspace[]
   avatar_filename  String?
-  assignedTasks    Task[]      @relation("TaskAssignees")
-  assignedSubtasks Subtask[]   @relation("SubtaskAssignees")
-  Project          Project?    @relation(fields: [projectId], references: [id])
-  projectId        Int?
+  projectAssignees ProjectAssignee[]
 }
 
 model Workspace {
@@ -29,14 +26,21 @@ model Workspace {
 }
 
 model Project {
-  id          Int       @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   name        String
   description String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id])
   workspaceId Int
   tasks       Task[]
-  assignees   User[]    @relation("ProjectAssignees", fields: [assigneeId], references: [id])
-  assigneeId  Int?
+  projectAssignees ProjectAssignee[]
+}
+
+model ProjectAssignee {
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
 }
 
 model Task {
@@ -53,7 +57,6 @@ model Task {
   blockedBy       Task?     @relation("BlockingTask", fields: [blockedById], references: [id])
   blockedById     Int?
   blockingTasks   Task[]    @relation("BlockingTask")
-  assignees       User[]    @relation("TaskAssignees", fields: [assigneeId], references: [id])
   assigneeId      Int?
 }
 
@@ -70,9 +73,9 @@ model Subtask {
   blockedBy          Subtask?  @relation("BlockingSubtask", fields: [blockedById], references: [id])
   blockedById        Int?
   blockingSubtasks   Subtask[] @relation("BlockingSubtask")
-  assignees          User[]    @relation("SubtaskAssignees", fields: [assigneeId], references: [id])
   assigneeId         Int?
 }
+
 
 // model User {
 //   id              Int         @id @default(autoincrement())
