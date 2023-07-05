@@ -16,7 +16,10 @@ export const useAuthStore = defineStore("auth", () => {
   const errorMessage = ref("");
 
   const logIn = async (email: string, password: string): Promise<void> => {
-
+    const response = await axios.post(
+      "http://localhost:9002/auth/create_account",
+      { email, password }
+    );
   };
 
   const createAccount = async (
@@ -36,9 +39,8 @@ export const useAuthStore = defineStore("auth", () => {
         "http://localhost:9002/auth/create_account",
         requestData
       );
-      if (response.status === 201) {
-        success.value = true;
-      }
+
+      if (response.status === 201) success.value = true;
     } catch (error) {
       errorStatus.value = error?.response?.status || 0;
       errorMessage.value = "User with this email already exists";

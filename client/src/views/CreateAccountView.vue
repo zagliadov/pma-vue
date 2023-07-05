@@ -26,24 +26,24 @@ const handleInputBlur = () => {
   if (errorStatus.value === 0 && errorMessage.value === "") return;
   errorStatus.value = 0;
   errorMessage.value = "";
-
 };
-const handleCreateAccount = () => {
+const handleCreateAccount = async () => {
   if (username.value && workspace.value && email.value && password.value) {
-    auth.createAccount(
+    await auth.createAccount(
       username.value,
       workspace.value,
       email.value,
       password.value
     );
-    console.log(errorMessage, errorStatus.value);
   }
-  console.log(success.value, 'success')
-  if (success.value) router.push('/login');
   username.value = "";
   workspace.value = "";
   email.value = "";
   password.value = "";
+  if (success.value) {
+    router.push("/login");
+    success.value = false;
+  }
 };
 </script>
 
@@ -97,7 +97,8 @@ const handleCreateAccount = () => {
           class="text-xs font-normal text-gray-600 pb-1 pt-4 transition-all"
           :class="{
             'text-primary relative bg-white w-[31px] translate-x-3 translate-y-2 transition-all':
-              isFocused('email'), 'text-error': errorStatus === 409 && isFocused('email')
+              isFocused('email'),
+            'text-error': errorStatus === 409 && isFocused('email'),
           }"
         >
           Email
@@ -112,7 +113,9 @@ const handleCreateAccount = () => {
           :class="{ 'input-error border border-error': errorStatus === 409 }"
           class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
         />
-        <span :class="{'text-error': errorStatus === 409}">{{ errorMessage }}</span>
+        <span :class="{ 'text-error': errorStatus === 409 }">{{
+          errorMessage
+        }}</span>
 
         <label
           htmlFor="password"
@@ -179,6 +182,5 @@ const handleCreateAccount = () => {
         </div>
       </div>
     </div>
-    <div class="desktop:w-1/2 bg-no-repeat bg-cover bg-gray-50"></div>
   </div>
 </template>
