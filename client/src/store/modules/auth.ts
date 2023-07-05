@@ -1,26 +1,57 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { computed, ref } from "vue";
+import { ref } from "vue";
+interface ICreateAccountRequest {
+  username: string;
+  workspace: string;
+  email: string;
+  password: string;
+}
 
 export const useAuthStore = defineStore("auth", () => {
-  const isLoggedIn = ref(false);
-  const user = ref(null);
+  const username = ref("Daniil");
+  const userDoesNotExist = ref(false);
+  const success = ref(false);
+  const errorStatus = ref(0);
+  const errorMessage = ref("");
 
-  const isAuthenticated = computed(() => console.log(isLoggedIn));
-  const currentUser = computed(() => console.log(user));
+  const logIn = async (email: string, password: string): Promise<void> => {
 
-  const loginUser = async (email: string, password: string) => {
+  };
+
+  const createAccount = async (
+    username: string,
+    workspace: string,
+    email: string,
+    password: string
+  ): Promise<void> => {
     try {
-      console.log(email, password, "asd");
+      const requestData: ICreateAccountRequest = {
+        username,
+        workspace,
+        email,
+        password,
+      };
+      const response = await axios.post(
+        "http://localhost:9002/auth/create_account",
+        requestData
+      );
+      if (response.status === 201) {
+        success.value = true;
+      }
     } catch (error) {
-      console.error("Error occurred during login:", error);
+      errorStatus.value = error?.response?.status || 0;
+      errorMessage.value = "User with this email already exists";
     }
   };
-  const registration = async (email: any) => {
-    try {
-      console.log(email);
-    } catch (error) {
-      console.error("Error occurred during registration:", error);
-    }
+
+  return {
+    username,
+    userDoesNotExist,
+    logIn,
+    errorStatus,
+    errorMessage,
+    createAccount,
+    success,
   };
 });
