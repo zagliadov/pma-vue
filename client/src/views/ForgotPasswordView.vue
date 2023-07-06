@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import { ref } from "vue";
 
+const email = ref("");
 </script>
 
 <template>
@@ -18,18 +20,7 @@ import { RouterLink } from "vue-router";
         </div>
         <div className="w-[464px] h-[512px] flex flex-col">
           <p className="text-2xl pb-8">Forgot password?</p>
-          <label
-            htmlFor="email"
-            className="text-xs font-normal text-gray-600 pb-1"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            className="input input-bordered w-full pl-4 py-3 rounded"
-          />
+          <CustomInput v-model="email" placeholder="Enter email" name="Email" />
 
           <p className="text-sm font-normal text-gray-600 py-8">
             We will send you the link to your email. You will be able to create
