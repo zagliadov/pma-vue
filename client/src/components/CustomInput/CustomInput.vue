@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, watch, computed } from "vue";
+import { ref, defineProps, defineEmits, computed } from "vue";
 import { useAuthStore } from "../../store/modules/auth";
 import { storeToRefs } from "pinia";
 
-const emits = defineEmits(["update:modelValue"]);
-
+defineEmits(['update:modelValue']);
 const { modelValue, name } = defineProps({
   modelValue: String,
   placeholder: String,
@@ -17,10 +16,6 @@ const { modelValue, name } = defineProps({
   },
 });
 
-const value = ref(modelValue);
-watch(value, () => {
-  emits("update:modelValue", value.value);
-});
 const auth = useAuthStore();
 const { errorMessage, errorStatus } = storeToRefs(auth);
 const focusedInput = ref("");
@@ -34,8 +29,10 @@ const handleInputFocused = (inputName: string) => {
 };
 
 const isError = computed(() => {
-  return errorStatus.value === 409 && isFocused(name as string) && name === 'Email'
-})
+  return (
+    errorStatus.value === 409 && isFocused(name as string) && name === "Email"
+  );
+});
 
 const handleInputBlur = () => {
   focusedInput.value = "";
@@ -54,16 +51,13 @@ const handleInputBlur = () => {
               isFocused(name as string),
           }"
   >
-    <span
-      class="bg-white"
-      :class="{'text-error': isError}"
-      >{{ name }}</span
-    >
+    <span class="bg-white" :class="{ 'text-error': isError }">{{ name }}</span>
   </label>
   <input
     :type="type"
     :name="name"
-    v-model="value"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
     :placeholder="placeholder"
     @focus="handleInputFocused(name as string)"
     @blur="handleInputBlur"
