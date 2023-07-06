@@ -50,3 +50,47 @@ export const createAccount = async (req: Request, res: Response) => {
     handleError(error, res);
   }
 };
+
+const createJwtToken = (id: number, name: string, email: string) => {
+  try {
+    const expiresIn = Math.floor(Date.now() / 1000) + 60 * 60 * 24;
+    const payload = {
+      id,
+      name,
+      email,
+    };
+    const secret = process.env.JWT_SECRET as string;
+    if (!secret) {
+      throw new Error("JWT_SECRET is not defined in environment variables.");
+    }
+    const token = jwt.sign(payload, secret, { expiresIn });
+    return token;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (!existingUser)
+      return res
+        .status(404)
+        .json({ message: "User with this email does not exist" });
+    const validPassword = await bcrypt.compare(password, existingUser.password);
+    if (!validPassword) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    const token = createJwtToken(
+      existingUser.id,
+      existingUser.name as string,
+      existingUser.email
+    );
+    if (token) res.status(200).json({ token: token });
+  } catch (error) {
+    handleError(error, res);
+  }
+};

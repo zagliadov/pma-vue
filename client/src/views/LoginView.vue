@@ -1,18 +1,32 @@
 <script setup lang="ts">
 import { useAuthStore } from "../store/modules/auth";
+import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
-import GoogleLoginButton from "@/components/GoogleLoginButton/GoogleLoginButton.vue";
-import AppleLoginButton from "@/components/AppleLoginButton/AppleLoginButton.vue";
 import { ref } from "vue";
 
-const { logIn } = useAuthStore();
-
+const auth = useAuthStore();
+const { logIn } = auth;
+const { errorStatus, errorMessage, success } = storeToRefs(auth);
 const email = ref("");
 const password = ref("");
+const focusedInput = ref("");
 
+const isFocused = (name: string) => {
+  if (focusedInput.value === name) return true;
+};
+
+const handleInputFocused = (inputName: string) => {
+  focusedInput.value = inputName;
+};
+const handleInputBlur = () => {
+  focusedInput.value = "";
+  if (errorStatus.value === 0 && errorMessage.value === "") return;
+  errorStatus.value = 0;
+  errorMessage.value = "";
+};
 const handleLogin = async () => {
   if (email.value && password.value) {
-    logIn(email.value, password.value);
+    await logIn(email.value, password.value);
     email.value = "";
     password.value = "";
   }
@@ -20,27 +34,34 @@ const handleLogin = async () => {
 };
 </script>
 <template>
-  <div className="flex justify-center h-screen w-screen">
-    <div className="flex flex-col justify-center items-center">
-      <div className="w-[464px] h-[512px] flex flex-col">
-        <p className="text-2xl pb-8">Log in</p>
-        <label
+  <div class="flex justify-center h-screen w-screen">
+    <div class="flex flex-col justify-center items-center">
+      <div class="w-[464px] h-[512px] flex flex-col">
+        <p class="text-2xl pb-8">Log in</p>
+        <CustomInput name="Email" :email='email'/>
+        <!-- <label
           htmlFor="email"
-          className="text-xs font-normal text-gray-600 pb-1"
+          class="text-xs font-normal text-gray-600 pb-1"
+          :class="{
+            'text-primary translate-x-3 relative translate-y-2 transition-all':
+              isFocused('email'),
+          }"
         >
-          Email
+          <span class="bg-white">Email</span>
         </label>
         <input
           type="email"
           name="email"
           v-model="email"
           placeholder="Enter email"
-          className="input input-bordered w-full pl-4 py-3 rounded"
-        />
+          @focus="handleInputFocused('email')"
+          @blur="handleInputBlur"
+          class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
+        /> -->
 
         <label
           htmlFor="password"
-          className="text-xs font-normal text-gray-600 pb-1 pt-4"
+          class="text-xs font-normal text-gray-600 pb-1 pt-4"
         >
           Password
         </label>
@@ -49,51 +70,50 @@ const handleLogin = async () => {
           name="password"
           v-model="password"
           placeholder="Enter password"
-          className="input input-bordered w-full pl-4 py-3 rounded"
+          class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
         />
-        <div className="relative">
-          <span className="absolute text-red-500 text-xs left-[35%]"> </span>
+        <div class="relative">
+          <span class="absolute text-red-500 text-xs left-[35%]"> </span>
         </div>
 
-        <div className="flex items-center pt-4">
+        <div class="flex items-center pt-4">
           <RouterLink
             to="/forgot_password"
-            className="text-gray-600 font-medium text-xs hover:text-primary"
+            class="text-gray-600 font-medium text-xs hover:text-primary"
           >
             Forgot Password?
           </RouterLink>
         </div>
 
-        <div className="pb-8"></div>
+        <div class="pb-8"></div>
         <button @click="handleLogin" class="btn btn-primary rounded">
           Log in
         </button>
-        <div className="pb-8"></div>
+        <div class="pb-8"></div>
 
-        <div className="flex item-center">
-          <hr className="w-full border-neutral-content mt-2" />
-          <span className="px-4 text-gray-400 text-xs font-normal">or</span>
-          <hr className="w-full border-neutral-content mt-2" />
+        <div class="flex item-center">
+          <hr class="w-full border-neutral-content mt-2" />
+          <span class="px-4 text-gray-400 text-xs font-normal">or</span>
+          <hr class="w-full border-neutral-content mt-2" />
         </div>
-        <div className="pt-4"></div>
+        <div class="pt-4"></div>
         <GoogleLoginButton />
 
-        <div className="pt-4"></div>
+        <div class="pt-4"></div>
         <AppleLoginButton />
 
-        <div className="pt-4">
-          <span className="text-sm text-gray-600 font-normal">
+        <div class="pt-4">
+          <span class="text-sm text-gray-600 font-normal">
             Don't have an account yet?
           </span>
           <RouterLink
             to="/create_account"
-            className="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
+            class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
           >
             Create account
           </RouterLink>
         </div>
       </div>
     </div>
-    <div className="bg-no-repeat bg-cover bg-gray-100"></div>
   </div>
 </template>

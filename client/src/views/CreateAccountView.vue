@@ -3,8 +3,6 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "@/store/modules/auth";
-import IconGoogle from "@/components/icons/IconGoogle.vue";
-import IconApple from "@/components/icons/IconApple.vue";
 
 const auth = useAuthStore();
 const router = useRouter();

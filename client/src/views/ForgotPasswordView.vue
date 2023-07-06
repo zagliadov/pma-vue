@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import IconLeftArrow from "@/components/icons/IconLeftArrow.vue";
 
 </script>
 

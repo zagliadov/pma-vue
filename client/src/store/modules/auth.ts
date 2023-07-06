@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
+
+const SERVER = "http://localhost:9002";
 interface ICreateAccountRequest {
   username: string;
   workspace: string;
@@ -16,10 +18,22 @@ export const useAuthStore = defineStore("auth", () => {
   const errorMessage = ref("");
 
   const logIn = async (email: string, password: string): Promise<void> => {
-    const response = await axios.post(
-      "http://localhost:9002/auth/create_account",
+    try {
+      const response = await axios.post(
+      `${SERVER}/auth/login`,
       { email, password }
     );
+
+    console.log(response);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      const status = error?.response?.status;
+      if (message && status) {
+        errorMessage.value = message;
+        errorStatus.value = status;
+      }
+    }
+    
   };
 
   const createAccount = async (
@@ -36,7 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
         password,
       };
       const response = await axios.post(
-        "http://localhost:9002/auth/create_account",
+        `${SERVER}/auth/create_account`,
         requestData
       );
 
