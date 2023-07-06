@@ -94,3 +94,27 @@ export const login = async (req: Request, res: Response) => {
     handleError(error, res);
   }
 };
+
+export const verifyToken = async (req: any, res: any, next: any) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token: string = authHeader && authHeader.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Authentication failed" });
+    const decodedToken: any = await jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    );
+    const expirationTime = decodedToken.exp;
+    const currentTime = Date.now() / 1000;
+    if (expirationTime < currentTime) {
+      console.log("Token is not valid");
+      return res.status(401).json({ message: "Authentication failed" });
+    } else {
+      req.userData = decodedToken;
+      next();
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({ message: "Authentication failed" });
+  }
+};
