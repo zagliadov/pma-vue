@@ -51,7 +51,11 @@ const handleInputBlur = () => {
               isFocused(name as string),
           }"
   >
-    <span class="bg-white">{{ name }}</span>
+    <span
+      class="bg-white"
+      :class="{'text-error': errorStatus === 409 && isFocused(name as string) && name === 'Email'}"
+      >{{ name }}</span
+    >
   </label>
   <input
     :type="type"
@@ -61,5 +65,9 @@ const handleInputBlur = () => {
     @focus="handleInputFocused(name as string)"
     @blur="handleInputBlur"
     class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
+    :class="{
+      'input-error border border-error':
+        errorStatus === 409 && name === 'Email',
+    }"
   />
 </template>
