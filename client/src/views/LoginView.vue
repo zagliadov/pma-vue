@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from "../store/modules/auth";
 import { storeToRefs } from "pinia";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import { ref } from "vue";
 
 const auth = useAuthStore();
@@ -9,6 +9,7 @@ const { logIn } = auth;
 const { errorStatus, errorMessage, success } = storeToRefs(auth);
 const email = ref("");
 const password = ref("");
+const router = useRouter();
 
 const handleLogin = async () => {
   if (email.value && password.value) {
@@ -16,6 +17,14 @@ const handleLogin = async () => {
     email.value = "";
     password.value = "";
   }
+  // if (success.value) {
+  //   router.push("/login");
+  //   success.value = false;
+  // }
+  setTimeout(() => {
+    errorMessage.value = "";
+    errorStatus.value = 0;
+  }, 5000);
 };
 </script>
 <template>
@@ -25,11 +34,12 @@ const handleLogin = async () => {
         <p class="text-2xl pb-8">Log in</p>
         <CustomInput v-model="email" placeholder="Enter email" name="Email" />
         <div class="pt-4"></div>
-        <CustomInput v-model="password" placeholder="Enter password" name="Password" type="password" />
-
-        <div class="relative">
-          <span class="absolute text-red-500 text-xs left-[35%]"> </span>
-        </div>
+        <CustomInput
+          v-model="password"
+          placeholder="Enter password"
+          name="Password"
+          type="password"
+        />
 
         <div class="flex items-center pt-4">
           <RouterLink
@@ -44,6 +54,14 @@ const handleLogin = async () => {
         <button @click="handleLogin" class="btn btn-primary rounded">
           Log in
         </button>
+        <div class="pt-1 relative">
+          <span v-if="errorStatus === 404" class="text-error absolute top-0 left-2">{{
+            errorMessage
+          }}</span>
+          <span v-if="errorStatus === 401" class="text-error absolute top-0 left-2">{{
+            errorMessage
+          }}</span>
+        </div>
         <div class="pb-8"></div>
 
         <div class="flex item-center">
@@ -52,14 +70,10 @@ const handleLogin = async () => {
           <hr class="w-full border-neutral-content mt-2" />
         </div>
         <div class="pt-4"></div>
-        <GoogleLoginButton>
-          Log in with Google
-        </GoogleLoginButton>
+        <GoogleLoginButton> Log in with Google </GoogleLoginButton>
 
         <div class="pt-4"></div>
-        <AppleLoginButton>
-          Log in with Apple
-        </AppleLoginButton>
+        <AppleLoginButton> Log in with Apple </AppleLoginButton>
 
         <div class="pt-4">
           <span class="text-sm text-gray-600 font-normal">

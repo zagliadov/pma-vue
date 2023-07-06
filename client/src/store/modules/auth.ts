@@ -19,12 +19,15 @@ export const useAuthStore = defineStore("auth", () => {
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await axios.post(
-      `${SERVER}/auth/login`,
-      { email, password }
-    );
-
-    console.log(response);
+      const response = await axios.post(`${SERVER}/auth/login`, {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        const token = response?.data?.token;
+        localStorage.setItem("token", token);
+        success.value = true;
+      }
     } catch (error) {
       const message = error?.response?.data?.message;
       const status = error?.response?.status;
@@ -33,7 +36,6 @@ export const useAuthStore = defineStore("auth", () => {
         errorStatus.value = status;
       }
     }
-    
   };
 
   const createAccount = async (

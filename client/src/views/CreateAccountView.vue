@@ -74,15 +74,10 @@ const handleCreateAccount = async () => {
         </div>
 
         <div class="pb-4"></div>
-        <GoogleLoginButton>
-          Sign up with Google
-        </GoogleLoginButton>
+        <GoogleLoginButton> Sign up with Google </GoogleLoginButton>
 
         <div class="pt-4"></div>
-        <AppleLoginButton>
-          Sign up with Apple
-        </AppleLoginButton>
-
+        <AppleLoginButton> Sign up with Apple </AppleLoginButton>
 
         <div class="pt-3"></div>
         <div>

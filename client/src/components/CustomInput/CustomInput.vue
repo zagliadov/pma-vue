@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, watch } from "vue";
+import { ref, defineProps, defineEmits, watch, computed } from "vue";
 import { useAuthStore } from "../../store/modules/auth";
 import { storeToRefs } from "pinia";
 
 const emits = defineEmits(["update:modelValue"]);
 
-const { modelValue } = defineProps({
+const { modelValue, name } = defineProps({
   modelValue: String,
   placeholder: String,
   name: String,
@@ -18,7 +18,6 @@ const { modelValue } = defineProps({
 });
 
 const value = ref(modelValue);
-console.log(value.value);
 watch(value, () => {
   emits("update:modelValue", value.value);
 });
@@ -33,6 +32,10 @@ const isFocused = (name: string) => {
 const handleInputFocused = (inputName: string) => {
   focusedInput.value = inputName;
 };
+
+const isError = computed(() => {
+  return errorStatus.value === 409 && isFocused(name as string) && name === 'Email'
+})
 
 const handleInputBlur = () => {
   focusedInput.value = "";
@@ -53,7 +56,7 @@ const handleInputBlur = () => {
   >
     <span
       class="bg-white"
-      :class="{'text-error': errorStatus === 409 && isFocused(name as string) && name === 'Email'}"
+      :class="{'text-error': isError}"
       >{{ name }}</span
     >
   </label>
