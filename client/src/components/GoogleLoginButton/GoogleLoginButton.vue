@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import IconGoogle from '../icons/IconGoogle.vue';
 
 </script>
 
@@ -11,7 +10,7 @@ import IconGoogle from '../icons/IconGoogle.vue';
   >
     <IconGoogle />
     <span className="font-medium text-base text-gray-600 pl-2">
-      Log in with Google
+      <slot />
     </span>
   </button>
 </template>

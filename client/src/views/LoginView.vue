@@ -9,28 +9,13 @@ const { logIn } = auth;
 const { errorStatus, errorMessage, success } = storeToRefs(auth);
 const email = ref("");
 const password = ref("");
-const focusedInput = ref("");
 
-const isFocused = (name: string) => {
-  if (focusedInput.value === name) return true;
-};
-
-const handleInputFocused = (inputName: string) => {
-  focusedInput.value = inputName;
-};
-const handleInputBlur = () => {
-  focusedInput.value = "";
-  if (errorStatus.value === 0 && errorMessage.value === "") return;
-  errorStatus.value = 0;
-  errorMessage.value = "";
-};
 const handleLogin = async () => {
   if (email.value && password.value) {
     await logIn(email.value, password.value);
     email.value = "";
     password.value = "";
   }
-  // Очистите значения полей формы после успешного входа
 };
 </script>
 <template>
@@ -38,40 +23,10 @@ const handleLogin = async () => {
     <div class="flex flex-col justify-center items-center">
       <div class="w-[464px] h-[512px] flex flex-col">
         <p class="text-2xl pb-8">Log in</p>
-        <CustomInput name="Email" :email='email'/>
-        <!-- <label
-          htmlFor="email"
-          class="text-xs font-normal text-gray-600 pb-1"
-          :class="{
-            'text-primary translate-x-3 relative translate-y-2 transition-all':
-              isFocused('email'),
-          }"
-        >
-          <span class="bg-white">Email</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          v-model="email"
-          placeholder="Enter email"
-          @focus="handleInputFocused('email')"
-          @blur="handleInputBlur"
-          class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
-        /> -->
+        <CustomInput v-model="email" placeholder="Enter email" name="Email" />
+        <div class="pt-4"></div>
+        <CustomInput v-model="password" placeholder="Enter password" name="Password" type="password" />
 
-        <label
-          htmlFor="password"
-          class="text-xs font-normal text-gray-600 pb-1 pt-4"
-        >
-          Password
-        </label>
-        <input
-          type="text"
-          name="password"
-          v-model="password"
-          placeholder="Enter password"
-          class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
-        />
         <div class="relative">
           <span class="absolute text-red-500 text-xs left-[35%]"> </span>
         </div>
@@ -97,10 +52,14 @@ const handleLogin = async () => {
           <hr class="w-full border-neutral-content mt-2" />
         </div>
         <div class="pt-4"></div>
-        <GoogleLoginButton />
+        <GoogleLoginButton>
+          Log in with Google
+        </GoogleLoginButton>
 
         <div class="pt-4"></div>
-        <AppleLoginButton />
+        <AppleLoginButton>
+          Log in with Apple
+        </AppleLoginButton>
 
         <div class="pt-4">
           <span class="text-sm text-gray-600 font-normal">

@@ -1,10 +1,27 @@
 <script setup lang="ts">
-const props = defineProps(['name', 'email']);
-console.log(props)
-import { ref } from "vue";
+import { ref, defineProps, defineEmits, watch } from "vue";
 import { useAuthStore } from "../../store/modules/auth";
 import { storeToRefs } from "pinia";
 
+const emits = defineEmits(["update:modelValue"]);
+
+const { modelValue } = defineProps({
+  modelValue: String,
+  placeholder: String,
+  name: String,
+  type: {
+    type: String,
+    default: "text",
+    validator: (value: string) =>
+      ["text", "textarea", "password"].includes(value),
+  },
+});
+
+const value = ref(modelValue);
+console.log(value.value);
+watch(value, () => {
+  emits("update:modelValue", value.value);
+});
 const auth = useAuthStore();
 const { errorMessage, errorStatus } = storeToRefs(auth);
 const focusedInput = ref("");
@@ -16,6 +33,7 @@ const isFocused = (name: string) => {
 const handleInputFocused = (inputName: string) => {
   focusedInput.value = inputName;
 };
+
 const handleInputBlur = () => {
   focusedInput.value = "";
   if (errorStatus.value === 0 && errorMessage.value === "") return;
@@ -26,21 +44,21 @@ const handleInputBlur = () => {
 
 <template>
   <label
-    htmlFor="props.name"
-    class="text-xs font-normal text-gray-600 pb-1"
+    htmlFor="name"
+    class="text-xs font-normal text-gray-600 pb-1 transition-all"
     :class="{
-      'text-primary translate-x-3 relative translate-y-2 transition-all':
-        isFocused(props.name),
-    }"
+            'text-primary relative translate-x-3 translate-y-2 transition-all':
+              isFocused(name as string),
+          }"
   >
-    <span class="bg-white">{{ props.name }}</span>
+    <span class="bg-white">{{ name }}</span>
   </label>
   <input
-    type='props.name'
-    name='props.name'
-    v-model="props.email"
-    :placeholder="'Enter ' + props.name"
-    @focus="handleInputFocused(props.name)"
+    :type="type"
+    :name="name"
+    v-model="value"
+    :placeholder="placeholder"
+    @focus="handleInputFocused(name as string)"
     @blur="handleInputBlur"
     class="input input-primary border border-neutral-content w-full pl-4 py-3 rounded"
   />

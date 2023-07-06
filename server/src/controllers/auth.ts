@@ -73,7 +73,7 @@ const createJwtToken = (id: number, name: string, email: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-
+  console.log(email, password)
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser)
