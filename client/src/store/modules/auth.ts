@@ -9,13 +9,33 @@ interface ICreateAccountRequest {
   email: string;
   password: string;
 }
-
+interface IProject {
+  id: number;
+  name: string;
+  description: string;
+  workspaceId: number;
+  tasks: any;
+  projectAssignees: any;
+}
+interface IWorkspace {
+  id: number;
+  name: string;
+  authorId: number;
+  projects: IProject[];
+}
+interface IExistingUser {
+  avatar_filename: string | null;
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  workspace: IWorkspace[];
+}
 export const useAuthStore = defineStore("auth", () => {
-  const username = ref("Daniil");
-  const userDoesNotExist = ref(false);
-  const success = ref(false);
-  const errorStatus = ref(0);
-  const errorMessage = ref("");
+  const success: boolean = ref(false);
+  const existingUser: IExistingUser = ref(null);
+  const errorStatus: number = ref(0);
+  const errorMessage: string = ref("");
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
@@ -27,10 +47,11 @@ export const useAuthStore = defineStore("auth", () => {
         const token = response?.data?.token;
         localStorage.setItem("token", token);
         success.value = true;
+        existingUser.value = response.data?.existingUser;
       }
     } catch (error) {
       const message = error?.response?.data?.message;
-      const status = error?.response?.status;
+      const status = error?.response?.status || 0;
       if (message && status) {
         errorMessage.value = message;
         errorStatus.value = status;
@@ -64,12 +85,11 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   return {
-    username,
-    userDoesNotExist,
     logIn,
     errorStatus,
     errorMessage,
     createAccount,
     success,
+    existingUser,
   };
 });

@@ -1,10 +1,8 @@
-
-const handleResponseStatus = (status: number) => {
-  switch(status) {
-    case 201:
-
-    case 409:
-
-    case 500:
+export const parseUsernameFromEmail = (email: string): string | null => {
+  const regex = /^(.*?)@/;
+  const result = email.match(regex);
+  if (result && result.length > 1) {
+    return result[1];
   }
-}
+  return null;
+};

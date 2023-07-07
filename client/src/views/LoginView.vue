@@ -3,10 +3,11 @@ import { useAuthStore } from "../store/modules/auth";
 import { storeToRefs } from "pinia";
 import { RouterLink, useRouter } from "vue-router";
 import { ref } from "vue";
+import { parseUsernameFromEmail } from "@/helpers/helpers";
 
 const auth = useAuthStore();
 const { logIn } = auth;
-const { errorStatus, errorMessage, success } = storeToRefs(auth);
+const { errorStatus, errorMessage, success, existingUser } = storeToRefs(auth);
 const email = ref("");
 const password = ref("");
 const router = useRouter();
@@ -17,10 +18,11 @@ const handleLogin = async () => {
     email.value = "";
     password.value = "";
   }
-  // if (success.value) {
-  //   router.push("/login");
-  //   success.value = false;
-  // }
+  if (success.value) {
+    const { email, workspace } = existingUser.value;
+    const { id: workspaceId } = workspace[0];
+    router.push(`/${parseUsernameFromEmail(email)}/workspace/${workspaceId}`);
+  }
   setTimeout(() => {
     errorMessage.value = "";
     errorStatus.value = 0;
@@ -55,12 +57,16 @@ const handleLogin = async () => {
           Log in
         </button>
         <div class="pt-1 relative">
-          <span v-if="errorStatus === 404" class="text-error absolute top-0 left-2">{{
-            errorMessage
-          }}</span>
-          <span v-if="errorStatus === 401" class="text-error absolute top-0 left-2">{{
-            errorMessage
-          }}</span>
+          <span
+            v-if="errorStatus === 404"
+            class="text-error absolute top-0 left-2"
+            >{{ errorMessage }}</span
+          >
+          <span
+            v-if="errorStatus === 401"
+            class="text-error absolute top-0 left-2"
+            >{{ errorMessage }}</span
+          >
         </div>
         <div class="pb-8"></div>
 
