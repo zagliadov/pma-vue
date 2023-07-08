@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
-
-const SERVER = "http://localhost:9002";
+import { API_URL } from "../../helpers/constants"; 
 interface ICreateAccountRequest {
   username: string;
   workspace: string;
@@ -39,7 +38,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await axios.post(`${SERVER}/auth/login`, {
+      const response = await axios.post(`${API_URL}/auth/login`, {
         email,
         password,
       });
@@ -73,7 +72,7 @@ export const useAuthStore = defineStore("auth", () => {
         password,
       };
       const response = await axios.post(
-        `${SERVER}/auth/create_account`,
+        `${API_URL}/auth/create_account`,
         requestData
       );
 

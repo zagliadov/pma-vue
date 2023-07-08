@@ -3,6 +3,10 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import ForgotPasswordView from "../views/ForgotPasswordView.vue";
 import CreateAccountView from "../views/CreateAccountView.vue";
+import ProjectsView from "../views/ProjectsView.vue";
+import axios from "axios";
+import { API_URL } from "../helpers/constants";
+import { checkAuthentication } from "../helpers/helpers";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,12 +15,17 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-      meta: { requiresAuth: true }, // Добавляем мета-свойство для указания требуется ли аутентификация
+      beforeEnter: () => {
+        return "/login"
+      }
     },
     {
       path: "/login",
       name: "login",
       component: LoginView,
+      beforeEnter: async () => {
+        localStorage.removeItem("token");
+      },
     },
     {
       path: "/forgot_password",
@@ -28,18 +37,16 @@ const router = createRouter({
       name: "create_account",
       component: CreateAccountView,
     },
+    {
+      path: "/:email/workspace/:workspace_id",
+      name: "project_view",
+      component: ProjectsView,
+      beforeEnter: async () => {
+        const auth = await checkAuthentication();
+        return auth;
+      },
+    },
   ],
-});
-
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = false; // Проверьте здесь, установлено ли значение аутентификации
-
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    // Если требуется аутентификация и пользователь не аутентифицирован, перенаправляем на страницу входа
-    next({ name: "login" });
-  } else {
-    next(); // Продолжаем нормальную навигацию
-  }
 });
 
 export default router;
