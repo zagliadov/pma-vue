@@ -6,19 +6,13 @@ import CreateAccountView from "../views/CreateAccountView.vue";
 import ProjectsView from "../views/ProjectsView.vue";
 import axios from "axios";
 import { API_URL } from "../helpers/constants";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "../store/modules/auth";
 import { checkAuthentication } from "../helpers/helpers";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-      beforeEnter: () => {
-        return "/login"
-      }
-    },
     {
       path: "/login",
       name: "login",
@@ -42,9 +36,16 @@ const router = createRouter({
       name: "project_view",
       component: ProjectsView,
       beforeEnter: async () => {
-        const auth = await checkAuthentication();
-        return auth;
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        console.log(isValid);
+        if (!isValid) return "login";
+        return isValid;
       },
+      onBeforeRouteUpdate: async () => {
+        conosle.log('hlasdkjf')
+      }
     },
   ],
 });

@@ -73,7 +73,7 @@ const createJwtToken = (id: number, name: string, email: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log(email, password)
+  console.log(email, password);
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -110,7 +110,6 @@ export const login = async (req: Request, res: Response) => {
 export const verifyToken = async (req: any, res: any) => {
   try {
     const authHeader = req.headers["authorization"];
-    console.log(authHeader);
     const token: string = authHeader && authHeader.split(" ")[1];
     if (!token)
       return res.status(401).json({ message: "Authentication failed" });
@@ -124,7 +123,20 @@ export const verifyToken = async (req: any, res: any) => {
       console.log("Token is not valid");
       return res.status(401).json({ message: "Authentication failed" });
     } else {
-      res.status(200).json({ token: decodedToken });
+      const { email } = decodedToken;
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+        include: {
+          workspace: {
+            include: {
+              projects: true,
+            },
+          },
+        },
+      });
+      if (existingUser) res.status(200).json({ existingUser });
     }
   } catch (error) {
     console.log(error);

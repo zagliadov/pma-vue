@@ -4,6 +4,8 @@ import AppleLoginButton from "../AppleLoginButton/AppleLoginButton.vue";
 import IconLeftArrow from "../icons/IconLeftArrow.vue";
 import IconGoogle from "../icons/IconGoogle.vue";
 import IconApple from "../icons/IconApple.vue";
+import Footer from "../Footer/Footer.vue";
+import Navigation from "../Navigation/Navigation.vue";
 
 const components = [
   { name: "CustomInput", component: CustomInput },
@@ -12,6 +14,8 @@ const components = [
   { name: "IconLeftArrow", component: IconLeftArrow },
   { name: "IconGoogle", component: IconGoogle },
   { name: "IconApple", component: IconApple },
+  { name: "Footer", component: Footer },
+  { name: "Navigation", component: Navigation },
 ];
 export default {
   install(app) {

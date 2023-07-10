@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
-import { API_URL } from "../../helpers/constants"; 
+import { API_URL } from "../../helpers/constants";
 interface ICreateAccountRequest {
   username: string;
   workspace: string;
@@ -83,6 +83,26 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const response = await axios.post(
+        `${API_URL}/auth/verify_token`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        existingUser.value = response?.data?.existingUser;
+        return true;
+      }
+    }
+    return false;
+  };
+
   return {
     logIn,
     errorStatus,
@@ -90,5 +110,6 @@ export const useAuthStore = defineStore("auth", () => {
     createAccount,
     success,
     existingUser,
+    checkAuthentication,
   };
 });
