@@ -1,18 +1,24 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import LoginView from "../views/LoginView.vue";
-import ForgotPasswordView from "../views/ForgotPasswordView.vue";
-import CreateAccountView from "../views/CreateAccountView.vue";
-import ProjectsView from "../views/ProjectsView.vue";
-import axios from "axios";
-import { API_URL } from "../helpers/constants";
-import { storeToRefs } from "pinia";
 import { useAuthStore } from "../store/modules/auth";
 import { checkAuthentication } from "../helpers/helpers";
+
+const LoginView = () => import("../views/LoginView.vue");
+const ForgotPasswordView = () => import("../views/ForgotPasswordView.vue");
+const CreateAccountView = () => import("../views/CreateAccountView.vue");
+const ProjectsView = () => import("../views/ProjectsView.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: "/",
+      name: "home",
+      component: HomeView,
+      beforeEnter: async () => {
+        return "login";
+      },
+    },
     {
       path: "/login",
       name: "login",
@@ -39,13 +45,10 @@ const router = createRouter({
         const auth = useAuthStore();
         const { checkAuthentication } = auth;
         const isValid = await checkAuthentication();
-        console.log(isValid);
+        console.log(isValid, "auth");
         if (!isValid) return "login";
         return isValid;
       },
-      onBeforeRouteUpdate: async () => {
-        conosle.log('hlasdkjf')
-      }
     },
   ],
 });
