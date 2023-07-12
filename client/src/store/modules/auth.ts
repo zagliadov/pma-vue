@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
 import { API_URL } from "../../helpers/constants";
+
 interface ICreateAccountRequest {
   username: string;
   workspace: string;

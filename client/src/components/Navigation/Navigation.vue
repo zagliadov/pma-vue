@@ -1,9 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useDiffStore } from "../../store/modules/difference";
+
+const diff = useDiffStore();
+const { setIsSideMenuOpen } = useDiffStore();
+const { isSideMenuOpen } = storeToRefs(diff);
+</script>
 
 <template>
   <div class="flex flex-col">
+    <SideMenu v-if="isSideMenuOpen"/>
     <div class="flex justify-start pr-4 py-2 border-b h-[56px]">
-      <button class="pl-4 flex items-center">
+      <button class="pl-4 flex items-center" @click="setIsSideMenuOpen">
         <IconSideMenu />
       </button>
     </div>
