@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { useDiffStore } from "../../store/modules/difference";
+import { storeToRefs } from "pinia";
 
 const diff = useDiffStore();
-const { setIsSideMenuOpen } = diff;
+const { isSpaceOpen } = storeToRefs(diff);
+const { setIsSideMenuOpen, setIsSpaceOpen } = diff;
+
+const handleSpaceOpen = () => {
+  setIsSpaceOpen();
+  console.log(isSpaceOpen.value);
+};
 </script>
 
 <template>
@@ -17,11 +24,24 @@ const { setIsSideMenuOpen } = diff;
         <IconSideMenu />
       </button>
     </div>
-    <div>
-      <div class="flex items-center px-4 py-4">
-        <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
-        <span class="pl-1 font-medium">Your spaces</span>
+    <div class="px-4 py-6">
+      <div class="flex justify-between border items-center">
+        <div class="flex items-center">
+          <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
+          <span class="pl-1 font-medium">Your spaces</span>
+        </div>
+
+        <div class="pr-3">
+          <button
+            @click="handleSpaceOpen"
+            class="flex items-center"
+            :class="{ 'rotate-180': isSpaceOpen }"
+          >
+            <IconChevron />
+          </button>
+        </div>
       </div>
+      <div v-if="isSpaceOpen">helo</div>
     </div>
   </div>
 </template>
