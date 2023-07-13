@@ -1,14 +1,37 @@
 <script setup lang="ts">
-import { useDiffStore } from "../../store/modules/difference";
+import { ref } from "vue";
+import { useDiffStore } from "@/store/modules/difference";
+import { useAuthStore } from "@/store/modules/auth";
+import { useWorkspaceStore } from "@/store/modules/workspace";
 import { storeToRefs } from "pinia";
 
 const diff = useDiffStore();
-const { isSpaceOpen } = storeToRefs(diff);
-const { setIsSideMenuOpen, setIsSpaceOpen } = diff;
+const auth = useAuthStore();
+const space = useWorkspaceStore();
+const { createWorkspace } = space;
+const { workspaceRegex } = storeToRefs(space);
+const { existingUser } = storeToRefs(auth);
+const { workspace } = existingUser.value;
+const { setIsSideMenuOpen } = diff;
+const isSpaceOpen = ref<boolean>(false);
+const isCreateSpace = ref<boolean>(false);
+const newWorkspaceName = ref<string>("");
 
 const handleSpaceOpen = () => {
-  setIsSpaceOpen();
-  console.log(isSpaceOpen.value);
+  isSpaceOpen.value = !isSpaceOpen.value;
+  isCreateSpace.value = false;
+};
+
+const handleOpenSpaceCreation = () => {
+  isCreateSpace.value = !isCreateSpace.value;
+};
+
+const handleCreateNewSpace = () => {
+  if (workspaceRegex.value.test(newWorkspaceName.value)) {
+    createWorkspace(newWorkspaceName.value);
+    newWorkspaceName.value = "";
+    isCreateSpace.value = false;
+  }
 };
 </script>
 
@@ -25,10 +48,10 @@ const handleSpaceOpen = () => {
       </button>
     </div>
     <div class="px-4 py-6">
-      <div class="flex justify-between border items-center">
+      <div class="flex justify-between items-center">
         <div class="flex items-center">
           <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
-          <span class="pl-1 font-medium">Your spaces</span>
+          <span class="pl-1">Your spaces</span>
         </div>
 
         <div class="pr-3">
@@ -41,10 +64,42 @@ const handleSpaceOpen = () => {
           </button>
         </div>
       </div>
-      <div v-if="isSpaceOpen">
-        
+      <button
+        v-if="isSpaceOpen"
+        class="flex items-center pt-3 pl-5"
+        @click="handleOpenSpaceCreation"
+      >
+        <IconPlus />
+        <span class="font-lg font-medium pl-2 text-primary">New space</span>
+      </button>
+
+      <div
+        class="flex relative form-control w-full max-w-xs pr-8 pl-6"
+        v-if="isCreateSpace"
+      >
+        <CustomInput
+          v-model="newWorkspaceName"
+          placeholder="Type here"
+          name="Enter a name for the new workspace"
+        />
+        <button
+          @click="handleCreateNewSpace"
+          class="absolute right-0 top-8 border-2 rounded-full border-neutral-content"
+          :class="{ 'border-primary': workspaceRegex.test(newWorkspaceName) }"
+        >
+          <IconPlus
+            :class="{
+              'stroke-neutral-content': !workspaceRegex.test(newWorkspaceName),
+            }"
+          />
+        </button>
       </div>
-      <div v-if="isSpaceOpen" class="pt-">helo</div>
+
+      <div v-if="isSpaceOpen" class="pt-4">
+        <div v-for="space in workspace">
+          {{ space.name }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
