@@ -41,7 +41,10 @@ const handleSpaceOpen = () => {
           </button>
         </div>
       </div>
-      <div v-if="isSpaceOpen">helo</div>
+      <div v-if="isSpaceOpen">
+        
+      </div>
+      <div v-if="isSpaceOpen" class="pt-">helo</div>
     </div>
   </div>
 </template>
