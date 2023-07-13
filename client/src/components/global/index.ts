@@ -5,6 +5,7 @@ import IconLeftArrow from "../icons/IconLeftArrow.vue";
 import IconGoogle from "../icons/IconGoogle.vue";
 import IconApple from "../icons/IconApple.vue";
 import IconSideMenu from "../icons/IconSideMenu.vue";
+import IconCheckCircle from "../icons/IconCheckCircle.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -17,9 +18,10 @@ const components = [
   { name: "IconLeftArrow", component: IconLeftArrow },
   { name: "IconGoogle", component: IconGoogle },
   { name: "IconApple", component: IconApple },
+  { name: "IconSideMenu", component: IconSideMenu },
+  { name: "IconCheckCircle", component: IconCheckCircle },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
-  { name: "IconSideMenu", component: IconSideMenu },
   { name: "Layout", component: Layout },
   { name: "SideMenu", component: SideMenu },
 ];
