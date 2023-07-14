@@ -8,6 +8,7 @@ import IconSideMenu from "../icons/IconSideMenu.vue";
 import IconCheckCircle from "../icons/IconCheckCircle.vue";
 import IconChevron from "../icons/IconChevron.vue";
 import IconPlus from "../icons/IconPlus.vue";
+import IconNoProject from "../icons/IconNoProject.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -24,6 +25,7 @@ const components = [
   { name: "IconCheckCircle", component: IconCheckCircle },
   { name: "IconChevron", component: IconChevron },
   { name: "IconPlus", component: IconPlus },
+  { name: "IconNoProject", component: IconNoProject },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
