@@ -3,11 +3,11 @@ import { ref } from "vue";
 import { useDiffStore } from "@/store/modules/difference";
 import { useWorkspaceStore } from "@/store/modules/workspace";
 import { storeToRefs } from "pinia";
-
+import WorkspaceList from "./WorkspaceList/WorkspaceList.vue";
 const diff = useDiffStore();
 const space = useWorkspaceStore();
 const { createWorkspace, getWorkspaces } = space;
-const { workspaceRegex, errorMessage, errorStatus, successStatus, workspaces } =
+const { workspaceRegex, errorMessage, errorStatus, successStatus } =
   storeToRefs(space);
 const { setIsSideMenuOpen } = diff;
 const isSpaceOpen = ref<boolean>(false);
@@ -104,12 +104,7 @@ const handleCreateNewSpace = async () => {
           />
         </button>
       </div>
-
-      <div v-if="isSpaceOpen" class="pt-4">
-        <div v-for="workspace in workspaces">
-          {{ workspace.name }}
-        </div>
-      </div>
+      <WorkspaceList v-if="isSpaceOpen"/>
     </div>
   </div>
 </template>

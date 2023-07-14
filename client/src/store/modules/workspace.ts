@@ -2,9 +2,10 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
+import { IWorkspace } from "../interfaces.ts";
 
 export const useWorkspaceStore = defineStore("workspace", () => {
-  const workspaces = ref([]);
+  const workspaces = ref<IWorkspace[]>([]);
   const workspaceRegex = ref<RegExp>(/^[^\s][A-Za-z\s]{1,20}[^\s]$/);
   const errorMessage = ref<string>("");
   const errorStatus = ref<number>(0);

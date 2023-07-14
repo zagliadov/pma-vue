@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import auth from "./routes/auth";
 import workspace from "./routes/workspace";
+import project from "./routes/project";
 
 const app = express();
 app.use(express.json());
@@ -12,6 +13,7 @@ const port = process.env.PORT || 9003;
 
 app.use("/auth", auth);
 app.use("/workspace", workspace);
+app.use("/project", project);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
