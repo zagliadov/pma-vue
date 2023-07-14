@@ -1,26 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useDiffStore } from "@/store/modules/difference";
-import { useAuthStore } from "@/store/modules/auth";
 import { useWorkspaceStore } from "@/store/modules/workspace";
 import { storeToRefs } from "pinia";
 
 const diff = useDiffStore();
-const auth = useAuthStore();
 const space = useWorkspaceStore();
-const { createWorkspace } = space;
-const { workspaceRegex, errorMessage, errorStatus, successStatus } =
+const { createWorkspace, getWorkspaces } = space;
+const { workspaceRegex, errorMessage, errorStatus, successStatus, workspaces } =
   storeToRefs(space);
-const { existingUser } = storeToRefs(auth);
-const { workspace } = existingUser.value;
 const { setIsSideMenuOpen } = diff;
 const isSpaceOpen = ref<boolean>(false);
 const isCreateSpace = ref<boolean>(false);
 const newWorkspaceName = ref<string>("");
 
-const handleSpaceOpen = () => {
+const handleSpaceOpen = async () => {
   isSpaceOpen.value = !isSpaceOpen.value;
   isCreateSpace.value = false;
+  await getWorkspaces();
 };
 
 const handleOpenSpaceCreation = () => {
@@ -109,8 +106,8 @@ const handleCreateNewSpace = async () => {
       </div>
 
       <div v-if="isSpaceOpen" class="pt-4">
-        <div v-for="space in workspace">
-          {{ space.name }}
+        <div v-for="workspace in workspaces">
+          {{ workspace.name }}
         </div>
       </div>
     </div>
