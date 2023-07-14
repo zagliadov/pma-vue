@@ -9,7 +9,8 @@ const diff = useDiffStore();
 const auth = useAuthStore();
 const space = useWorkspaceStore();
 const { createWorkspace } = space;
-const { workspaceRegex } = storeToRefs(space);
+const { workspaceRegex, errorMessage, errorStatus, successStatus } =
+  storeToRefs(space);
 const { existingUser } = storeToRefs(auth);
 const { workspace } = existingUser.value;
 const { setIsSideMenuOpen } = diff;
@@ -26,11 +27,16 @@ const handleOpenSpaceCreation = () => {
   isCreateSpace.value = !isCreateSpace.value;
 };
 
-const handleCreateNewSpace = () => {
+const handleCreateNewSpace = async () => {
+  errorStatus.value = 0;
+  errorMessage.value = "";
   if (workspaceRegex.value.test(newWorkspaceName.value)) {
-    createWorkspace(newWorkspaceName.value);
-    newWorkspaceName.value = "";
-    isCreateSpace.value = false;
+    await createWorkspace(newWorkspaceName.value);
+    if (successStatus.value === 200) {
+      newWorkspaceName.value = "";
+      isCreateSpace.value = false;
+    }
+    if (errorStatus.value === 400) return;
   }
 };
 </script>
@@ -82,6 +88,13 @@ const handleCreateNewSpace = () => {
           placeholder="Type here"
           name="Enter a name for the new workspace"
         />
+        <label class="label">
+          <span
+            v-if="errorStatus === 400"
+            class="label-text-alt absolute text-error pt-1"
+            >{{ errorMessage }}</span
+          >
+        </label>
         <button
           @click="handleCreateNewSpace"
           class="absolute right-0 top-8 border-2 rounded-full border-neutral-content"
