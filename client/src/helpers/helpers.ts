@@ -1,5 +1,19 @@
 import axios from "axios";
 import { API_URL } from "./constants";
+import { type Router } from "vue-router";
+
+const extractNumberFromURL = (url: string): number => {
+  const segments: string[] = url.split("/");
+  const number: number = parseInt(segments[segments.length - 1]);
+  return number;
+}
+
+export const getWorkspaceIdFromCurrentURL = (router: Router): number => {
+  const url = router.currentRoute.value.fullPath;
+  const number = extractNumberFromURL(url);
+  return number;
+}
+
 
 export const parseUsernameFromEmail = (email: string): string | null => {
   const regex = /^(.*?)@/;
@@ -28,8 +42,6 @@ export const checkAuthentication = async () => {
       }
     );
       if (response.status === 200) return true;
-    // Здесь должна быть проверка валидности токена на сервере
-    // Верните true, если токен валиден, или выполните другую проверку аутентификации
   }
   return false;
 };
