@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL } from "./constants";
+
 export const parseUsernameFromEmail = (email: string): string | null => {
   const regex = /^(.*?)@/;
   const result = email.match(regex);
@@ -7,6 +8,11 @@ export const parseUsernameFromEmail = (email: string): string | null => {
     return result[1];
   }
   return null;
+};
+
+export const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return emailRegex.test(email);
 };
 
 export const checkAuthentication = async () => {
