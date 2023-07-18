@@ -6,7 +6,7 @@ import { ref } from "vue";
 
 const router = useRouter();
 const projectStore = useProjectStore();
-const { openCreateProjectModal } = projectStore;
+const { openCreateProjectModal, addNewProject } = projectStore;
 const member = ref<string>("");
 const projectName = ref<string>("");
 const projectMembers = ref<string[]>([]);
@@ -16,14 +16,21 @@ const handleCloseModal = () => {
   openCreateProjectModal();
 };
 
-const handleCreateProject = () => {
-  console.log(getWorkspaceIdFromCurrentURL(router));
+const handleCreateProject = async () => {
   if (
     projectName.value !== "" &&
     projectMembers.value.length !== 0 &&
     projectDescription.value !== ""
   ) {
-    
+    const workspaceId = getWorkspaceIdFromCurrentURL(router);
+    if (!workspaceId) return;
+    const data = {
+      workspaceId,
+      projectName: projectName.value.trim(),
+      projectMembers: projectMembers.value,
+      projectDescription: projectDescription.value.trim()
+    }
+    await addNewProject(data);
   }
 };
 
@@ -97,7 +104,7 @@ const handleRemoveMember = (member: string) => {
           v-model="projectDescription"
           type="textarea"
           placeholder="Enter project description..."
-          class="textarea textarea-sm w-full focus:outline-none rounded bg-gray-100"
+          class="textarea textarea-lg w-full focus:outline-none rounded bg-gray-100"
         ></textarea>
       </div>
     </div>
