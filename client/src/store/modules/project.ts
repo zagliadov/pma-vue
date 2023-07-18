@@ -6,6 +6,11 @@ import { IProject } from "../interfaces.ts";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
+  const isCreateProjectModal = ref<boolean>(false);
+
+  const openCreateProjectModal = () => {
+    isCreateProjectModal.value = !isCreateProjectModal.value;
+  }
 
   const getProjects = async (workspaceId: number) => {
     const token = localStorage.getItem("token");
@@ -28,6 +33,8 @@ export const useProjectStore = defineStore("project", () => {
 
   return {
     projects,
+    isCreateProjectModal,
+    openCreateProjectModal,
     getProjects,
   };
 });
