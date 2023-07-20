@@ -27,10 +27,10 @@ CREATE TABLE "Project" (
 -- CreateTable
 CREATE TABLE "ProjectAssignee" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" INTEGER NOT NULL,
+    "userId" INTEGER,
+    "email" TEXT NOT NULL,
     "projectId" INTEGER NOT NULL,
     "isEmailConfirmed" BOOLEAN NOT NULL,
-    CONSTRAINT "ProjectAssignee_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "ProjectAssignee_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -68,3 +68,6 @@ CREATE TABLE "Subtask" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProjectAssignee_email_key" ON "ProjectAssignee"("email");

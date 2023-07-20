@@ -14,7 +14,6 @@ model User {
   password         String
   workspace        Workspace[]
   avatar_filename  String?
-  projectAssignees ProjectAssignee[]
 }
 
 model Workspace {
@@ -36,13 +35,14 @@ model Project {
 }
 
 model ProjectAssignee {
-  id        Int    @id @default(autoincrement())
-  user      User   @relation(fields: [userId], references: [id])
-  userId    Int
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  id              Int     @id @default(autoincrement())
+  userId          Int?
+  email           String     @unique
+  project         Project @relation(fields: [projectId], references: [id])
+  projectId       Int
   isEmailConfirmed Boolean
 }
+
 
 model Task {
   id              Int       @id @default(autoincrement())

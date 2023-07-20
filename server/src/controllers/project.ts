@@ -43,8 +43,10 @@ export const addNewProject = async (req: any, res: Response) => {
     });
     const projectId: number = project.id;
     interface IProjectAssignees {
-      userId: number,
-      projectId: number
+      userId: number;
+      email: string;
+      projectId: number;
+      isEmailConfirmed: boolean;
     }
     const projectAssignees: IProjectAssignees[] = [];
 
@@ -52,18 +54,20 @@ export const addNewProject = async (req: any, res: Response) => {
       const memberUser = await prisma.user.findUnique({
         where: { email: member },
       });
-      if (memberUser) {
-        projectAssignees.push({
-          userId: memberUser.id,
-          projectId: projectId,
-        });
-      }
+      projectAssignees.push({
+        userId: memberUser ? memberUser.id : 0,
+        email: memberUser ? memberUser.email : member,
+        projectId: projectId,
+        isEmailConfirmed: memberUser ? true : false,
+      });
     }
     for (const assignee of projectAssignees) {
       await prisma.projectAssignee.create({
         data: {
           userId: assignee.userId,
+          email: assignee.email,
           projectId: assignee.projectId,
+          isEmailConfirmed: assignee.isEmailConfirmed,
         },
       });
     }
