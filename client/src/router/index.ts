@@ -7,6 +7,7 @@ const LoginView = () => import("../views/LoginView.vue");
 const ForgotPasswordView = () => import("../views/ForgotPasswordView.vue");
 const CreateAccountView = () => import("../views/CreateAccountView.vue");
 const ProjectsView = () => import("../views/ProjectsView.vue");
+const CreateProject = () => import("../views/CreateProject.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,10 +46,14 @@ const router = createRouter({
         const auth = useAuthStore();
         const { checkAuthentication } = auth;
         const isValid = await checkAuthentication();
-        console.log(isValid, "auth");
         if (!isValid) return "login";
         return isValid;
       },
+    },
+    {
+      path: "/:email/workspace/:workspace_id/create_project",
+      name: "create_project",
+      component: CreateProject,
     },
   ],
 });

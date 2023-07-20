@@ -2,22 +2,11 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
-import { IProject } from "../interfaces";
+import { IProject, IAddNewProjectData } from "../interfaces";
 
-interface IAddNewProjectData {
-  workspaceId: number;
-  projectName: string;
-  projectMembers: string[];
-  projectDescription: string;
-}
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
-  const isCreateProjectModal = ref<boolean>(false);
-
-  const openCreateProjectModal = () => {
-    isCreateProjectModal.value = !isCreateProjectModal.value;
-  };
 
   const getProjects = async (workspaceId: number) => {
     const token = localStorage.getItem("token");
@@ -59,8 +48,6 @@ export const useProjectStore = defineStore("project", () => {
 
   return {
     projects,
-    isCreateProjectModal,
-    openCreateProjectModal,
     getProjects,
     addNewProject,
   };

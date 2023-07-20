@@ -13,7 +13,6 @@ import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
 import SideMenu from "../SideMenu/SideMenu.vue";
-import CreateProjectModal from "../CreateProjectModal/CreateProjectModal.vue";
 
 const components = [
   { name: "CustomInput", component: CustomInput },
@@ -31,7 +30,6 @@ const components = [
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
   { name: "SideMenu", component: SideMenu },
-  { name: "CreateProjectModal", component: CreateProjectModal },
 ];
 export default {
   install(app) {

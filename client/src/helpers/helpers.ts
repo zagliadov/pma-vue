@@ -4,7 +4,7 @@ import { type Router } from "vue-router";
 
 const extractNumberFromURL = (url: string): number => {
   const segments: string[] = url.split("/");
-  const number: number = parseInt(segments[segments.length - 1]);
+  const number: number = Number(segments[3]);
   return number;
 }
 

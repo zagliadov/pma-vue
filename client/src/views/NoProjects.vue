@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { useProjectStore } from "../store/modules/project";
 import { useDiffStore } from "@/store/modules/difference";
+import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import {
+  parseUsernameFromEmail,
+  getWorkspaceIdFromCurrentURL,
+} from "@/helpers/helpers";
 
-const projectStore = useProjectStore();
 const differenceStore = useDiffStore();
+const authStore = useAuthStore();
+const router = useRouter();
+const { existingUser } = storeToRefs(authStore);
+const { email } = existingUser.value;
 const { isSideMenuOpen } = storeToRefs(differenceStore);
-const { openCreateProjectModal } = projectStore;
-const { isCreateProjectModal } = storeToRefs(projectStore);
-
-const handleOpenModal = () => {
-  openCreateProjectModal();
-};
 </script>
 
 <template>
@@ -19,10 +21,9 @@ const handleOpenModal = () => {
     class="hero h-full bg-white"
     :class="{
       'bg-base-200 blur-sm': isSideMenuOpen,
-      'bg-base-200': isCreateProjectModal,
     }"
   >
-    <div class="hero-content text-center" v-if="!isCreateProjectModal">
+    <div class="hero-content text-center">
       <div class="max-w-md">
         <div class="flex justify-center pb-6">
           <IconNoProject />
@@ -33,13 +34,17 @@ const handleOpenModal = () => {
           Create your first project. Create tasks and subtasks. Mark who will
           perform the task and when. View tasks in table or timeline mode
         </p>
-        <button class="btn btn-primary" @click="handleOpenModal">
-          <IconPlus class="stroke-primary-content" />
-          <span>Create project</span>
-        </button>
+        <RouterLink
+          :to="`/${parseUsernameFromEmail(
+            email
+          )}/workspace/${getWorkspaceIdFromCurrentURL(router)}/create_project`"
+        >
+          <button class="btn btn-primary">
+            <IconPlus class="stroke-primary-content" />
+            <span>Create project</span>
+          </button>
+        </RouterLink>
       </div>
     </div>
-
-    <CreateProjectModal v-if="isCreateProjectModal" />
   </div>
 </template>
