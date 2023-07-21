@@ -47,6 +47,22 @@ export const createAccount = async (req: Request, res: Response) => {
     });
     if (id && workspace) {
       if (isUserAssignee) {
+        const assigneeProject = await prisma.project.findUnique({
+          where: {
+            id: isUserAssignee.projectId,
+          },
+        });
+        if (assigneeProject) {
+          await prisma.workspace.update({
+            where: { id: workspaces.id },
+            data: {
+              projects: {
+                connect: { id: assigneeProject.id },
+              },
+            },
+          });
+        }
+        
         await prisma.projectAssignee.update({
           where: { email },
           data: {
