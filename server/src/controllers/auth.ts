@@ -28,6 +28,8 @@ export const createAccount = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
+    const isUserAssignee = await prisma.projectAssignee.findUnique({ where: { email } });
+
     const { id } = await prisma.user.create({
       data: {
         name: username,
@@ -44,6 +46,15 @@ export const createAccount = async (req: Request, res: Response) => {
       },
     });
     if (id && workspace) {
+      if (isUserAssignee) {
+        await prisma.projectAssignee.update({
+          where: { email },
+          data: {
+            userId: id,
+            isEmailConfirmed: true,
+          },
+        });
+      }
       return res.status(201).json({ message: "User create" });
     }
   } catch (error) {
