@@ -56,9 +56,6 @@ export const createAccount = async (req: Request, res: Response) => {
     password,
     Number(process.env.SALT)
   );
-  // const userId: Prisma.UserSelect = {
-  //   id: true,
-  // };
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -72,14 +69,6 @@ export const createAccount = async (req: Request, res: Response) => {
       email,
       bcrypt_password,
     });
-    // const { id } = await prisma.user.create({
-    //   data: {
-    //     name: username,
-    //     email,
-    //     password: bcrypt_password,
-    //   },
-    //   select: userId,
-    // });
     if (!id) return res.status(500).json({ message: "Failed to create user" });
     await prisma.workspace.create({
       data: {
@@ -89,11 +78,6 @@ export const createAccount = async (req: Request, res: Response) => {
     });
     if (id && workspace) {
       if (isUserAssignee) {
-        // const assigneeProject = await prisma.project.findUnique({
-        //   where: {
-        //     id: isUserAssignee.projectId,
-        //   },
-        // });
         await prisma.projectAssignee.update({
           where: { email },
           data: {
