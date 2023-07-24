@@ -14,32 +14,74 @@ interface IUserCreate {
   password: string;
 }
 
+interface CreateUserInput {
+  username: string;
+  email: string;
+  bcrypt_password: string;
+}
+
+interface CreateUserOutput {
+  userId: number;
+}
+
+const createUser = async ({
+  username,
+  email,
+  bcrypt_password,
+}: CreateUserInput): Promise<CreateUserOutput> => {
+  try {
+    const { id: userId } = await prisma.user.create({
+      data: {
+        name: username,
+        email,
+        password: bcrypt_password,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    prisma.$disconnect();
+
+    return { userId };
+  } catch (error) {
+    prisma.$disconnect();
+    throw error;
+  }
+};
+
 export const createAccount = async (req: Request, res: Response) => {
   const { username, workspace, email, password }: IUserCreate = req.body;
   const bcrypt_password: string = await bcrypt.hash(
     password,
     Number(process.env.SALT)
   );
-  const userId: Prisma.UserSelect = {
-    id: true,
-  };
+  // const userId: Prisma.UserSelect = {
+  //   id: true,
+  // };
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-    const isUserAssignee = await prisma.projectAssignee.findUnique({ where: { email } });
-
-    const { id } = await prisma.user.create({
-      data: {
-        name: username,
-        email,
-        password: bcrypt_password,
-      },
-      select: userId,
+    const isUserAssignee = await prisma.projectAssignee.findUnique({
+      where: { email },
     });
+    const { userId: id } = await createUser({
+      username,
+      email,
+      bcrypt_password,
+    });
+    // const { id } = await prisma.user.create({
+    //   data: {
+    //     name: username,
+    //     email,
+    //     password: bcrypt_password,
+    //   },
+    //   select: userId,
+    // });
     if (!id) return res.status(500).json({ message: "Failed to create user" });
-    const workspaces = await prisma.workspace.create({
+    await prisma.workspace.create({
       data: {
         name: workspace,
         authorId: id,
@@ -47,22 +89,11 @@ export const createAccount = async (req: Request, res: Response) => {
     });
     if (id && workspace) {
       if (isUserAssignee) {
-        const assigneeProject = await prisma.project.findUnique({
-          where: {
-            id: isUserAssignee.projectId,
-          },
-        });
-        if (assigneeProject) {
-          await prisma.workspace.update({
-            where: { id: workspaces.id },
-            data: {
-              projects: {
-                connect: { id: assigneeProject.id },
-              },
-            },
-          });
-        }
-        
+        // const assigneeProject = await prisma.project.findUnique({
+        //   where: {
+        //     id: isUserAssignee.projectId,
+        //   },
+        // });
         await prisma.projectAssignee.update({
           where: { email },
           data: {
