@@ -3,9 +3,9 @@ import prisma from "../db";
 
 export const getProjectAssigneeByEmail = async (
   email: string
-): Promise<ProjectAssignee | null> => {
+): Promise<ProjectAssignee[] | null> => {
   try {
-    const isUserAssignee = await prisma.projectAssignee.findUnique({
+    const isUserAssignee = await prisma.projectAssignee.findMany({
       where: { email },
     });
 
