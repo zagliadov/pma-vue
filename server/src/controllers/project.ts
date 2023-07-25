@@ -5,7 +5,7 @@ import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 
 export const getProjects = async (req: any, res: Response) => {
-  const { email, id } = req.userData;
+  const { email } = req.userData;
   const { workspaceId } = req.body;
 
   try {
@@ -18,20 +18,7 @@ export const getProjects = async (req: any, res: Response) => {
         workspaceId: workspaceId,
       },
     });
-    const projectAssignees = await prisma.projectAssignee.findMany({
-      where: {
-        userId: id,
-      },
-      include: {
-        project: {
-          include: {
-            workspace: true,
-            tasks: true,
-          },
-        },
-      },
-    });
-    return res.status(200).json({ projects, projectAssignees });
+    return res.status(200).json({ projects });
   } catch (error) {
     handleError(error, res);
   }

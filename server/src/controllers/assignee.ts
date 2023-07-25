@@ -17,7 +17,9 @@ export const getAssigneeProjects = async (req: any, res: Response) => {
         assigneeProjects.push(await getProjectById(projectId));
       }
     }
-    res.status(200).json({ assigneeProjects });
+    if (assigneeProjects.length > 0) {
+      res.status(200).json({ assigneeProjects });
+    }
   } catch (error) {
     handleError(error, res);
   }

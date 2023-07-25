@@ -7,7 +7,6 @@ import { IProject, IAddNewProjectData } from "../interfaces";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
-  const assigneeProjects = ref<any>([]);
 
   const getProjects = async (workspaceId: number) => {
     const token = localStorage.getItem("token");
@@ -22,7 +21,6 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      assigneeProjects.value = response?.data?.projectAssignees;
       console.log(response.data);
       projects.value = response?.data?.projects;
     } catch (error) {
@@ -51,7 +49,6 @@ export const useProjectStore = defineStore("project", () => {
 
   return {
     projects,
-    assigneeProjects,
     getProjects,
     addNewProject,
   };
