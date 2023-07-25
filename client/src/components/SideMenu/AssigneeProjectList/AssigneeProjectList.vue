@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useAssigneeStore } from "@/store/modules/assignee";
+import { useAuthStore } from "@/store/modules/auth";
+import { parseUsernameFromEmail } from "@/helpers/helpers";
 
 const assigneeStore = useAssigneeStore();
+const authStore = useAuthStore();
 const { getAssigneeProjects } = useAssigneeStore();
-
+const { assigneeProjects } = storeToRefs(assigneeStore);
+const { existingUser } = storeToRefs(authStore);
+const { email } = existingUser.value;
 const isAssigneeOpen = ref<boolean>(false);
+
 const handleAssigneeOpen = async () => {
-  isAssigneeOpen.value = !isAssigneeOpen.value;
   await getAssigneeProjects();
+  isAssigneeOpen.value = !isAssigneeOpen.value;
+  
 };
 </script>
 
@@ -28,6 +36,19 @@ const handleAssigneeOpen = async () => {
         >
           <IconChevron />
         </button>
+      </div>
+    </div>
+    <div v-if="isAssigneeOpen">
+      <div v-for="{ id, name, workspaceId } in assigneeProjects" :key="id" class="pt-4">
+        <RouterLink
+          :to="`/${parseUsernameFromEmail(
+            email
+          )}/workspace/${workspaceId}/project/${id}`"
+          @click="handleCloseSideMenu"
+          class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
+        >
+          <span>{{ name }}</span>
+        </RouterLink>
       </div>
     </div>
   </div>

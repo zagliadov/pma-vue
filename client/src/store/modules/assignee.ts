@@ -3,7 +3,6 @@ import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
 
-
 export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<any>([]);
 
@@ -13,14 +12,14 @@ export const useAssigneeStore = defineStore("assignee", () => {
     try {
       const response = await axios.post(
         `${API_URL}/assignee/get_assignee_projects`,
-        { },
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log(response, "getAssigneeProjects");
+      assigneeProjects.value = response?.data?.assigneeProjects;
     } catch (error) {
       console.log(error);
     }
@@ -28,6 +27,6 @@ export const useAssigneeStore = defineStore("assignee", () => {
 
   return {
     assigneeProjects,
-    getAssigneeProjects
+    getAssigneeProjects,
   };
 });
