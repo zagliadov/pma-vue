@@ -37,9 +37,10 @@ model Project {
 model ProjectAssignee {
   id              Int     @id @default(autoincrement())
   userId          Int?
-  email           String     @unique
+  email           String
   project         Project @relation(fields: [projectId], references: [id])
   projectId       Int
+  projectCreator  Boolean
   isEmailConfirmed Boolean
 }
 

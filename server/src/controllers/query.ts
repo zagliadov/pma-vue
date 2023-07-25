@@ -15,7 +15,9 @@ export const getProjectAssigneeByEmail = async (
   }
 };
 
-export const getProjectById = async (projectId: number | null): Promise<Project | null> => {
+export const getProjectById = async (
+  projectId: number | null
+): Promise<Project | null> => {
   try {
     if (projectId) {
       const assigneeProject = await prisma.project.findUnique({
@@ -28,6 +30,27 @@ export const getProjectById = async (projectId: number | null): Promise<Project 
     } else {
       return null;
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProjectsAndWorkspaceIdsByEmail = async (
+  email: string
+): Promise<ProjectAssignee[]> => {
+  try {
+    const assigneeProjects = await prisma.projectAssignee.findMany({
+      where: { email },
+      include: {
+        project: {
+          include: {
+            workspace: true,
+          },
+        },
+      },
+    });
+
+    return assigneeProjects;
   } catch (error) {
     throw error;
   }

@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Prisma } from ".prisma/client";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
+import { getProjectAssigneeByEmail } from "./query";
 
 interface IUserCreate {
   username: string;
@@ -61,9 +61,7 @@ export const createAccount = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-    const isUserAssignee = await prisma.projectAssignee.findUnique({
-      where: { email },
-    });
+    const isUserAssignee = await getProjectAssigneeByEmail(email);
     const { userId: id } = await createUser({
       username,
       email,

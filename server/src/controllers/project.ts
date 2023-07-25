@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Prisma } from ".prisma/client";
 import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
@@ -59,6 +58,7 @@ export const addNewProject = async (req: any, res: Response) => {
       userId: number;
       email: string;
       projectId: number;
+      projectCreator: boolean;
       isEmailConfirmed: boolean;
     }
     const projectAssignees: IProjectAssignees[] = [];
@@ -71,6 +71,7 @@ export const addNewProject = async (req: any, res: Response) => {
         userId: memberUser ? memberUser.id : 0,
         email: memberUser ? memberUser.email : member,
         projectId: projectId,
+        projectCreator: false,
         isEmailConfirmed: memberUser ? true : false,
       });
     }
@@ -80,6 +81,7 @@ export const addNewProject = async (req: any, res: Response) => {
           userId: assignee.userId,
           email: assignee.email,
           projectId: assignee.projectId,
+          projectCreator: assignee.projectCreator,
           isEmailConfirmed: assignee.isEmailConfirmed,
         },
       });
