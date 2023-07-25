@@ -4,6 +4,7 @@ import { useDiffStore } from "@/store/modules/difference";
 import { useWorkspaceStore } from "@/store/modules/workspace";
 import { storeToRefs } from "pinia";
 import WorkspaceList from "./WorkspaceList/WorkspaceList.vue";
+import AssigneeProjectList from "./AssigneeProjectList/AssigneeProjectList.vue";
 const diff = useDiffStore();
 const space = useWorkspaceStore();
 const { createWorkspace, getWorkspaces } = space;
@@ -110,6 +111,8 @@ const handleCreateNewSpace = async () => {
         </div>
         <WorkspaceList v-if="isSpaceOpen" />
       </div>
+
+      <AssigneeProjectList />
     </div>
   </div>
 </template>

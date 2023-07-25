@@ -1,17 +1,24 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { Request, Response } from "express";
-import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail, getProjectById } from "./query";
 
 export const getAssigneeProjects = async (req: any, res: Response) => {
-  const { email, id } = req.userData;
-  const isUserAssignee = await getProjectAssigneeByEmail(email);
-  if (!isUserAssignee) return;
-  const { projectId } = isUserAssignee;
-  const assigneeProject = await getProjectById(projectId);
-
-
-  console.log(assigneeProject, "===============>isUserAssignee");
-}
+  const { email } = req.userData;
+  try {
+    // In the ProjectAssignee table, we are looking for a mention of email, we check whether we are the assignees of the project.
+    const isUserAssignee = await getProjectAssigneeByEmail(email);
+    if (!isUserAssignee) return;
+    const assigneeProjects = [];
+    for (const { projectId, projectCreator } of isUserAssignee) {
+      // If the user has created a project, then we do not need a separate request to receive the project.
+      if (!projectCreator) {
+        assigneeProjects.push(await getProjectById(projectId));
+      }
+    }
+    res.status(200).json({ assigneeProjects });
+  } catch (error) {
+    handleError(error, res);
+  }
+};
