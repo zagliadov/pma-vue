@@ -61,10 +61,7 @@ export const createAccount = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-    // const isUserAssignee = await getProjectAssigneeByEmail(email);
-    const isUserAssignee = await prisma.projectAssignee.findMany({
-      where: { email },
-    });
+    const isUserAssignee = await getProjectAssigneeByEmail(email);
     const { userId: id } = await createUser({
       username,
       email,
@@ -79,7 +76,6 @@ export const createAccount = async (req: Request, res: Response) => {
     });
     if (id && workspace) {
       if (isUserAssignee && isUserAssignee.length > 0) {
-        console.log(isUserAssignee, "=============>isUserAssignee");
         await prisma.projectAssignee.updateMany({
           where: { email },
           data: {

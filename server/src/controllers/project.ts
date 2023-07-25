@@ -38,7 +38,7 @@ export const getProjects = async (req: any, res: Response) => {
 };
 
 export const addNewProject = async (req: any, res: Response) => {
-  const { email } = req.userData;
+  const { email, id } = req.userData;
   const { workspaceId, projectName, projectMembers, projectDescription } =
     req.body;
   try {
@@ -62,30 +62,39 @@ export const addNewProject = async (req: any, res: Response) => {
       isEmailConfirmed: boolean;
     }
     const projectAssignees: IProjectAssignees[] = [];
-    console.log(email)
-    // for (const member of projectMembers) {
-    //   const memberUser = await prisma.user.findUnique({
-    //     where: { email: member },
-    //   });
-    //   projectAssignees.push({
-    //     userId: memberUser ? memberUser.id : 0,
-    //     email: memberUser ? memberUser.email : member,
-    //     projectId: projectId,
-    //     projectCreator: false,
-    //     isEmailConfirmed: memberUser ? true : false,
-    //   });
-    // }
-    // for (const assignee of projectAssignees) {
-    //   await prisma.projectAssignee.create({
-    //     data: {
-    //       userId: assignee.userId,
-    //       email: assignee.email,
-    //       projectId: assignee.projectId,
-    //       projectCreator: assignee.projectCreator,
-    //       isEmailConfirmed: assignee.isEmailConfirmed,
-    //     },
-    //   });
-    // }
+    projectAssignees.push({
+      userId: id,
+      email: email,
+      projectId: projectId,
+      projectCreator: true,
+      isEmailConfirmed: true,
+    });
+    for (const member of projectMembers) {
+      // If the project creator has specified his email address, then ignore this email
+      if (member !== email) {
+        const memberUser = await prisma.user.findUnique({
+          where: { email: member },
+        });
+        projectAssignees.push({
+          userId: memberUser ? memberUser.id : 0,
+          email: memberUser ? memberUser.email : member,
+          projectId: projectId,
+          projectCreator: false,
+          isEmailConfirmed: memberUser ? true : false,
+        });
+      }
+    }
+    for (const assignee of projectAssignees) {
+      await prisma.projectAssignee.create({
+        data: {
+          userId: assignee.userId,
+          email: assignee.email,
+          projectId: assignee.projectId,
+          projectCreator: assignee.projectCreator,
+          isEmailConfirmed: assignee.isEmailConfirmed,
+        },
+      });
+    }
 
     const projects = await prisma.project.findMany({
       where: {
