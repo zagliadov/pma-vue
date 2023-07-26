@@ -31,31 +31,43 @@ const handleCloseSideMenu = () => {
 
 <template>
   <div class="pt-4">
-    <div
-      v-for="{ name, id } in workspaces"
-      :key="id"
-      class="flex items-center justify-between pt-2"
-    >
-      <div class="flex items-center">
-        <button
-          class="flex items-center"
-          :class="{ 'rotate-180': selectWorkspaceId === id }"
-          @click="handleOpenProject(id)"
-        >
-          <IconChevron />
-        </button>
-        <span class="pl-2">{{ name }}</span>
+    <div v-for="{ name, id } in workspaces" :key="id" class="flex flex-col">
+      <div class="flex items-center justify-between pt-2">
+        <div class="flex items-center">
+          <button
+            class="flex items-center"
+            :class="{ 'rotate-180': selectWorkspaceId === id }"
+            @click="handleOpenProject(id)"
+          >
+            <IconChevron />
+          </button>
+          <span class="pl-2">{{ name }}</span>
+        </div>
+        <div class="flex items-center pr-3">
+          <RouterLink
+            :to="`/${parseUsernameFromEmail(
+              email
+            )}/workspace/${id}/create_project`"
+            @click="handleCloseSideMenu"
+            class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
+          >
+            <IconPlus class="stroke-neutral" />
+          </RouterLink>
+        </div>
       </div>
-      <div class="flex items-center pr-3">
-        <RouterLink
-          :to="`/${parseUsernameFromEmail(
-            email
-          )}/workspace/${id}/create_project`"
-          @click="handleCloseSideMenu"
-          class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
-        >
-          <IconPlus class="stroke-neutral" />
-        </RouterLink>
+
+      <div v-if="selectWorkspaceId === id" class="pt-1 pl-7">
+        <div v-for="{ name, id } in projects" :key="id" class="pt-2">
+          <RouterLink
+            :to="`/${parseUsernameFromEmail(
+              email
+            )}/workspace/${selectWorkspaceId}/project/${id}`"
+            @click="handleCloseSideMenu"
+            class="text-gray-600 pl-2 hover:text-primary"
+          >
+            <span class="text-base">{{ name }}</span>
+          </RouterLink>
+        </div>
       </div>
     </div>
   </div>

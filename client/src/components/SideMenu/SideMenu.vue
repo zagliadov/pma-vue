@@ -58,7 +58,7 @@ const handleCreateNewSpace = async () => {
         <div class="flex justify-between items-center">
           <div class="flex items-center">
             <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
-            <span class="pl-1">Your spaces</span>
+            <span class="pl-1 text-lg">Your spaces</span>
           </div>
 
           <div class="pr-3">

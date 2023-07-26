@@ -25,7 +25,7 @@ const handleAssigneeOpen = async () => {
     <div class="flex justify-between items-center">
       <div class="flex items-center">
         <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
-        <span class="pl-1">Project assignee</span>
+        <span class="pl-1 text-lg">Project assignee</span>
       </div>
 
       <div class="pr-3">
@@ -39,15 +39,15 @@ const handleAssigneeOpen = async () => {
       </div>
     </div>
     <div v-if="isAssigneeOpen">
-      <div v-for="{ id, name, workspaceId } in assigneeProjects" :key="id" class="pt-4">
+      <div v-for="{ id, name, workspaceId } in assigneeProjects" :key="id" class="pt-4 pl-4">
         <RouterLink
           :to="`/${parseUsernameFromEmail(
             email
           )}/workspace/${workspaceId}/project/${id}`"
           @click="handleCloseSideMenu"
-          class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
+          class="text-gray-600 pl-2 hover:text-primary"
         >
-          <span>{{ name }}</span>
+          <span class="text-base">{{ name }}</span>
         </RouterLink>
       </div>
     </div>
