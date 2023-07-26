@@ -20,8 +20,9 @@ const { setIsSideMenuOpen } = differenceStore;
 const selectWorkspaceId = ref<number>(0);
 
 const handleOpenProject = async (workspaceId: number) => {
-  selectWorkspaceId.value = workspaceId;
-  await getProjects(workspaceId);
+  await getProjects(workspaceId).then(() => {
+    selectWorkspaceId.value = workspaceId;
+  })
 };
 
 const handleCloseSideMenu = () => {

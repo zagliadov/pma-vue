@@ -24,6 +24,30 @@ export const getProjects = async (req: any, res: Response) => {
   }
 };
 
+export const getProject = async (req: any, res: Response) => {
+  const { email } = req.userData;
+  const { projectId } = req.body;
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (!existingUser) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+      },
+      include: {
+        tasks: true,
+        projectAssignees: true,
+      },
+    });
+    return res.status(200).json({ project });
+  } catch (error) {
+    handleError(error, res);
+  }
+};
+
 export const addNewProject = async (req: any, res: Response) => {
   const { email, id } = req.userData;
   const { workspaceId, projectName, projectMembers, projectDescription } =

@@ -4,9 +4,9 @@ import axios from "axios";
 import { API_URL } from "../../helpers/constants";
 import { IProject, IAddNewProjectData } from "../interfaces";
 
-
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
+  const project = ref<IProject>();
 
   const getProjects = async (workspaceId: number) => {
     const token = localStorage.getItem("token");
@@ -21,8 +21,27 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      console.log(response.data);
       projects.value = response?.data?.projects;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getProject = async (projectId: number): Promise<void> => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await axios.post(
+        `${API_URL}/project/get_project`,
+        { projectId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response?.data?.project);
+      project.value = response?.data?.project;
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +68,9 @@ export const useProjectStore = defineStore("project", () => {
 
   return {
     projects,
+    project,
     getProjects,
+    getProject,
     addNewProject,
   };
 });
