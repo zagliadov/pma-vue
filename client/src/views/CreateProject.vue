@@ -45,10 +45,14 @@ const handleCreateProject = async () => {
 const handleAddMembers = (event: any) => {
   if (event.key === "Enter" && member.value !== "") {
     if (!validateEmail(member.value)) return;
-    projectMembers.value.push(member.value.trim());
+    const trimmedEmail = member.value.trim();
+    if (!projectMembers.value.includes(trimmedEmail)) {
+      projectMembers.value.push(trimmedEmail);
+    }
     member.value = "";
   }
 };
+
 
 const handleRemoveMember = (member: string) => {
   const updateMembers = projectMembers.value.filter(

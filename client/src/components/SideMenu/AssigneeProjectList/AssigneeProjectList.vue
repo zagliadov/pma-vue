@@ -16,8 +16,11 @@ const isAssigneeOpen = ref<boolean>(false);
 const handleAssigneeOpen = async () => {
   await getAssigneeProjects();
   isAssigneeOpen.value = !isAssigneeOpen.value;
-  
 };
+
+const handleCloseSideMenu = () => {
+
+}
 </script>
 
 <template>
