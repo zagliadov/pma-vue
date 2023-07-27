@@ -3,7 +3,7 @@ import { useProjectStore } from "../store/modules/project";
 import { useDiffStore } from "@/store/modules/difference";
 import {
   validateEmail,
-  getWorkspaceIdFromCurrentURL,
+  getWorkspaceIdFromCurrentPath,
 } from "../helpers/helpers";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -29,7 +29,7 @@ const handleCreateProject = async () => {
     projectMembers.value.length !== 0 &&
     projectDescription.value !== ""
   ) {
-    const workspaceId = getWorkspaceIdFromCurrentURL(router);
+    const workspaceId = getWorkspaceIdFromCurrentPath(router);
     if (!workspaceId) return;
     const data = {
       workspaceId,

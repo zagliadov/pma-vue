@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import {
   parseUsernameFromEmail,
-  getWorkspaceIdFromCurrentURL,
+  getWorkspaceIdFromCurrentPath,
 } from "@/helpers/helpers";
 
 const differenceStore = useDiffStore();
@@ -38,7 +38,7 @@ const { isSideMenuOpen } = storeToRefs(differenceStore);
           <RouterLink
             :to="`/${parseUsernameFromEmail(
               email
-            )}/workspace/${getWorkspaceIdFromCurrentURL(
+            )}/workspace/${getWorkspaceIdFromCurrentPath(
               router
             )}/create_project`"
           >

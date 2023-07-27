@@ -2,18 +2,20 @@ import axios from "axios";
 import { API_URL } from "./constants";
 import { type Router } from "vue-router";
 
-const extractNumberFromURL = (url: string): number => {
-  const segments: string[] = url.split("/");
-  const number: number = Number(segments[3]);
-  return number;
-}
+export const getProjectIdFromCurrentPath = (router: Router): number => {
+  const projectId = Number(router?.currentRoute?.value?.params?.project_id);
+  return projectId;
+};
 
-export const getWorkspaceIdFromCurrentURL = (router: Router): number => {
-  const url = router.currentRoute.value.fullPath;
-  const number = extractNumberFromURL(url);
-  return number;
-}
+export const getWorkspaceIdFromCurrentPath = (router: Router): number => {
+  const workspaceId = Number(router?.currentRoute?.value?.params?.workspace_id);
+  return workspaceId;
+};
 
+export const getEmailFromCurrentPath = (router: Router): string => {
+  const email = String(router?.currentRoute?.value?.params?.email);
+  return email;
+};
 
 export const parseUsernameFromEmail = (email: string): string | null => {
   const regex = /^(.*?)@/;
@@ -41,7 +43,7 @@ export const checkAuthentication = async () => {
         },
       }
     );
-      if (response.status === 200) return true;
+    if (response.status === 200) return true;
   }
   return false;
 };

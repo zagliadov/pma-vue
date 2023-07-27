@@ -10,6 +10,7 @@ const CreateAccountView = () => import("../views/CreateAccountView.vue");
 const NoProjects = () => import("../views/NoProjects.vue");
 const CreateProject = () => import("../views/CreateProject.vue");
 const ProjectTable = () => import("../views/ProjectTable.vue");
+const TimelineTable = () => import("../views/TimelineTable.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,11 +70,23 @@ const router = createRouter({
         return isValid;
       },
     },
+    {
+      path: "/:email/workspace/:workspace_id/project/:project_id/timeline",
+      name: "project_timeline_view",
+      component: TimelineTable,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
   ],
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.name === "project_view") {
+  if (to.name === "project_view" || to.name === "project_timeline_view") {
     // Assuming you have a function getProject that fetches project data based on projectId
     const projectId: number = Number(to.params.project_id);
     try {
