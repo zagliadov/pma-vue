@@ -2,11 +2,14 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAssigneeStore } from "@/store/modules/assignee";
+import { useDiffStore } from "@/store/modules/difference";
 import { useAuthStore } from "@/store/modules/auth";
 import { parseUsernameFromEmail } from "@/helpers/helpers";
 
 const assigneeStore = useAssigneeStore();
 const authStore = useAuthStore();
+const differenceStore = useDiffStore();
+const { setIsSideMenuOpen } = differenceStore;
 const { getAssigneeProjects } = useAssigneeStore();
 const { assigneeProjects } = storeToRefs(assigneeStore);
 const { existingUser } = storeToRefs(authStore);
@@ -19,8 +22,8 @@ const handleAssigneeOpen = async () => {
 };
 
 const handleCloseSideMenu = () => {
-
-}
+  setIsSideMenuOpen();
+};
 </script>
 
 <template>
