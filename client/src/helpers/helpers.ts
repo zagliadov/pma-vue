@@ -45,14 +45,12 @@ export const getRouteParams = (
 
 export const createMainTableRoute = (router: Router): string => {
   const { email, workspaceId, projectId } = getRouteParams(router);
-
   const mainTableRoute = `/${email}/workspace/${workspaceId}/project/${projectId}`;
   return mainTableRoute;
 };
 
 export const createTimelineTableRoute = (router: Router): string => {
   const { email, workspaceId, projectId } = getRouteParams(router);
-
   const timelineTableRoute = `/${email}/workspace/${workspaceId}/project/${projectId}/timeline`;
   return timelineTableRoute;
 };
@@ -60,21 +58,4 @@ export const createTimelineTableRoute = (router: Router): string => {
 export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return emailRegex.test(email);
-};
-
-export const checkAuthentication = async () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    const response = await axios.post(
-      `${API_URL}/auth/verify_token`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (response.status === 200) return true;
-  }
-  return false;
 };
