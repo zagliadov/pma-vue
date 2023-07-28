@@ -8,6 +8,9 @@ import {
   getEmailFromCurrentPath,
   getWorkspaceIdFromCurrentPath,
   getProjectIdFromCurrentPath,
+  isCreateProjectRoute,
+  createMainTableRoute,
+  createTimelineTableRoute,
 } from "@/helpers/helpers";
 
 const diffStore = useDiffStore();
@@ -16,16 +19,6 @@ const { project } = storeToRefs(projectStore);
 const { setIsSideMenuOpen } = diffStore;
 const { isSideMenuOpen } = storeToRefs(diffStore);
 const router = useRouter();
-const mainTableRoute = `/${getEmailFromCurrentPath(
-  router
-)}/workspace/${getWorkspaceIdFromCurrentPath(
-  router
-)}/project/${getProjectIdFromCurrentPath(router)}`;
-const timelineTableRoute = `/${getEmailFromCurrentPath(
-  router
-)}/workspace/${getWorkspaceIdFromCurrentPath(
-  router
-)}/project/${getProjectIdFromCurrentPath(router)}/timeline`;
 
 const handleSideMenuOpen = async () => {
   setIsSideMenuOpen();
@@ -42,15 +35,21 @@ const handleSideMenuOpen = async () => {
         </button>
       </div>
 
-      <div class="flex items-center">
-        <span class="font-medium text-lg pr-4">{{ project.name }}</span>
+      <div class="flex items-center" v-if="!isCreateProjectRoute(router)">
+        <span class="font-medium text-lg pr-4">{{ project?.name }}</span>
         <div class="border-r border-base-300 h-4 w-1"></div>
-        <RouterLink :to="mainTableRoute" class="flex items-center px-4">
+        <RouterLink
+          :to="createMainTableRoute(router)"
+          class="flex items-center px-4"
+        >
           <IconMainTableColumns />
           <span class="text-neutral pl-1">Main Table</span>
         </RouterLink>
         <div class="border-r border-base-300 h-4 w-1"></div>
-        <RouterLink :to="timelineTableRoute" class="flex items-center pl-4">
+        <RouterLink
+          :to="createTimelineTableRoute(router)"
+          class="flex items-center pl-4"
+        >
           <IconTimeline />
           <span class="text-neutral pl-1">Timeline</span>
         </RouterLink>

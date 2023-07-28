@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { useAuthStore } from "../store/modules/auth";
 import { useProjectStore } from "../store/modules/project";
-import { checkAuthentication } from "../helpers/helpers";
 
 const LoginView = () => import("../views/LoginView.vue");
 const ForgotPasswordView = () => import("../views/ForgotPasswordView.vue");
