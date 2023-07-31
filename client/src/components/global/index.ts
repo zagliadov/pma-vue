@@ -10,6 +10,9 @@ import IconChevron from "../icons/IconChevron.vue";
 import IconPlus from "../icons/IconPlus.vue";
 import IconNoProject from "../icons/IconNoProject.vue";
 import IconMainTableColumns from "../icons/IconMainTableColumns.vue";
+import IconBell from "../icons/IconBell.vue";
+import IconSettings from "../icons/IconSettings.vue";
+import IconHelp from "../icons/IconHelp.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -28,6 +31,9 @@ const components = [
   { name: "IconPlus", component: IconPlus },
   { name: "IconNoProject", component: IconNoProject },
   { name: "IconMainTableColumns", component: IconMainTableColumns },
+  { name: "IconSettings", component: IconSettings },
+  { name: "IconBell", component: IconBell },
+  { name: "IconHelp", component: IconHelp },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },

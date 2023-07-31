@@ -59,3 +59,10 @@ export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return emailRegex.test(email);
 };
+
+export const capitalizeFirstLetter = (name: string): string => {
+  if (name.length === 0) {
+    return name;
+  }
+  return name.charAt(0).toLocaleUpperCase();
+};

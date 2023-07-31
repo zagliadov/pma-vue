@@ -4,7 +4,10 @@ import { useDiffStore } from "@/store/modules/difference";
 import { useProjectStore } from "@/store/modules/project";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
-import { parseUsernameFromEmail } from "../../../helpers/helpers";
+import {
+  parseUsernameFromEmail,
+  capitalizeFirstLetter,
+} from "../../../helpers/helpers";
 import { ref } from "vue";
 
 const workspaceStore = useWorkspaceStore();
@@ -22,7 +25,7 @@ const selectWorkspaceId = ref<number>(0);
 const handleOpenProject = async (workspaceId: number) => {
   await getProjects(workspaceId).then(() => {
     selectWorkspaceId.value = workspaceId;
-  })
+  });
 };
 
 const handleCloseSideMenu = () => {
@@ -64,9 +67,14 @@ const handleCloseSideMenu = () => {
               email
             )}/workspace/${selectWorkspaceId}/project/${id}`"
             @click="handleCloseSideMenu"
-            class="text-gray-600 pl-2 hover:text-primary"
+            class="flex items-center text-gray-600 pl-2 hover:text-primary"
           >
-            <span class="text-base">{{ name }}</span>
+            <div
+              class="flex items-center justify-center rounded bg-gray-300 w-8 h-8"
+            >
+              <span>{{ capitalizeFirstLetter(name) }}</span>
+            </div>
+            <span class="text-base pl-2">{{ name }}</span>
           </RouterLink>
         </div>
       </div>

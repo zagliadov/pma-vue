@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useAssigneeStore } from "@/store/modules/assignee";
 import { useDiffStore } from "@/store/modules/difference";
 import { useAuthStore } from "@/store/modules/auth";
-import { parseUsernameFromEmail } from "@/helpers/helpers";
+import { parseUsernameFromEmail, capitalizeFirstLetter } from "@/helpers/helpers";
 
 const assigneeStore = useAssigneeStore();
 const authStore = useAuthStore();
@@ -45,15 +45,24 @@ const handleCloseSideMenu = () => {
       </div>
     </div>
     <div v-if="isAssigneeOpen">
-      <div v-for="{ id, name, workspaceId } in assigneeProjects" :key="id" class="pt-4 pl-4">
+      <div
+        v-for="{ id, name, workspaceId } in assigneeProjects"
+        :key="id"
+        class="pt-4 pl-4"
+      >
         <RouterLink
           :to="`/${parseUsernameFromEmail(
             email
           )}/workspace/${workspaceId}/project/${id}`"
           @click="handleCloseSideMenu"
-          class="text-gray-600 pl-2 hover:text-primary"
+          class="flex items-center text-gray-600 pl-2 hover:text-primary"
         >
-          <span class="text-base">{{ name }}</span>
+          <div
+            class="flex items-center justify-center rounded bg-gray-300 w-8 h-8"
+          >
+            <span>{{ capitalizeFirstLetter(name) }}</span>
+          </div>
+          <span class="text-base pl-2">{{ name }}</span>
         </RouterLink>
       </div>
     </div>

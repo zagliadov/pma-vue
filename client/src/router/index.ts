@@ -10,6 +10,7 @@ const NoProjects = () => import("../views/NoProjects.vue");
 const CreateProject = () => import("../views/CreateProject.vue");
 const ProjectTable = () => import("../views/ProjectTable.vue");
 const TimelineTable = () => import("../views/TimelineTable.vue");
+const MySettings = () => import("../views/MySettings.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,6 +74,18 @@ const router = createRouter({
       path: "/:email/workspace/:workspace_id/project/:project_id/timeline",
       name: "project_timeline_view",
       component: TimelineTable,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
+    {
+      path: "/my_settings/:email",
+      name: "my_settings_view",
+      component: MySettings,
       beforeEnter: async () => {
         const auth = useAuthStore();
         const { checkAuthentication } = auth;
