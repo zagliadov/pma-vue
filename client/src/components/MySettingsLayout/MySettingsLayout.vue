@@ -18,7 +18,7 @@ console.log(router?.currentRoute?.value?.name);
     <LayoutHeader />
   </header>
   <main class="flex p-4 h-auto">
-    <div class="flex flex-col w-4/12">
+    <div class="flex flex-col w-[250px] min-w-[200px] pr-4">
       <RouterLink
         class="flex items-center p-3 rounded"
         :to="`/my_settings/${getEmailFromCurrentPath(router)}`"
