@@ -13,9 +13,15 @@ import IconMainTableColumns from "../icons/IconMainTableColumns.vue";
 import IconBell from "../icons/IconBell.vue";
 import IconSettings from "../icons/IconSettings.vue";
 import IconHelp from "../icons/IconHelp.vue";
+import IconMySettingsUser from "../icons/IconMySettingsUser.vue";
+import IconMySettingsBell from "../icons/IconMySettingsBell.vue";
+import IconMySettingsProject from "../icons/IconMySettingsProject.vue";
+import IconMySettingsHelp from "../icons/IconMySettingsHelp.vue";
+import IconMySettingsLogOut from "../icons/IconMySettingsLogOut.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
+import MySettingsLayout from "../MySettingsLayout/MySettingsLayout.vue";
 import SideMenu from "../SideMenu/SideMenu.vue";
 
 const components = [
@@ -34,9 +40,15 @@ const components = [
   { name: "IconSettings", component: IconSettings },
   { name: "IconBell", component: IconBell },
   { name: "IconHelp", component: IconHelp },
+  { name: "IconMySettingsUser", component: IconMySettingsUser },
+  { name: "IconMySettingsBell", component: IconMySettingsBell },
+  { name: "IconMySettingsProject", component: IconMySettingsProject },
+  { name: "IconMySettingsHelp", component: IconMySettingsHelp },
+  { name: "IconMySettingsLogOut", component: IconMySettingsLogOut },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
+  { name: "MySettingsLayout", component: MySettingsLayout },
   { name: "SideMenu", component: SideMenu },
 ];
 export default {

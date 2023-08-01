@@ -11,6 +11,9 @@ const CreateProject = () => import("../views/CreateProject.vue");
 const ProjectTable = () => import("../views/ProjectTable.vue");
 const TimelineTable = () => import("../views/TimelineTable.vue");
 const MySettings = () => import("../views/MySettings.vue");
+const Notification = () => import("../views/Notification.vue");
+const Projects = () => import("../views/Projects.vue");
+const Information = () => import("../views/Information.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,8 +87,44 @@ const router = createRouter({
     },
     {
       path: "/my_settings/:email",
-      name: "my_settings_view",
+      name: "my_settings",
       component: MySettings,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
+    {
+      path: "/my_settings/:email/notification",
+      name: "notification",
+      component: Notification,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
+    {
+      path: "/my_settings/:email/projects",
+      name: "projects",
+      component: Projects,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
+    {
+      path: "/my_settings/:email/information",
+      name: "information",
+      component: Information,
       beforeEnter: async () => {
         const auth = useAuthStore();
         const { checkAuthentication } = auth;

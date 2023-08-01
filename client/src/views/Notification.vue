@@ -1,9 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+</script>
+
 
 <template>
   <MySettingsLayout>
     <div>
-      <span>my settings</span>
+      <span>Notification</span>
     </div>
   </MySettingsLayout>
 </template>

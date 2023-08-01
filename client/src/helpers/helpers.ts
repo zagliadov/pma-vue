@@ -24,6 +24,34 @@ export const isCreateProjectRoute = (router: Router): boolean => {
   return isProjectRoute;
 };
 
+export const isMySettingsRoute = (router: Router): boolean => {
+  const isMySettingsRoute = Boolean(
+    router?.currentRoute?.value?.name === "my_settings"
+  );
+  return isMySettingsRoute;
+};
+
+export const isNotificationRoute = (router: Router): boolean => {
+  const isNotificationRoute = Boolean(
+    router?.currentRoute?.value?.name === "notification"
+  );
+  return isNotificationRoute;
+};
+
+export const isProjectsRoute = (router: Router): boolean => {
+  const isProjectsRoute = Boolean(
+    router?.currentRoute?.value?.name === "projects"
+  );
+  return isProjectsRoute;
+};
+
+export const isInformationRoute = (router: Router): boolean => {
+  const isInformationRoute = Boolean(
+    router?.currentRoute?.value?.name === "information"
+  );
+  return isInformationRoute;
+};
+
 export const parseUsernameFromEmail = (email: string): string | null => {
   const regex = /^(.*?)@/;
   const result = email.match(regex);
