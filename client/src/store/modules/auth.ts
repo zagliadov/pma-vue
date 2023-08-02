@@ -37,6 +37,26 @@ export const useAuthStore = defineStore("auth", () => {
   const errorStatus: number = ref(0);
   const errorMessage: string = ref("");
 
+  const uploadPhoto = async (file: string | Blob) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const formData = new FormData();
+        formData.append("File", file);
+        const response = await axios.post(`${API_URL}/auth/upload_photo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, {
@@ -112,5 +132,6 @@ export const useAuthStore = defineStore("auth", () => {
     success,
     existingUser,
     checkAuthentication,
+    uploadPhoto,
   };
 });

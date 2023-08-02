@@ -5,10 +5,12 @@ import { ref } from "vue";
 import { capitalizeFirstLetter } from "@/helpers/helpers";
 
 const authStore = useAuthStore();
+const { uploadPhoto } = authStore;
 const { existingUser } = storeToRefs(authStore);
 const { name } = existingUser.value;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");
 const colorId = ref<number>(Number(localStorage.getItem("color_id")) || 0);
+const inputFile = ref(null);
 
 const handleChooseColor = (color: string, id: number) => {
   localStorage.setItem("color", color);
@@ -16,6 +18,13 @@ const handleChooseColor = (color: string, id: number) => {
   colorAvatar.value = color;
   colorId.value = id;
 };
+
+const handleUploadPhoto = (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      uploadPhoto(e.target.files[0]);
+    }
+    inputFile.value = null;
+  };
 </script>
 
 <template>
@@ -36,6 +45,8 @@ const handleChooseColor = (color: string, id: number) => {
           }}</span>
           <input
             type="file"
+            ref="inputFile"
+            @change="handleUploadPhoto"
             id="upload-photo"
             accept="/image/*, .jpeg, .png, .jpg"
             class="hidden"
