@@ -1,5 +1,3 @@
-import axios from "axios";
-import { API_URL } from "./constants";
 import { type Router } from "vue-router";
 
 export const getProjectIdFromCurrentPath = (router: Router): number => {
