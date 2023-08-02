@@ -17,6 +17,8 @@ app.use("/workspace", workspace);
 app.use("/project", project);
 app.use("/assignee", assignee);
 
+app.use('/controllers/uploads', express.static('./controllers/uploads'));
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

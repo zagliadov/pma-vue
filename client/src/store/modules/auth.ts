@@ -37,9 +37,9 @@ export const useAuthStore = defineStore("auth", () => {
   const errorStatus: number = ref(0);
   const errorMessage: string = ref("");
 
-  const uploadPhoto = async (file: string | Blob) => {
+  const uploadPhoto = async (file: any) => {
     const token = localStorage.getItem("token");
-    if (token) {
+    if (!token) return;
       try {
         const formData = new FormData();
         formData.append("File", file);
@@ -55,7 +55,6 @@ export const useAuthStore = defineStore("auth", () => {
       } catch (error) {
         console.log(error);
       }
-    }
   }
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
