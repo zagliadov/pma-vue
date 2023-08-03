@@ -32,10 +32,14 @@ interface IExistingUser {
   workspace: IWorkspace[];
 }
 export const useAuthStore = defineStore("auth", () => {
-  const success: boolean = ref(false);
-  const existingUser: IExistingUser = ref(null);
-  const errorStatus: number = ref(0);
-  const errorMessage: string = ref("");
+  const success = ref<boolean>(false);
+  const existingUser = ref<IExistingUser | null>(null);
+  const errorStatus = ref<number>(0);
+  const errorMessage = ref<string>("");
+
+  const updatedUser = (user: IExistingUser) => {
+    existingUser.value = user;
+  };
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
@@ -112,5 +116,6 @@ export const useAuthStore = defineStore("auth", () => {
     success,
     existingUser,
     checkAuthentication,
+    updatedUser,
   };
 });
