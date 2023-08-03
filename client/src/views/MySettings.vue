@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/store/modules/auth";
+import { useUserStore } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { capitalizeFirstLetter } from "@/helpers/helpers";
 
 const authStore = useAuthStore();
-const { uploadPhoto } = authStore;
+const userStore = useUserStore();
+const { uploadPhoto } = userStore;
 const { existingUser } = storeToRefs(authStore);
 const { name } = existingUser.value;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");

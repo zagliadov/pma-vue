@@ -41,18 +41,17 @@ export const useAuthStore = defineStore("auth", () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const formData = new FormData();
-      formData.append("File", file);
+      console.log("UPLOAD");
       const response = await axios.post(
-        `${API_URL}/auth/upload_photo`,
-        formData,
+        `${API_URL}/user/upload_photo`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      return console.log(response);
+      return response;
     } catch (error) {
       console.log(error);
     }

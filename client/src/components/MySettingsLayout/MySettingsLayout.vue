@@ -10,7 +10,6 @@ import {
 } from "@/helpers/helpers";
 
 const router = useRouter();
-console.log(router?.currentRoute?.value?.name);
 </script>
 
 <template>
