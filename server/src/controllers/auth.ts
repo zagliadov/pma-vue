@@ -188,16 +188,26 @@ export const uploadPhoto = async (req: any, res: Response) => {
   const { email, id } = req.userData;
   console.log(email, "asldkfjas;ldkfja;lsdk")
   try {
-    if (!req.files || !req.files.File) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
+    // if (!req.files || !req.files.File) {
+    //   return res.status(400).json({ message: "No file uploaded" });
+    // }
     const file = req.files.File;
     console.log(file, 'File=============>')
-    const newFileName = encodeURI(id + "-" + file.name);
-    await file.mv(`${__dirname}/uploads/${newFileName}`);
+    // const newFileName = encodeURI(id + "-" + file.name);
+    // await file.mv(`${__dirname}/uploads/${newFileName}`);
 
   } catch (error) {
     console.log(error);
     return res.status(500).send(error);
+  }
+};
+
+export const downloadPhoto = async (req: any, res: any) => {
+  try {
+    const imageName = req.params.image_name;
+    res.sendFile(`${__dirname}/uploads/${imageName}`);
+  } catch (error) {
+    console.log(error);
+    res.status(500).end();
   }
 };
