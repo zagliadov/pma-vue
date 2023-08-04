@@ -1,12 +1,10 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { ref } from "vue";
 import { API_URL } from "../../helpers/constants";
-import { useAuthStore } from "./auth";
-import { storeToRefs } from "pinia";
 
 export const useUserStore = defineStore("user", () => {
-  const authStore = useAuthStore();
-  const { existingUser } = storeToRefs(authStore);
+  const avatar_filename = ref<string | null>(null);
 
   const uploadPhoto = async (file: any) => {
     const token = localStorage.getItem("token");
@@ -23,13 +21,14 @@ export const useUserStore = defineStore("user", () => {
           },
         }
       );
-      return existingUser.value = response?.data?.existingUser;
+      avatar_filename.value = response?.data?.avatar_filename;
     } catch (error) {
       console.log(error);
     }
   };
 
   return {
+    avatar_filename,
     uploadPhoto,
   };
 });

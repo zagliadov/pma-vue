@@ -37,10 +37,6 @@ export const useAuthStore = defineStore("auth", () => {
   const errorStatus = ref<number>(0);
   const errorMessage = ref<string>("");
 
-  const updatedUser = (user: IExistingUser) => {
-    existingUser.value = user;
-  };
-
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, {
@@ -108,6 +104,28 @@ export const useAuthStore = defineStore("auth", () => {
     return false;
   };
 
+  const uploadPhoto = async (file: any) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const formData = new FormData();
+      formData.append("File", file);
+      const response = await axios.post(
+        `${API_URL}/user/upload_photo`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.existingUser);
+      existingUser.value = response?.data?.existingUser;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     logIn,
     errorStatus,
@@ -116,6 +134,6 @@ export const useAuthStore = defineStore("auth", () => {
     success,
     existingUser,
     checkAuthentication,
-    updatedUser,
+    uploadPhoto,
   };
 });

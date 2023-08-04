@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../../store/modules/user";
 import { useAuthStore } from "../../store/modules/auth";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
 
-const userStore = useUserStore();
+// const userStore = useUserStore();
 const authStore = useAuthStore();
-const { updatedUser } = authStore;
 const { existingUser } = storeToRefs(authStore);
+const { uploadPhoto } = authStore;
+// const { avatar_filename } = storeToRefs(userStore);
 const { name, avatar_filename } = existingUser.value;
-const { uploadPhoto } = userStore;
-
+// const { uploadPhoto } = userStore;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");
 const colorId = ref<number>(Number(localStorage.getItem("color_id")) || 0);
 const inputFile = ref(null);
@@ -22,7 +22,6 @@ const handleChooseColor = (color: string, id: number) => {
   colorAvatar.value = color;
   colorId.value = id;
 };
-console.log(avatar_filename, "a;sldkfj");
 
 const handleUploadPhoto = async (e: any) => {
   if (!e.target.files && !e.target.files.length > 0) return;
@@ -30,14 +29,14 @@ const handleUploadPhoto = async (e: any) => {
   inputFile.value = null;
 };
 
-const getAvatar = () => {
-  if (avatar_filename === null) {
+const getAvatar =  () => {
+  if (existingUser.value?.avatar_filename === null) {
     return { backgroundColor: colorAvatar };
   } else {
     return {
       backgroundPosition: "center",
       backgroundSize: "contain",
-      backgroundImage: `url("http://localhost:9002/user/user_avatar/${avatar_filename}")`,
+      backgroundImage: `url("http://localhost:9002/user/user_avatar/${existingUser.value?.avatar_filename}")`,
     };
   }
 };
