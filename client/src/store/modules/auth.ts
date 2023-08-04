@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
 import { API_URL } from "../../helpers/constants";
+import type { IExistingUser } from "../interfaces";
 
 interface ICreateAccountRequest {
   username: string;
@@ -9,28 +10,7 @@ interface ICreateAccountRequest {
   email: string;
   password: string;
 }
-interface IProject {
-  id: number;
-  name: string;
-  description: string;
-  workspaceId: number;
-  tasks: any;
-  projectAssignees: any;
-}
-interface IWorkspace {
-  id: number;
-  name: string;
-  authorId: number;
-  projects: IProject[];
-}
-interface IExistingUser {
-  avatar_filename: string | null;
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  workspace: IWorkspace[];
-}
+
 export const useAuthStore = defineStore("auth", () => {
   const success = ref<boolean>(false);
   const existingUser = ref<IExistingUser | null>(null);

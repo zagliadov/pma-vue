@@ -1,4 +1,4 @@
-import { Project, ProjectAssignee } from "@prisma/client";
+import { User, Project, ProjectAssignee } from "@prisma/client";
 import prisma from "../db";
 
 export const getProjectAssigneeByEmail = async (
@@ -55,3 +55,27 @@ export const getProjectsAndWorkspaceIdsByEmail = async (
     throw error;
   }
 };
+
+export const getUserWithWorkspacesAndProjects = async (email: string): Promise<User | null> => {
+  try {
+    const userWithWorkspacesAndProjects = await prisma.user.findUnique({
+      where: { email },
+      include: {
+        workspace: {
+          include: {
+            projects: true,
+          },
+        },
+      },
+    });
+
+    return userWithWorkspacesAndProjects;
+  } catch (error) {
+    console.error('Ошибка при получении данных пользователя:', error);
+    return null;
+  }
+};
+
+
+
+

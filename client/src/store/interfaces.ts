@@ -12,6 +12,20 @@ export interface IWorkspace {
   projects: IProject[];
 }
 
+export interface IProjectAssignees {
+  id: number;
+  userId: number;
+  email: string;
+  project: IProject[];
+  projectId: number;
+  projectCreator: boolean;
+  isEmailConfirmed: boolean;
+}
+
+export interface ITasks {
+  
+}
+
 export interface IProject {
   id: number;
   name: string;
@@ -19,5 +33,14 @@ export interface IProject {
   workspace: IWorkspace[];
   workspaceId: number;
   tasks: any;
-  projectAssignees: any;
+  projectAssignees: IProjectAssignees[];
+}
+
+export interface IExistingUser {
+  avatar_filename: string | null;
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  workspace: IWorkspace[];
 }

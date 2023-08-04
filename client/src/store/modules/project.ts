@@ -8,11 +8,11 @@ export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
   const project = ref<IProject>();
 
-  const getProjects = async (workspaceId: number) => {
+  const getProjects = async (workspaceId: number): Promise<void> => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
+      const response = await axios.post<{ projects: IProject[] }>(
         `${API_URL}/project/get_projects`,
         { workspaceId },
         {
@@ -21,7 +21,11 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      projects.value = response?.data?.projects;
+      if (response.status === 200) {
+        projects.value = response.data.projects;
+      } else {
+        console.log("Failed to get projects");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -31,7 +35,7 @@ export const useProjectStore = defineStore("project", () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
+      const response = await axios.post<{ project: IProject }>(
         `${API_URL}/project/get_project`,
         { projectId },
         {
@@ -40,8 +44,11 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      console.log(response?.data?.project);
-      project.value = response?.data?.project;
+      if (response.status === 200) {
+        project.value = response.data.project;
+      } else {
+        console.log("Failed to get project");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +58,7 @@ export const useProjectStore = defineStore("project", () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
+      const response = await axios.post<{ projects: IProject[] }>(
         `${API_URL}/project/add_new_project`,
         data,
         {
@@ -60,7 +67,11 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      projects.value = response?.data?.projects;
+      if (response.status === 200) {
+        projects.value = response.data.projects;
+      } else {
+        console.log("Failed to get projects");
+      }
     } catch (error) {
       console.log(error);
     }

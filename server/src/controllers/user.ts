@@ -3,6 +3,7 @@ dotenv.config();
 import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
+import { getUserWithWorkspacesAndProjects } from "./query";
 
 export const uploadPhoto = async (req: any, res: Response) => {
   const { email, id } = req.userData;
@@ -43,7 +44,28 @@ export const downloadPhoto = async (req: any, res: any) => {
     const imageName = req.params.image_name;
     res.sendFile(`${__dirname}/uploads/${imageName}`);
   } catch (error) {
-    console.log(error);
-    res.status(500).end();
+    handleError(error, res);
+  }
+};
+
+export const removeAvatarFilename = async (
+  req: any,
+  res: Response
+): Promise<void> => {
+  try {
+    const { email } = req.userData;
+    await prisma.user.update({
+      where: { email },
+      data: {
+        avatar_filename: null,
+      },
+    });
+    const existingUser = await getUserWithWorkspacesAndProjects(email);
+    if (!existingUser) {
+      res.status(400).json({ message: "User does not exist" });
+    }
+    res.status(200).json({ existingUser });
+  } catch (error) {
+    handleError(error, res);
   }
 };

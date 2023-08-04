@@ -8,7 +8,7 @@ import { capitalizeFirstLetter } from "../../helpers/helpers";
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const { existingUser } = storeToRefs(authStore);
-const { uploadPhoto } = userStore;
+const { uploadPhoto, removeAvatar } = userStore;
 const { name } = existingUser.value;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");
 const colorId = ref<number>(Number(localStorage.getItem("color_id")) || 0);
@@ -39,9 +39,9 @@ const getAvatar = () => {
   }
 };
 
-const handleRemoveAvatar = () => {
-
-}
+const handleRemoveAvatar = async () => {
+  await removeAvatar();
+};
 </script>
 
 <template>
