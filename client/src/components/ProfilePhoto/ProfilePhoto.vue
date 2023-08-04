@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useUserStore } from "../../store/modules/user";
 import { useAuthStore } from "../../store/modules/auth";
+import { useUserStore } from "../../store/modules/user";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
 
-// const userStore = useUserStore();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 const { existingUser } = storeToRefs(authStore);
-const { uploadPhoto } = authStore;
-// const { avatar_filename } = storeToRefs(userStore);
-const { name, avatar_filename } = existingUser.value;
-// const { uploadPhoto } = userStore;
+const { uploadPhoto } = userStore;
+const { name } = existingUser.value;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");
 const colorId = ref<number>(Number(localStorage.getItem("color_id")) || 0);
 const inputFile = ref(null);
@@ -24,14 +22,14 @@ const handleChooseColor = (color: string, id: number) => {
 };
 
 const handleUploadPhoto = async (e: any) => {
-  if (!e.target.files && !e.target.files.length > 0) return;
+  if (!e.target.files && e.target.files.length > 0) return;
   await uploadPhoto(e.target.files[0]);
   inputFile.value = null;
 };
 
-const getAvatar =  () => {
+const getAvatar = () => {
   if (existingUser.value?.avatar_filename === null) {
-    return { backgroundColor: colorAvatar };
+    return { backgroundColor: colorAvatar.value };
   } else {
     return {
       backgroundPosition: "center",
@@ -40,17 +38,24 @@ const getAvatar =  () => {
     };
   }
 };
+
+const handleRemoveAvatar = () => {
+
+}
 </script>
 
 <template>
-  <div class="flex pt-5">
+  <div class="flex pt-5 relative">
+    <button class="absolute top-0 left-0" @click="handleRemoveAvatar">
+      <span>&#10005;</span>
+    </button>
     <label
       :style="getAvatar()"
       htmlFor="upload-photo"
-      class="flex cursor-pointer items-center justify-center rounded-full bg-gray-400 w-14 h-14"
+      class="flex cursor-pointer items-center justify-center rounded-full w-14 h-14"
     >
       <span
-        v-if="avatar_filename === null"
+        v-if="existingUser?.avatar_filename === null"
         class="text-white font-medium text-2xl"
         >{{ capitalizeFirstLetter(name) }}</span
       >

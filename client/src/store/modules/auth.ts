@@ -104,28 +104,6 @@ export const useAuthStore = defineStore("auth", () => {
     return false;
   };
 
-  const uploadPhoto = async (file: any) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    try {
-      const formData = new FormData();
-      formData.append("File", file);
-      const response = await axios.post(
-        `${API_URL}/user/upload_photo`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data.existingUser);
-      existingUser.value = response?.data?.existingUser;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return {
     logIn,
     errorStatus,
@@ -134,6 +112,5 @@ export const useAuthStore = defineStore("auth", () => {
     success,
     existingUser,
     checkAuthentication,
-    uploadPhoto,
   };
 });
