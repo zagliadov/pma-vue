@@ -17,7 +17,7 @@ const router = useRouter();
     <LayoutHeader />
   </header>
   <main class="flex p-4 h-auto">
-    <div class="flex flex-col w-[250px] min-w-[200px] pr-4">
+    <div class="flex flex-col w-[300px] min-w-[200px] pr-4">
       <RouterLink
         class="flex items-center p-3 rounded"
         :to="`/my_settings/${getEmailFromCurrentPath(router)}`"
@@ -60,6 +60,8 @@ const router = useRouter();
         <span class="pl-2 text-error">Log out</span>
       </RouterLink>
     </div>
-    <slot />
+    <div class="w-full">
+      <slot />
+    </div>
   </main>
 </template>

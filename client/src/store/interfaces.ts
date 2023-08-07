@@ -22,10 +22,14 @@ export interface IProjectAssignees {
   isEmailConfirmed: boolean;
 }
 
-export interface ITasks {
-  
-}
+export interface ITasks {}
 
+export interface IPersonalInformation {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  phoneNumber: number;
+}
 export interface IProject {
   id: number;
   name: string;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useAuthStore } from "../../store/modules/auth";
-import { useUserStore } from "../../store/modules/user";
-import { capitalizeFirstLetter } from "../../helpers/helpers";
+import { useAuthStore } from "../../../store/modules/auth";
+import { useUserStore } from "../../../store/modules/user";
+import { capitalizeFirstLetter } from "../../../helpers/helpers";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -42,10 +42,12 @@ const getAvatar = () => {
 const handleRemoveAvatar = async () => {
   await removeAvatar();
 };
-
 </script>
 
 <template>
+  <div class="pt-6">
+    <span class="font-medium text-base">Profile photo</span>
+  </div>
   <div class="flex pt-5 relative">
     <button class="absolute top-0 left-0" @click="handleRemoveAvatar">
       <span>&#10005;</span>

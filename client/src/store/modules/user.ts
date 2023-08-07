@@ -4,11 +4,34 @@ import { ref } from "vue";
 import { useAuthStore } from "./auth";
 import { storeToRefs } from "pinia";
 import { API_URL } from "../../helpers/constants";
-import type { IExistingUser } from "../interfaces";
+import type { IExistingUser, IPersonalInformation } from "../interfaces";
 
 export const useUserStore = defineStore("user", () => {
   const authStore = useAuthStore();
   const { existingUser } = storeToRefs(authStore);
+  const firstName = ref<string>("");
+  const lastName = ref<string>("");
+  const userName = ref<string>("");
+  const phoneNumber = ref<number>(0);
+
+  const updatePersonalInformation = async (data: IPersonalInformation) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/update_personal_information`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   /**
    * Uploads a photo and updates the existing user's data.
@@ -74,7 +97,12 @@ export const useUserStore = defineStore("user", () => {
   };
 
   return {
+    firstName,
+    lastName,
+    userName,
+    phoneNumber,
     uploadPhoto,
     removeAvatar,
+    updatePersonalInformation,
   };
 });
