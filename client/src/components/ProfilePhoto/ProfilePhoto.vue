@@ -42,6 +42,7 @@ const getAvatar = () => {
 const handleRemoveAvatar = async () => {
   await removeAvatar();
 };
+
 </script>
 
 <template>
