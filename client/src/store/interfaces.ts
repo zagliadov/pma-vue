@@ -28,7 +28,7 @@ export interface IPersonalInformation {
   firstName: string;
   lastName: string;
   userName: string;
-  phoneNumber: number;
+  phoneNumber: number | null;
 }
 export interface IProject {
   id: number;

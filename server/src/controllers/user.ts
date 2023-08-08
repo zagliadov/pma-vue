@@ -69,3 +69,12 @@ export const removeAvatarFilename = async (
     handleError(error, res);
   }
 };
+
+export const updatePersonalInformation = async (req: any, res: Response) => {
+  const { email } = req.userData;
+  const { firstName, lastName, userName, phoneNumber } = req.body;
+  // await prisma.user.update({
+  //   where: { email },
+  //   data: {}
+  // })
+}

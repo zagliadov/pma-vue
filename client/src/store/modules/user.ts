@@ -12,7 +12,8 @@ export const useUserStore = defineStore("user", () => {
   const firstName = ref<string>("");
   const lastName = ref<string>("");
   const userName = ref<string>("");
-  const phoneNumber = ref<number>(0);
+  const phoneNumber = ref<number | null>(null);
+  
 
   const updatePersonalInformation = async (data: IPersonalInformation) => {
     const token = localStorage.getItem("token");

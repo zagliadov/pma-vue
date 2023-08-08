@@ -5,12 +5,16 @@ const userStore = useUserStore();
 const { firstName, lastName, userName, phoneNumber } = storeToRefs(userStore);
 const { updatePersonalInformation } = userStore;
 
+const phoneNumberRegex = /^\+\d-\d{3}-\d{3}-\d{4}$/;
+
+// const isValidPhoneNumber = phoneNumberRegex.test(phoneNumber.value);
+
 const handleSaveChanges = async () => {
   await updatePersonalInformation({
     firstName: firstName.value,
     lastName: lastName.value,
     userName: userName.value,
-    phoneNumber: phoneNumber.value,
+    phoneNumber: phoneNumberRegex.test(phoneNumber.value) && phoneNumber.value,
   });
   firstName.value = "";
   lastName.value = "";
