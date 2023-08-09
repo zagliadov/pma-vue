@@ -75,16 +75,36 @@ interface IData {
   lastName: string;
   userName: string;
   phoneNumber: number | null;
+  language: string;
+  timezone: string;
+  startOfTheCalendarWeek: string;
+  timeFormat: string;
+  dateFormat: string;
 }
 
 export const updatePersonalInformation = async (req: any, res: Response) => {
   const { email } = req.userData;
-  const { firstName, lastName, userName, phoneNumber } = req.body;
+  const {
+    firstName,
+    lastName,
+    userName,
+    phoneNumber,
+    language,
+    timezone,
+    startOfTheCalendarWeek,
+    timeFormat,
+    dateFormat,
+  } = req.body;
   const dataToUpdate: IData = {
     firstName: "",
     lastName: "",
     userName: "",
     phoneNumber: null,
+    language: "",
+    timezone: "",
+    startOfTheCalendarWeek: "",
+    timeFormat: "",
+    dateFormat: "",
   };
   if (userName) {
     dataToUpdate.userName = userName;
@@ -97,6 +117,15 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
   }
   if (phoneNumber) {
     dataToUpdate.phoneNumber = phoneNumber;
+  }
+  if (startOfTheCalendarWeek) {
+    dataToUpdate.startOfTheCalendarWeek = startOfTheCalendarWeek;
+  }
+  if (timeFormat) {
+    dataToUpdate.timeFormat = timeFormat;
+  }
+  if (dateFormat) {
+    dataToUpdate.dateFormat = dateFormat;
   }
   console.log(dataToUpdate);
   // await prisma.user.update({

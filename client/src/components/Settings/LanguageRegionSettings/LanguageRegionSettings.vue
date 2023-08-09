@@ -3,11 +3,11 @@ import { useUserStore } from "../../../store/modules/user";
 import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
-const { language, timezone } = storeToRefs(userStore);
+const { language, timezone, startOfTheCalendarWeek, timeFormat, dateFormat } = storeToRefs(userStore);
 </script>
 
 <template>
-  <div class="pt-10">
+  <div class="pt-10 pb-10">
     <div class="border-t pb-10"></div>
     <span class="font-medium text-base"> Language & Region settings </span>
     <div class="flex">
@@ -36,6 +36,50 @@ const { language, timezone } = storeToRefs(userStore);
           <option>AEST</option>
         </select>
       </div>
+    </div>
+    <div class="pt-10">
+      <span class="text-sm font-medium"> Start of the calendar week </span>
+      <div class="flex items-center justify-start w-[400px] pt-4">
+        <div class="flex items-center">
+          <input type="radio" name="radio-7" class="radio radio-accent" v-model="startOfTheCalendarWeek" />
+          <label for="radio-7" class="pl-4">Sunday</label>
+        </div>
+        <div class="flex items-center pl-[80px]">
+          <input type="radio" name="radio-7" class="radio radio-accent" />
+          <label for="radio-7" class="pl-4">Monday</label>
+        </div>
+      </div>
+    </div>
+    <div class="pt-10">
+      <span class="text-sm font-medium">Time format</span>
+      <div class="flex items-center justify-start w-[400px] pt-4">
+        <div class="flex items-center">
+          <input type="radio" name="radio-8" class="radio radio-accent" v-model="timeFormat" />
+          <label for="radio-7" class="pl-4">24 hour</label>
+        </div>
+        <div class="flex items-center pl-[80px]">
+          <input type="radio" name="radio-8" class="radio radio-accent" />
+          <label for="radio-7" class="pl-4">12 hour</label>
+        </div>
+      </div>
+    </div>
+    <div class="pt-10">
+      <span class="text-sm font-medium">Date format</span>
+      <div class="flex items-center justify-start w-[400px] pt-4">
+        <div class="flex items-center">
+          <input type="radio" name="radio-9" class="radio radio-accent" v-model="dateFormat" />
+          <label for="radio-7" class="pl-4">mm/dd/yyy</label>
+        </div>
+        <div class="flex items-center pl-[56px]">
+          <input type="radio" name="radio-9" class="radio radio-accent" />
+          <label for="radio-7" class="pl-4">dd/mm/yyyy</label>
+        </div>
+      </div>
+    </div>
+    <div class="pt-10 flex flex-col">
+      <span class="font-medium text-base">Manage account</span>
+      <span class="text-gray-600 text-sm py-4">Deleting an account is an irreversible action. After deleting the account, all data will be lost</span>
+      <button className="btn btn-error w-52">Delete account</button>
     </div>
   </div>
 </template>

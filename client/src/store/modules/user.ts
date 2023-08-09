@@ -15,6 +15,9 @@ export const useUserStore = defineStore("user", () => {
   const phoneNumber = ref<number | null>(null);
   const language = ref<string>("");
   const timezone = ref<string>("");
+  const startOfTheCalendarWeek = ref<string>("");
+  const timeFormat = ref<string>("");
+  const dateFormat = ref<string>("");
   
 
   const updatePersonalInformation = async (data: IPersonalInformation) => {
@@ -106,6 +109,9 @@ export const useUserStore = defineStore("user", () => {
     phoneNumber,
     language,
     timezone,
+    startOfTheCalendarWeek,
+    timeFormat,
+    dateFormat,
     uploadPhoto,
     removeAvatar,
     updatePersonalInformation,
