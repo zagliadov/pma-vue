@@ -17,16 +17,19 @@ const handleSideMenuOpen = async () => {
 <template>
   <div class="flex flex-col">
     <SideMenu v-if="isSideMenuOpen" />
-    <div class="flex justify-around px-4 py-2 border-b h-[56px]">
+    <div class="flex px-4 py-2 border-b h-[56px]">
       <div class="flex items-center">
         <button class="flex items-center" @click="handleSideMenuOpen">
           <IconSideMenu />
         </button>
       </div>
-
-      <TableNavigation />
-      <TableSearch />
-      <UserMenu />
+      <div class="flex justify-between w-full">
+        <TableNavigation />
+        <div class="flex items-center justify-end w-full">
+          <TableSearch />
+          <UserMenu />
+        </div>
+      </div>
     </div>
   </div>
 </template>
