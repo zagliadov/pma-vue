@@ -11,6 +11,14 @@ model User {
   id               Int         @id @default(autoincrement())
   email            String      @unique
   name             String?
+  firstName        String?
+  lastName         String?
+  phoneNumber      Int?
+  language         String?
+  timezone         String?
+  startOfTheCalendarWeek String?
+  timeFormat       Int?
+  dateFormat       String?
   password         String
   workspace        Workspace[]
   avatar_filename  String?

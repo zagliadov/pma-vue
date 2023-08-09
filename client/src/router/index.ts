@@ -32,6 +32,8 @@ const router = createRouter({
       component: LoginView,
       beforeEnter: async () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("color");
+        localStorage.removeItem("color_id");
       },
     },
     {

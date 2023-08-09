@@ -4,9 +4,9 @@ import { useRouter } from "vue-router";
 import { useProjectStore } from "@/store/modules/project";
 import { storeToRefs } from "pinia";
 import {
-  isCreateProjectRoute,
   createMainTableRoute,
   createTimelineTableRoute,
+  isProjectViewRoute,
 } from "@/helpers/helpers";
 
 const projectStore = useProjectStore();
@@ -15,7 +15,7 @@ const router = useRouter();
 </script>
 
 <template>
-  <div class="flex items-center" v-if="!isCreateProjectRoute(router)">
+  <div class="flex items-center" v-if="isProjectViewRoute(router)">
     <span class="font-medium text-lg pr-4 truncate max-w-[150px]">{{ project?.name }}</span>
     <div class="border-r border-base-300 h-4 w-1"></div>
     <RouterLink

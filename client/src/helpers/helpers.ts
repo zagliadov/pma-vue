@@ -29,6 +29,14 @@ export const isMySettingsRoute = (router: Router): boolean => {
   return isMySettingsRoute;
 };
 
+export const isProjectViewRoute = (router: Router): boolean => {
+  const name = router?.currentRoute?.value?.name;
+  const isProjectViewRoute = Boolean(
+    name === "project_view" || name === "project_timeline_view"
+  );
+  return isProjectViewRoute;
+};
+
 export const isNotificationRoute = (router: Router): boolean => {
   const isNotificationRoute = Boolean(
     router?.currentRoute?.value?.name === "notification"

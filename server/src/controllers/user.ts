@@ -70,11 +70,37 @@ export const removeAvatarFilename = async (
   }
 };
 
+interface IData {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  phoneNumber: number | null;
+}
+
 export const updatePersonalInformation = async (req: any, res: Response) => {
   const { email } = req.userData;
   const { firstName, lastName, userName, phoneNumber } = req.body;
+  const dataToUpdate: IData = {
+    firstName: "",
+    lastName: "",
+    userName: "",
+    phoneNumber: null,
+  };
+  if (userName) {
+    dataToUpdate.userName = userName;
+  }
+  if (firstName) {
+    dataToUpdate.firstName = firstName;
+  }
+  if (lastName) {
+    dataToUpdate.lastName = lastName;
+  }
+  if (phoneNumber) {
+    dataToUpdate.phoneNumber = phoneNumber;
+  }
+  console.log(dataToUpdate);
   // await prisma.user.update({
   //   where: { email },
   //   data: {}
   // })
-}
+};
