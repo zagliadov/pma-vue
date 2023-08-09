@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import ProfilePhoto from "../components/Settings/ProfilePhoto/ProfilePhoto.vue";
 import PersonalInformation from "../components/Settings/PersonalInformation/PersonalInformation.vue";
+import LanguageRegionSettings from "../components/Settings/LanguageRegionSettings/LanguageRegionSettings.vue";
+
+
+
 </script>
 
 <template>
@@ -11,6 +15,7 @@ import PersonalInformation from "../components/Settings/PersonalInformation/Pers
       </div>
       <ProfilePhoto />
       <PersonalInformation />
+      <LanguageRegionSettings />
     </div>
   </MySettingsLayout>
 </template>
