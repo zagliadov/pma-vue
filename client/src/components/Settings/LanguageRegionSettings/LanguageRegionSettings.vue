@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from "../../../store/modules/user";
+import { storeToRefs } from "pinia";
+
+const userStore = useUserStore();
+const { language, timezone } = storeToRefs(userStore);
+</script>
 
 <template>
   <div class="pt-10">
@@ -9,7 +15,7 @@
         <label class="label">
           <span class="label-text">Language</span>
         </label>
-        <select class="select select-bordered">
+        <select class="select select-bordered" v-model="language">
           <option>English</option>
           <option>French</option>
           <option>Spanish</option>
@@ -20,7 +26,7 @@
         <label class="label">
           <span class="label-text">Timezone</span>
         </label>
-        <select class="select select-bordered">
+        <select class="select select-bordered" v-model="timezone">
           <option>CET</option>
           <option>EET</option>
           <option>GMT</option>

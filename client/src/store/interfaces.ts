@@ -29,6 +29,8 @@ export interface IPersonalInformation {
   lastName: string;
   userName: string;
   phoneNumber: number | null;
+  language: string;
+  timezone: string;
 }
 export interface IProject {
   id: number;

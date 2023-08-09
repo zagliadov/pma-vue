@@ -2,7 +2,7 @@
 import { useUserStore } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
 const userStore = useUserStore();
-const { firstName, lastName, userName, phoneNumber } = storeToRefs(userStore);
+const { firstName, lastName, userName, phoneNumber, language, timezone } = storeToRefs(userStore);
 const { updatePersonalInformation } = userStore;
 
 const phoneNumberRegex = /^\+\d-\d{3}-\d{3}-\d{4}$/;
@@ -14,12 +14,16 @@ const handleSaveChanges = async () => {
     firstName: firstName.value,
     lastName: lastName.value,
     userName: userName.value,
-    phoneNumber: phoneNumberRegex.test(phoneNumber.value) && phoneNumber.value,
+    phoneNumber: phoneNumber.value,
+    language: language.value,
+    timezone: timezone.value,
   });
   firstName.value = "";
   lastName.value = "";
   userName.value = "";
   phoneNumber.value = 0;
+  language.value = "";
+  timezone.value = "";
 };
 </script>
 

@@ -13,6 +13,8 @@ export const useUserStore = defineStore("user", () => {
   const lastName = ref<string>("");
   const userName = ref<string>("");
   const phoneNumber = ref<number | null>(null);
+  const language = ref<string>("");
+  const timezone = ref<string>("");
   
 
   const updatePersonalInformation = async (data: IPersonalInformation) => {
@@ -102,6 +104,8 @@ export const useUserStore = defineStore("user", () => {
     lastName,
     userName,
     phoneNumber,
+    language,
+    timezone,
     uploadPhoto,
     removeAvatar,
     updatePersonalInformation,
