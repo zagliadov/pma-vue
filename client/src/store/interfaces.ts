@@ -28,9 +28,12 @@ export interface IPersonalInformation {
   firstName: string;
   lastName: string;
   userName: string;
-  phoneNumber: number | null;
-  language: string;
-  timezone: string;
+  phoneNumber: string;
+  language: "English" | "French" | "Spanish";
+  timezone: "CET" | "EET" | "GMT" | "IST" | "CST" | "JST" | "AEST";
+  startOfTheCalendarWeek: "Monday" | "Sunday";
+  timeFormat: "24 hour" | "12 hour";
+  dateFormat: "mm/dd/yyyy" | "dd/mm/yyyy";
 }
 export interface IProject {
   id: number;

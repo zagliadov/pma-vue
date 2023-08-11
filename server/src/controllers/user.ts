@@ -74,7 +74,7 @@ interface IData {
   firstName: string;
   lastName: string;
   userName: string;
-  phoneNumber: number | null;
+  phoneNumber: number;
   language: string;
   timezone: string;
   startOfTheCalendarWeek: string;
@@ -83,53 +83,39 @@ interface IData {
 }
 
 export const updatePersonalInformation = async (req: any, res: Response) => {
-  const { email } = req.userData;
-  const {
-    firstName,
-    lastName,
-    userName,
-    phoneNumber,
-    language,
-    timezone,
-    startOfTheCalendarWeek,
-    timeFormat,
-    dateFormat,
-  } = req.body;
-  const dataToUpdate: IData = {
-    firstName: "",
-    lastName: "",
-    userName: "",
-    phoneNumber: null,
-    language: "",
-    timezone: "",
-    startOfTheCalendarWeek: "",
-    timeFormat: "",
-    dateFormat: "",
-  };
-  if (userName) {
-    dataToUpdate.userName = userName;
+  try {
+    const { email } = req.userData;
+    const {
+      firstName,
+      lastName,
+      userName,
+      phoneNumber,
+      language,
+      timezone,
+      startOfTheCalendarWeek,
+      timeFormat,
+      dateFormat,
+    } = req.body;
+
+    const dataToUpdate = {
+      firstName: firstName,
+      lastName: lastName,
+      name: userName,
+      phoneNumber: phoneNumber,
+      language: language,
+      timezone: timezone,
+      startOfTheCalendarWeek: startOfTheCalendarWeek,
+      timeFormat: timeFormat,
+      dateFormat: dateFormat,
+    };
+
+    console.log(dataToUpdate);
+
+    const updatedUser = await prisma.user.update({
+      where: { email },
+      data: dataToUpdate,
+    });
+  } catch (error) {
+    handleError(error, res);
   }
-  if (firstName) {
-    dataToUpdate.firstName = firstName;
-  }
-  if (lastName) {
-    dataToUpdate.lastName = lastName;
-  }
-  if (phoneNumber) {
-    dataToUpdate.phoneNumber = phoneNumber;
-  }
-  if (startOfTheCalendarWeek) {
-    dataToUpdate.startOfTheCalendarWeek = startOfTheCalendarWeek;
-  }
-  if (timeFormat) {
-    dataToUpdate.timeFormat = timeFormat;
-  }
-  if (dateFormat) {
-    dataToUpdate.dateFormat = dateFormat;
-  }
-  console.log(dataToUpdate);
-  // await prisma.user.update({
-  //   where: { email },
-  //   data: {}
-  // })
 };

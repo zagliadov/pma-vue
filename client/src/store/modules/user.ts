@@ -12,7 +12,7 @@ export const useUserStore = defineStore("user", () => {
   const firstName = ref<string>("");
   const lastName = ref<string>("");
   const userName = ref<string>("");
-  const phoneNumber = ref<number | null>(null);
+  const phoneNumber = ref<string>("");
   const language = ref<string>("");
   const timezone = ref<string>("");
   const startOfTheCalendarWeek = ref<string>("");

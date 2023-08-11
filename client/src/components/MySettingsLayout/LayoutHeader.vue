@@ -15,10 +15,6 @@ const {
 } = storeToRefs(userStore);
 const { updatePersonalInformation } = userStore;
 
-const phoneNumberRegex = /^\+\d-\d{3}-\d{3}-\d{4}$/;
-
-// const isValidPhoneNumber = phoneNumberRegex.test(phoneNumber.value);
-
 const handleSaveChanges = async () => {
   await updatePersonalInformation({
     firstName: firstName.value,
@@ -34,7 +30,7 @@ const handleSaveChanges = async () => {
   firstName.value = "";
   lastName.value = "";
   userName.value = "";
-  phoneNumber.value = 0;
+  phoneNumber.value = "";
   language.value = "";
   startOfTheCalendarWeek.value = "";
   timeFormat.value = "";

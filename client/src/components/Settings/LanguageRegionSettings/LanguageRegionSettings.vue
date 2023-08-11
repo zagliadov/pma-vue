@@ -41,11 +41,11 @@ const { language, timezone, startOfTheCalendarWeek, timeFormat, dateFormat } = s
       <span class="text-sm font-medium"> Start of the calendar week </span>
       <div class="flex items-center justify-start w-[400px] pt-4">
         <div class="flex items-center">
-          <input type="radio" name="radio-7" class="radio radio-accent" v-model="startOfTheCalendarWeek" />
+          <input type="radio" name="radio-7" value="Sunday" class="radio radio-accent" v-model="startOfTheCalendarWeek" />
           <label for="radio-7" class="pl-4">Sunday</label>
         </div>
         <div class="flex items-center pl-[80px]">
-          <input type="radio" name="radio-7" class="radio radio-accent" />
+          <input type="radio" name="radio-7" value="Monday" class="radio radio-accent" v-model="startOfTheCalendarWeek" />
           <label for="radio-7" class="pl-4">Monday</label>
         </div>
       </div>
@@ -54,11 +54,11 @@ const { language, timezone, startOfTheCalendarWeek, timeFormat, dateFormat } = s
       <span class="text-sm font-medium">Time format</span>
       <div class="flex items-center justify-start w-[400px] pt-4">
         <div class="flex items-center">
-          <input type="radio" name="radio-8" class="radio radio-accent" v-model="timeFormat" />
+          <input type="radio" name="radio-8" value="24 hour" class="radio radio-accent" v-model="timeFormat" />
           <label for="radio-7" class="pl-4">24 hour</label>
         </div>
         <div class="flex items-center pl-[80px]">
-          <input type="radio" name="radio-8" class="radio radio-accent" />
+          <input type="radio" name="radio-8" value="12 hour" class="radio radio-accent"  v-model="timeFormat" />
           <label for="radio-7" class="pl-4">12 hour</label>
         </div>
       </div>
@@ -67,11 +67,11 @@ const { language, timezone, startOfTheCalendarWeek, timeFormat, dateFormat } = s
       <span class="text-sm font-medium">Date format</span>
       <div class="flex items-center justify-start w-[400px] pt-4">
         <div class="flex items-center">
-          <input type="radio" name="radio-9" class="radio radio-accent" v-model="dateFormat" />
-          <label for="radio-7" class="pl-4">mm/dd/yyy</label>
+          <input type="radio" name="radio-9" class="radio radio-accent" value="mm/dd/yyyy" v-model="dateFormat" />
+          <label for="radio-7" class="pl-4">mm/dd/yyyy</label>
         </div>
         <div class="flex items-center pl-[56px]">
-          <input type="radio" name="radio-9" class="radio radio-accent" />
+          <input type="radio" name="radio-9" value="dd/mm/yyyy" class="radio radio-accent" v-model="dateFormat" />
           <label for="radio-7" class="pl-4">dd/mm/yyyy</label>
         </div>
       </div>
