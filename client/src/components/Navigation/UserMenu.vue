@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import NotificationsDropdown from "./NotificationsDropdown/NotificationsDropdown.vue";
+import UserPersonalMenu from "./UserPersonalMenu/UserPersonalMenu.vue";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import {
@@ -26,12 +27,9 @@ const router = useRouter();
     <button>
       <IconSettings />
     </button>
-
-    <button class="w-8 h-8 rounded-full bg-gray-300">
+    <UserPersonalMenu />
+    <!-- <button class="w-8 h-8 rounded-full bg-gray-300">
       <span>{{ firstLetterInUpperCase }}</span>
-    </button>
-    <!-- <div class="absolute top-[50px] right-0 border w-[500px] h-[400px]">
-
-    </div> -->
+    </button> -->
   </div>
 </template>

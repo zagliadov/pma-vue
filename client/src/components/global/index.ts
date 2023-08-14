@@ -23,6 +23,10 @@ import IconPaperclipNotification from "../icons/IconPaperclipNotification.vue";
 import IconTrashNotification from "../icons/IconTrashNotification.vue";
 import IconDoubleCheckNotification from "../icons/IconDoubleCheckNotification.vue";
 import IconArrowRightNotification from "../icons/IconArrowRightNotification.vue";
+import IconProfilePersonal from "../icons/IconProfilePersonal.vue";
+import IconNotificationPersonal from "../icons/IconNotificationPersonal.vue";
+import IconSettingPersonal from "../icons/IconSettingPersonal.vue";
+import IconInformationPersonal from "../icons/IconInformationPersonal.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -55,6 +59,10 @@ const components = [
   { name: "IconTrashNotification", component: IconTrashNotification },
   { name: "IconDoubleCheckNotification", component: IconDoubleCheckNotification },
   { name: "IconArrowRightNotification", component: IconArrowRightNotification },
+  { name: "IconProfilePersonal", component: IconProfilePersonal },
+  { name: "IconNotificationPersonal", component: IconNotificationPersonal },
+  { name: "IconSettingPersonal", component: IconSettingPersonal },
+  { name: "IconInformationPersonal", component: IconInformationPersonal },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
