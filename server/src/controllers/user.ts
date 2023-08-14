@@ -70,16 +70,16 @@ export const removeAvatarFilename = async (
   }
 };
 
-interface IData {
-  firstName: string;
-  lastName: string;
-  name: string;
-  phoneNumber: string;
-  language: string;
-  timezone: string;
-  startOfTheCalendarWeek: string;
-  timeFormat: string;
-  dateFormat: string;
+interface IUserData {
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  phoneNumber?: string;
+  language?: string;
+  timezone?: string;
+  startOfTheCalendarWeek?: string;
+  timeFormat?: string;
+  dateFormat?: string;
 }
 
 export const updatePersonalInformation = async (req: any, res: Response) => {
@@ -97,25 +97,29 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
       dateFormat,
     } = req.body;
 
-    const dataToUpdate: IData = {
-      firstName: firstName,
-      lastName: lastName,
-      name: userName,
-      phoneNumber: phoneNumber,
-      language: language,
-      timezone: timezone,
-      startOfTheCalendarWeek: startOfTheCalendarWeek,
-      timeFormat: timeFormat,
-      dateFormat: dateFormat,
-    };
+    const dataToUpdate: IUserData = {};
+
+    if (firstName !== "") dataToUpdate.firstName = firstName;
+    if (lastName !== "") dataToUpdate.lastName = lastName;
+    if (userName !== "") dataToUpdate.name = userName;
+    if (phoneNumber !== "") dataToUpdate.phoneNumber = phoneNumber;
+    if (language !== "") dataToUpdate.language = language;
+    if (timezone !== "") dataToUpdate.timezone = timezone;
+    if (startOfTheCalendarWeek !== "") dataToUpdate.startOfTheCalendarWeek = startOfTheCalendarWeek;
+    if (timeFormat !== "") dataToUpdate.timeFormat = timeFormat;
+    if (dateFormat !== "") dataToUpdate.dateFormat = dateFormat;
 
     console.log(dataToUpdate);
-
-    // const updatedUser = await prisma.user.update({
-    //   where: { email },
-    //   data: dataToUpdate,
-    // });
+    if (Object.keys(dataToUpdate).length > 0) {
+      await prisma.user.update({
+        where: { email },
+        data: dataToUpdate,
+      });
+    }
+    prisma.$disconnect();
+    res.status(200).end();
   } catch (error) {
+    prisma.$disconnect();
     handleError(error, res);
   }
 };

@@ -9,15 +9,15 @@ import type { IExistingUser, IPersonalInformation } from "../interfaces";
 export const useUserStore = defineStore("user", () => {
   const authStore = useAuthStore();
   const { existingUser } = storeToRefs(authStore);
-  const firstName = ref<string>("");
-  const lastName = ref<string>("");
-  const userName = ref<string>("");
-  const phoneNumber = ref<string>("");
-  const language = ref<string>("");
-  const timezone = ref<string>("");
-  const startOfTheCalendarWeek = ref<string>("");
-  const timeFormat = ref<string>("");
-  const dateFormat = ref<string>("");
+  const firstName = ref<string>(existingUser?.value?.firstName || "");
+  const lastName = ref<string>(existingUser?.value?.lastName || "");
+  const userName = ref<string>(existingUser?.value?.name || "");
+  const phoneNumber = ref<string>(existingUser?.value?.phoneNumber || "");
+  const language = ref<string>(existingUser?.value?.language || "");
+  const timezone = ref<string>(existingUser?.value?.timezone || "");
+  const startOfTheCalendarWeek = ref<string>(existingUser?.value?.startOfTheCalendarWeek || "");
+  const timeFormat = ref<string>(existingUser?.value?.timeFormat || "");
+  const dateFormat = ref<string>(existingUser?.value?.dateFormat || "");
   
 
   const updatePersonalInformation = async (data: IPersonalInformation) => {

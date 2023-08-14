@@ -29,11 +29,11 @@ export interface IPersonalInformation {
   lastName: string;
   userName: string;
   phoneNumber: string;
-  language: "English" | "French" | "Spanish";
-  timezone: "CET" | "EET" | "GMT" | "IST" | "CST" | "JST" | "AEST";
-  startOfTheCalendarWeek: "Monday" | "Sunday";
-  timeFormat: "24 hour" | "12 hour";
-  dateFormat: "mm/dd/yyyy" | "dd/mm/yyyy";
+  language: string;
+  timezone: string;
+  startOfTheCalendarWeek: string;
+  timeFormat: string;
+  dateFormat: string;
 }
 export interface IProject {
   id: number;
@@ -52,4 +52,12 @@ export interface IExistingUser {
   email: string;
   password: string;
   workspace: IWorkspace[];
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  language?: string;
+  timezone?: string;
+  startOfTheCalendarWeek?: string;
+  timeFormat?: string;
+  dateFormat?: string;
 }

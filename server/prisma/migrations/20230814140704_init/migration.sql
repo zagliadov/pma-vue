@@ -5,11 +5,11 @@ CREATE TABLE "User" (
     "name" TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
-    "phoneNumber" INTEGER,
+    "phoneNumber" TEXT,
     "language" TEXT,
     "timezone" TEXT,
     "startOfTheCalendarWeek" TEXT,
-    "timeFormat" INTEGER,
+    "timeFormat" TEXT,
     "dateFormat" TEXT,
     "password" TEXT NOT NULL,
     "avatar_filename" TEXT

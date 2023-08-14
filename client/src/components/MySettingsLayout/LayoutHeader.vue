@@ -27,15 +27,6 @@ const handleSaveChanges = async () => {
     timeFormat: timeFormat.value,
     dateFormat: dateFormat.value,
   });
-  firstName.value = "";
-  lastName.value = "";
-  userName.value = "";
-  phoneNumber.value = "";
-  language.value = "";
-  startOfTheCalendarWeek.value = "";
-  timeFormat.value = "";
-  dateFormat.value = "";
-  timezone.value = "";
 };
 </script>
 

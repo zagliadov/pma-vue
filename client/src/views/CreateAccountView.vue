@@ -33,9 +33,9 @@ const handleCreateAccount = async () => {
 </script>
 
 <template>
-  <div class="flex justify-center items-start h-screen w-screen">
-    <div class="flex flex-col justify-center items-center">
-      <div class="w-[464px] h-[512px] flex flex-col">
+  <div class="flex justify-center items-center h-screen w-screen">
+    <div class="flex flex-col">
+      <div class="w-[464px] flex flex-col">
         <p class="text-2xl pb-8 pt-4">Create account</p>
 
         <CustomInput

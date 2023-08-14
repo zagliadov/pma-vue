@@ -13,11 +13,11 @@ model User {
   name             String?
   firstName        String?
   lastName         String?
-  phoneNumber      Int?
+  phoneNumber      String?
   language         String?
   timezone         String?
   startOfTheCalendarWeek String?
-  timeFormat       Int?
+  timeFormat       String?
   dateFormat       String?
   password         String
   workspace        Workspace[]
