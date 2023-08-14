@@ -18,6 +18,7 @@ import IconMySettingsBell from "../icons/IconMySettingsBell.vue";
 import IconMySettingsProject from "../icons/IconMySettingsProject.vue";
 import IconMySettingsHelp from "../icons/IconMySettingsHelp.vue";
 import IconMySettingsLogOut from "../icons/IconMySettingsLogOut.vue";
+import IconNotificationSetting from "../icons/IconNotificationSetting";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -45,6 +46,7 @@ const components = [
   { name: "IconMySettingsProject", component: IconMySettingsProject },
   { name: "IconMySettingsHelp", component: IconMySettingsHelp },
   { name: "IconMySettingsLogOut", component: IconMySettingsLogOut },
+  { name: "IconNotificationSetting", component: IconNotificationSetting },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },

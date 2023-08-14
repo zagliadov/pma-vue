@@ -73,8 +73,8 @@ export const removeAvatarFilename = async (
 interface IData {
   firstName: string;
   lastName: string;
-  userName: string;
-  phoneNumber: number;
+  name: string;
+  phoneNumber: string;
   language: string;
   timezone: string;
   startOfTheCalendarWeek: string;
@@ -97,7 +97,7 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
       dateFormat,
     } = req.body;
 
-    const dataToUpdate = {
+    const dataToUpdate: IData = {
       firstName: firstName,
       lastName: lastName,
       name: userName,
@@ -111,10 +111,10 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
 
     console.log(dataToUpdate);
 
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: dataToUpdate,
-    });
+    // const updatedUser = await prisma.user.update({
+    //   where: { email },
+    //   data: dataToUpdate,
+    // });
   } catch (error) {
     handleError(error, res);
   }

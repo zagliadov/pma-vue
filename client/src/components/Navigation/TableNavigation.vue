@@ -20,7 +20,7 @@ const router = useRouter();
     <div class="border-r border-base-300 h-4 w-1"></div>
     <RouterLink
       :to="createMainTableRoute(router)"
-      class="flex items-center px-4 min-w-[130px]"
+      class="flex items-center px-4 min-w-[140px]"
       :class="{ 'text-primary': $route.path === createMainTableRoute(router) }"
       exact
     >
@@ -34,7 +34,7 @@ const router = useRouter();
     <div class="border-r border-base-300 h-4 w-1"></div>
     <RouterLink
       :to="createTimelineTableRoute(router)"
-      class="flex items-center pl-4 min-w-[130px]"
+      class="flex items-center pl-4 min-w-[140px]"
       :class="{
         'text-primary': $route.path === createTimelineTableRoute(router),
       }"
