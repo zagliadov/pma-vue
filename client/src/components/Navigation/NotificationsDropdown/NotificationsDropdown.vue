@@ -66,17 +66,7 @@
 
         </div>
         <!-- Mark all as read -->
-        <div class="flex items-center justify-between p-4 border-t<!-- Mark all as read -->
-          <div class="flex items-center justify-between py-4">
-            <button class="flex items-center">
-              <IconDoubleCheckNotification />
-              <span class="pl-2">Mark all ass read</span>
-            </button>
-            <button class="flex items-center">
-              <span class="pr-2">Show all notification</span>
-              <IconArrowRightNotification />
-            </button>
-          </div>">
+        <div class="flex items-center justify-between p-4 border-t">
             <button class="flex items-center">
               <IconDoubleCheckNotification />
               <span class="pl-2">Mark all ass read</span>
