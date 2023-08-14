@@ -18,7 +18,11 @@ import IconMySettingsBell from "../icons/IconMySettingsBell.vue";
 import IconMySettingsProject from "../icons/IconMySettingsProject.vue";
 import IconMySettingsHelp from "../icons/IconMySettingsHelp.vue";
 import IconMySettingsLogOut from "../icons/IconMySettingsLogOut.vue";
-import IconNotificationSetting from "../icons/IconNotificationSetting";
+import IconNotificationSetting from "../icons/IconNotificationSetting.vue";
+import IconPaperclipNotification from "../icons/IconPaperclipNotification.vue";
+import IconTrashNotification from "../icons/IconTrashNotification.vue";
+import IconDoubleCheckNotification from "../icons/IconDoubleCheckNotification.vue";
+import IconArrowRightNotification from "../icons/IconArrowRightNotification.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -47,6 +51,10 @@ const components = [
   { name: "IconMySettingsHelp", component: IconMySettingsHelp },
   { name: "IconMySettingsLogOut", component: IconMySettingsLogOut },
   { name: "IconNotificationSetting", component: IconNotificationSetting },
+  { name: "IconPaperclipNotification", component: IconPaperclipNotification },
+  { name: "IconTrashNotification", component: IconTrashNotification },
+  { name: "IconDoubleCheckNotification", component: IconDoubleCheckNotification },
+  { name: "IconArrowRightNotification", component: IconArrowRightNotification },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
