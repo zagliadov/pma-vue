@@ -8,6 +8,28 @@ export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
   const project = ref<IProject>();
   const totalProjectsCount = ref<number>(0);
+  const allProjects = ref<IProject[]>([]);
+
+  const getAllProjects = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await axios.post(
+        `${API_URL}/project/get_all_projects`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        allProjects.value = response?.data?.allProjects;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getTotalProjectCount = async () => {
     const token = localStorage.getItem("token");
@@ -103,9 +125,11 @@ export const useProjectStore = defineStore("project", () => {
     projects,
     project,
     totalProjectsCount,
+    allProjects,
     getProjects,
     getProject,
     addNewProject,
     getTotalProjectCount,
+    getAllProjects,
   };
 });

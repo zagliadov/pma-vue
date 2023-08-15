@@ -119,8 +119,9 @@ const router = createRouter({
         const auth = useAuthStore();
         const projectStore = useProjectStore();
         const { checkAuthentication } = auth;
-        const { getTotalProjectCount } = projectStore;
+        const { getTotalProjectCount, getAllProjects } = projectStore;
         getTotalProjectCount();
+        getAllProjects();
         const isValid = await checkAuthentication();
         if (!isValid) return "login";
         return isValid;
