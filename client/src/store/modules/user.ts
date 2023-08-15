@@ -24,7 +24,7 @@ export const useUserStore = defineStore("user", () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/user/update_personal_information`,
         data,
         {
@@ -33,7 +33,6 @@ export const useUserStore = defineStore("user", () => {
           },
         }
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }

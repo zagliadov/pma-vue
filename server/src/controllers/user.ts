@@ -109,7 +109,6 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
     if (timeFormat !== "") dataToUpdate.timeFormat = timeFormat;
     if (dateFormat !== "") dataToUpdate.dateFormat = dateFormat;
 
-    console.log(dataToUpdate);
     if (Object.keys(dataToUpdate).length > 0) {
       await prisma.user.update({
         where: { email },

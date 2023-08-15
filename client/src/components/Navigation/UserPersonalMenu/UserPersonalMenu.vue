@@ -13,7 +13,7 @@ import {
 
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
-const { name } = existingUser.value;
+const { name, firstName, lastName, email } = existingUser.value;
 const router = useRouter();
 const firstLetterInUpperCase = capitalizeFirstLetter(name);
 </script>
@@ -33,8 +33,8 @@ const firstLetterInUpperCase = capitalizeFirstLetter(name);
             <span>{{ firstLetterInUpperCase }}</span>
           </div>
           <div class="flex flex-col pl-3">
-            <span>Brooklyn Simmons</span>
-            <span class="text-gray-400 text-sm">sara.cruz@example.com</span>
+            <span>{{ firstName || "Brooklyn" }} {{ lastName || "Simmons" }}</span>
+            <span class="text-gray-400 text-sm">{{ email || "email@example.com" }}</span>
           </div>
         </div>
         <div class="p-4 border-b">

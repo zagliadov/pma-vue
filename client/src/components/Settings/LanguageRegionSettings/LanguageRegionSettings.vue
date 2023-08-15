@@ -33,7 +33,7 @@ const { language, timezone, startOfTheCalendarWeek, timeFormat, dateFormat } = s
           <option>IST</option>
           <option>CST</option>
           <option>JST</option>
-          <option>AEST</option>
+          <option>EAST</option>
         </select>
       </div>
     </div>

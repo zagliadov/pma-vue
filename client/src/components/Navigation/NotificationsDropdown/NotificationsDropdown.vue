@@ -1,4 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthStore } from "../../../store/modules/auth";
+import { storeToRefs } from "pinia";
+
+const authStore = useAuthStore();
+const { existingUser } = storeToRefs(authStore);
+
+const { firstName, lastName, email } = existingUser.value;
+</script>
 
 <template>
   <div class="dropdown dropdown-bottom dropdown-end flex items-center">
@@ -22,7 +30,7 @@
         <div class="border-y p-4">
           <div class="flex items-center justify-between">
             <span
-              >Brooklyn Simmons
+              >{{ firstName || "Brooklyn" }} {{ lastName || "Simmons" }}
               <span class="text-gray-400 text-sm">comments on the </span> Design
               Update <span class="text-gray-400">task</span></span
             >
@@ -41,7 +49,7 @@
         <div class="p-4">
           <div class="flex items-center justify-between pb-2">
             <span
-              >Brooklyn Simmons
+              >{{ firstName || "Brooklyn" }} {{ lastName || "Simmons" }}
               <span class="text-gray-400 text-sm">adds a file to the </span>
               Home Design <span class="text-gray-400">task</span></span
             >
