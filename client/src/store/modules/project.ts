@@ -7,6 +7,28 @@ import { IProject, IAddNewProjectData } from "../interfaces";
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
   const project = ref<IProject>();
+  const totalProjectsCount = ref<number>(0);
+
+  const getTotalProjectCount = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await axios.post(
+        `${API_URL}/project/get_total_project_count`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        totalProjectsCount.value = response?.data?.totalProjectsCount;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getProjects = async (workspaceId: number): Promise<void> => {
     const token = localStorage.getItem("token");
@@ -80,8 +102,10 @@ export const useProjectStore = defineStore("project", () => {
   return {
     projects,
     project,
+    totalProjectsCount,
     getProjects,
     getProject,
     addNewProject,
+    getTotalProjectCount,
   };
 });

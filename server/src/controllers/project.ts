@@ -4,6 +4,37 @@ import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 
+export const getTotalProjectCount = async (req: any, res: Response) => {
+  const { email } = req.userData;
+  try {
+    const userProjects = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        workspace: {
+          select: {
+            projects: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    let totalProjectsCount = 0;
+    if (userProjects) {
+      userProjects.workspace.forEach((workspace: any) => {
+        totalProjectsCount += workspace.projects.length;
+      });
+    }
+    res.status(200).json({ totalProjectsCount });
+    prisma.$disconnect();
+  } catch (error) {
+    prisma.$disconnect();
+    handleError(error, res);
+  }
+};
+
 export const getProjects = async (req: any, res: Response) => {
   const { email } = req.userData;
   const { workspaceId } = req.body;
