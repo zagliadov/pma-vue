@@ -3,15 +3,15 @@ import { useProjectStore } from "@/store/modules/project";
 import { useAssigneeStore } from "@/store/modules/assignee";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { capitalizeFirstLetter } from "@/helpers/helpers";
-import { RouterLink } from "vue-router";
+import { capitalizeFirstLetter, getEmailFromCurrentPath } from "@/helpers/helpers";
+import { RouterLink, useRouter } from "vue-router";
 
 const projectStore = useProjectStore();
 const assigneeStore = useAssigneeStore();
 const { totalProjectsCount, allProjects } = storeToRefs(projectStore);
 const { assigneeProjects } = storeToRefs(assigneeStore);
 const hoveredProjectId = ref<number | null>(null);
-const hoveredAssigneeProjectId = ref<number | null>(null);
+const router = useRouter();
 </script>
 
 <template>
@@ -45,7 +45,7 @@ const hoveredAssigneeProjectId = ref<number | null>(null);
               <div tabIndex="{0}" class="dropdown-content z-[1] menu p-3 w-52">
                 <div class="shadow bg-base-100 rounded">
                   <RouterLink
-                    :to="``"
+                  :to="`/my_settings/${getEmailFromCurrentPath(router)}/projects/edit_project/${id}`"
                     class="flex items-center p-3 border-b border-gray-100 hover:bg-gray-50"
                   >
                     <IconEdit />

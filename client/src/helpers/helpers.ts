@@ -51,6 +51,13 @@ export const isProjectsRoute = (router: Router): boolean => {
   return isProjectsRoute;
 };
 
+export const isProjectsEditProjectRoute = (router: Router): boolean => {
+  const isProjectsEditProjectRoute = Boolean(
+    router?.currentRoute?.value?.name === "my_settings_edit_project"
+  );
+  return isProjectsEditProjectRoute;
+};
+
 export const isInformationRoute = (router: Router): boolean => {
   const isInformationRoute = Boolean(
     router?.currentRoute?.value?.name === "information"

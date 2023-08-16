@@ -14,6 +14,7 @@ const TimelineTable = () => import("../views/TimelineTable.vue");
 const MySettings = () => import("../views/MySettings.vue");
 const Notification = () => import("../views/Notification.vue");
 const Projects = () => import("../views/Projects.vue");
+const MySettingsEditProject = () => import("../views/MySettingsEditProject.vue");
 const Information = () => import("../views/Information.vue");
 
 const router = createRouter({
@@ -126,6 +127,18 @@ const router = createRouter({
         getTotalProjectCount();
         getAllProjects();
         getAssigneeProjects();
+        const isValid = await checkAuthentication();
+        if (!isValid) return "login";
+        return isValid;
+      },
+    },
+    {
+      path: "/my_settings/:email/projects/edit_project/:id",
+      name: "my_settings_edit_project",
+      component: MySettingsEditProject,
+      beforeEnter: async () => {
+        const auth = useAuthStore();
+        const { checkAuthentication } = auth;
         const isValid = await checkAuthentication();
         if (!isValid) return "login";
         return isValid;

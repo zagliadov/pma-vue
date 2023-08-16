@@ -7,6 +7,7 @@ import {
   isNotificationRoute,
   isProjectsRoute,
   isInformationRoute,
+  isProjectsEditProjectRoute,
 } from "@/helpers/helpers";
 
 const router = useRouter();
@@ -39,7 +40,7 @@ const router = useRouter();
       <RouterLink
         class="flex items-center p-3 rounded"
         :to="`/my_settings/${getEmailFromCurrentPath(router)}/projects`"
-        :class="{ 'bg-gray-200': isProjectsRoute(router) }"
+        :class="{ 'bg-gray-200': isProjectsRoute(router) || isProjectsEditProjectRoute(router) }"
         exact
       >
         <IconMySettingsProject />
