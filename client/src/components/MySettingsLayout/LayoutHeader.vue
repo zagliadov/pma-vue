@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useUserStore } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { isMySettingsRoute } from "../../helpers/helpers";
 const userStore = useUserStore();
 const {
   firstName,
@@ -13,6 +15,7 @@ const {
   timeFormat,
   dateFormat,
 } = storeToRefs(userStore);
+const router = useRouter();
 const { updatePersonalInformation } = userStore;
 
 const handleSaveChanges = async () => {
@@ -35,8 +38,12 @@ const handleSaveChanges = async () => {
     <IconLeftArrow />
     <span class="pl-2">Back to table</span>
   </button>
-  <div>
-    <button @click="handleSaveChanges" class="btn btn-primary">
+  <div class="h-[30px]">
+    <button
+      v-if="isMySettingsRoute(router)"
+      @click="handleSaveChanges"
+      class="btn btn-primary"
+    >
       Save changes
     </button>
   </div>

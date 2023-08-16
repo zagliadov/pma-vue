@@ -4,9 +4,7 @@ import { storeToRefs } from "pinia";
 import { capitalizeFirstLetter } from "@/helpers/helpers";
 
 const projectStore = useProjectStore();
-const { getAllProjects } = projectStore;
 const { totalProjectsCount, allProjects } = storeToRefs(projectStore);
-const { name } = allProjects.value;
 </script>
 
 <template>
