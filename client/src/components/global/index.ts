@@ -28,6 +28,7 @@ import IconNotificationPersonal from "../icons/IconNotificationPersonal.vue";
 import IconSettingPersonal from "../icons/IconSettingPersonal.vue";
 import IconInformationPersonal from "../icons/IconInformationPersonal.vue";
 import IconMoreVerticalSettings from "../icons/IconMoreVerticalSettings.vue";
+import IconEdit from "../icons/IconEdit.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -65,6 +66,7 @@ const components = [
   { name: "IconSettingPersonal", component: IconSettingPersonal },
   { name: "IconInformationPersonal", component: IconInformationPersonal },
   { name: "IconMoreVerticalSettings", component: IconMoreVerticalSettings },
+  { name: "IconEdit", component: IconEdit },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },

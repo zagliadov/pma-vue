@@ -3,6 +3,7 @@ dotenv.config();
 import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail, getProjectById } from "./query";
+import prisma from "../db";
 
 export const getAssigneeProjects = async (req: any, res: Response) => {
   const { email } = req.userData;

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { useAuthStore } from "../store/modules/auth";
 import { useProjectStore } from "../store/modules/project";
+import { useAssigneeStore } from "@/store/modules/assignee";
 
 const LoginView = () => import("../views/LoginView.vue");
 const ForgotPasswordView = () => import("../views/ForgotPasswordView.vue");
@@ -118,10 +119,13 @@ const router = createRouter({
       beforeEnter: async () => {
         const auth = useAuthStore();
         const projectStore = useProjectStore();
+        const assigneeStore = useAssigneeStore();
         const { checkAuthentication } = auth;
         const { getTotalProjectCount, getAllProjects } = projectStore;
+        const { getAssigneeProjects } = assigneeStore;
         getTotalProjectCount();
         getAllProjects();
+        getAssigneeProjects();
         const isValid = await checkAuthentication();
         if (!isValid) return "login";
         return isValid;
