@@ -3,61 +3,49 @@ dotenv.config();
 import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
+import { IProjectAssignees } from "./interfaces";
 
 export const getAllProjects = async (req: any, res: Response) => {
   const { email } = req.userData;
   try {
-    const userProjects = await prisma.user.findUnique({
-      where: { email },
-      select: {
+    await prisma.$connect();
+    const allProjects = await prisma.project.findMany({
+      where: {
         workspace: {
-          select: {
-            projects: true,
+          author: {
+            email,
           },
         },
       },
     });
-    if (userProjects) {
-      const allProjects = userProjects.workspace.flatMap(
-        (workspace) => workspace.projects
-      );
-      res.status(200).json({ allProjects });
-      prisma.$disconnect();
-    }
+
+    res.status(200).json({ allProjects });
   } catch (error) {
-    prisma.$disconnect();
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 export const getTotalProjectCount = async (req: any, res: Response) => {
   const { email } = req.userData;
   try {
-    const userProjects = await prisma.user.findUnique({
-      where: { email },
-      select: {
+    await prisma.$connect();
+    const allProjects = await prisma.project.findMany({
+      where: {
         workspace: {
-          select: {
-            projects: {
-              select: {
-                id: true,
-              },
-            },
+          author: {
+            email,
           },
         },
       },
     });
-    let totalProjectsCount = 0;
-    if (userProjects) {
-      userProjects.workspace.forEach((workspace: any) => {
-        totalProjectsCount += workspace.projects.length;
-      });
-    }
+    const totalProjectsCount = allProjects.length;
     res.status(200).json({ totalProjectsCount });
-    prisma.$disconnect();
   } catch (error) {
-    prisma.$disconnect();
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -66,6 +54,7 @@ export const getProjects = async (req: any, res: Response) => {
   const { workspaceId } = req.body;
 
   try {
+    await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User does not exist" });
@@ -78,6 +67,8 @@ export const getProjects = async (req: any, res: Response) => {
     return res.status(200).json({ projects });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -86,6 +77,7 @@ export const getProject = async (req: any, res: Response) => {
   const { projectId } = req.body;
 
   try {
+    await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User does not exist" });
@@ -103,6 +95,8 @@ export const getProject = async (req: any, res: Response) => {
     return res.status(200).json({ project });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -111,6 +105,7 @@ export const addNewProject = async (req: any, res: Response) => {
   const { workspaceId, projectName, projectMembers, projectDescription } =
     req.body;
   try {
+    await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User does not exist" });
@@ -123,13 +118,6 @@ export const addNewProject = async (req: any, res: Response) => {
       },
     });
     const projectId: number = project.id;
-    interface IProjectAssignees {
-      userId: number;
-      email: string;
-      projectId: number;
-      projectCreator: boolean;
-      isEmailConfirmed: boolean;
-    }
     const projectAssignees: IProjectAssignees[] = [];
     projectAssignees.push({
       userId: id,
@@ -173,5 +161,7 @@ export const addNewProject = async (req: any, res: Response) => {
     return res.status(200).json({ projects });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };

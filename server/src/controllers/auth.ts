@@ -6,23 +6,7 @@ import bcrypt from "bcrypt";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail } from "./query";
-
-interface IUserCreate {
-  username: string;
-  workspace: string;
-  email: string;
-  password: string;
-}
-
-interface CreateUserInput {
-  username: string;
-  email: string;
-  bcrypt_password: string;
-}
-
-interface CreateUserOutput {
-  userId: number;
-}
+import { CreateUserInput, CreateUserOutput, IUserCreate } from "./interfaces";
 
 const createUser = async ({
   username,
@@ -30,6 +14,7 @@ const createUser = async ({
   bcrypt_password,
 }: CreateUserInput): Promise<CreateUserOutput> => {
   try {
+    await prisma.$connect();
     const { id: userId } = await prisma.user.create({
       data: {
         name: username,
@@ -40,13 +25,11 @@ const createUser = async ({
         id: true,
       },
     });
-
-    prisma.$disconnect();
-
     return { userId };
   } catch (error) {
-    prisma.$disconnect();
     throw error;
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -57,6 +40,7 @@ export const createAccount = async (req: Request, res: Response) => {
     Number(process.env.SALT)
   );
   try {
+    await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
@@ -88,6 +72,8 @@ export const createAccount = async (req: Request, res: Response) => {
     }
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -113,8 +99,8 @@ const createJwtToken = (id: number, name: string, email: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log(email, password);
   try {
+    await prisma.$connect();
     const existingUser = await prisma.user.findUnique({
       where: {
         email,
@@ -144,6 +130,8 @@ export const login = async (req: Request, res: Response) => {
       res.status(200).json({ token: token, existingUser: existingUser });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -163,6 +151,7 @@ export const verifyToken = async (req: any, res: any) => {
       console.log("Token is not valid");
       return res.status(401).json({ message: "Authentication failed" });
     } else {
+      await prisma.$connect();
       const { email } = decodedToken;
       const existingUser = await prisma.user.findUnique({
         where: {
@@ -181,5 +170,7 @@ export const verifyToken = async (req: any, res: any) => {
   } catch (error) {
     console.log(error);
     return res.status(401).json({ message: "Authentication failed" });
+  } finally {
+    await prisma.$disconnect();
   }
 };

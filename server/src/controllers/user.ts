@@ -4,10 +4,12 @@ import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 import { getUserWithWorkspacesAndProjects } from "./query";
+import { IUserData } from "./interfaces";
 
 export const uploadPhoto = async (req: any, res: Response) => {
   const { email, id } = req.userData;
   try {
+    await prisma.$connect();
     if (!req.files || !req.files.File) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -36,6 +38,8 @@ export const uploadPhoto = async (req: any, res: Response) => {
     return res.status(200).json({ existingUser });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -53,6 +57,7 @@ export const removeAvatarFilename = async (
   res: Response
 ): Promise<void> => {
   try {
+    await prisma.$connect();
     const { email } = req.userData;
     await prisma.user.update({
       where: { email },
@@ -67,20 +72,10 @@ export const removeAvatarFilename = async (
     res.status(200).json({ existingUser });
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
-
-interface IUserData {
-  firstName?: string;
-  lastName?: string;
-  name?: string;
-  phoneNumber?: string;
-  language?: string;
-  timezone?: string;
-  startOfTheCalendarWeek?: string;
-  timeFormat?: string;
-  dateFormat?: string;
-}
 
 export const updatePersonalInformation = async (req: any, res: Response) => {
   try {
@@ -105,20 +100,22 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
     if (phoneNumber !== "") dataToUpdate.phoneNumber = phoneNumber;
     if (language !== "") dataToUpdate.language = language;
     if (timezone !== "") dataToUpdate.timezone = timezone;
-    if (startOfTheCalendarWeek !== "") dataToUpdate.startOfTheCalendarWeek = startOfTheCalendarWeek;
+    if (startOfTheCalendarWeek !== "")
+      dataToUpdate.startOfTheCalendarWeek = startOfTheCalendarWeek;
     if (timeFormat !== "") dataToUpdate.timeFormat = timeFormat;
     if (dateFormat !== "") dataToUpdate.dateFormat = dateFormat;
 
+    await prisma.$connect();
     if (Object.keys(dataToUpdate).length > 0) {
       await prisma.user.update({
         where: { email },
         data: dataToUpdate,
       });
     }
-    prisma.$disconnect();
     res.status(200).end();
   } catch (error) {
-    prisma.$disconnect();
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };

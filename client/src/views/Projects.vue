@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useProjectStore } from "@/store/modules/project";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 import { capitalizeFirstLetter } from "@/helpers/helpers";
 
 const projectStore = useProjectStore();
 const { totalProjectsCount, allProjects } = storeToRefs(projectStore);
+const hoveredProjectId = ref<number | null>(null);
 </script>
 
 <template>
@@ -18,7 +20,9 @@ const { totalProjectsCount, allProjects } = storeToRefs(projectStore);
         <div
           v-for="{ id, name } in allProjects"
           :key="id"
-          class="flex items-center rounded hover:bg-gray-200"
+          class="flex items-center justify-between rounded hover:bg-gray-200"
+          @mouseenter="hoveredProjectId = id"
+          @mouseleave="hoveredProjectId = null"
         >
           <div class="flex items-center px-3 py-2">
             <div
@@ -27,6 +31,11 @@ const { totalProjectsCount, allProjects } = storeToRefs(projectStore);
               <span>{{ capitalizeFirstLetter(name) }}</span>
             </div>
             <span class="pl-3">{{ name }}</span>
+          </div>
+          <div v-if="hoveredProjectId === id" class="p-4">
+            <button class="border border-gray-300 rounded p-2">
+              <IconMoreVerticalSettings />
+            </button>
           </div>
         </div>
       </div>
