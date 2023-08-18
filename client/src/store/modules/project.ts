@@ -2,13 +2,24 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
-import { IProject, IAddNewProjectData } from "../interfaces";
+import type { IProject, IAddNewProjectData } from "../interfaces";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
   const project = ref<IProject>();
   const totalProjectsCount = ref<number>(0);
   const allProjects = ref<IProject[]>([]);
+
+  const editProjectName = async (newName: string, projectId: number) => {
+    try {
+      const response = await axios.patch(`${API_URL}/project/edit_project_name`, { newName, projectId });
+      if (response.status === 200) {
+        project.value = response?.data?.project;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getAllProjects = async () => {
     const token = localStorage.getItem("token");
@@ -131,5 +142,6 @@ export const useProjectStore = defineStore("project", () => {
     addNewProject,
     getTotalProjectCount,
     getAllProjects,
+    editProjectName,
   };
 });

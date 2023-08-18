@@ -14,17 +14,27 @@ const projectStore = useProjectStore();
 const assigneeStore = useAssigneeStore();
 const { membersCount, members } = storeToRefs(assigneeStore);
 const { project } = storeToRefs(projectStore);
-const { name = "", description, id } = project.value as IProject;
+const { editProjectName } = projectStore;
+const { description, id } = project.value as IProject;
 const router = useRouter();
 const hoveredMember = ref<string | null>(null);
-const newProjectName = ref<string>(name);
+const newProjectName = ref<string>(project.value?.name as string);
 
-const handleEditProjectName = () => {
-  console.log(id);
+const handleProjectNameEditModal = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
   if (modal) {
     modal?.showModal();
   }
+};
+
+const handleEditProjectName = async () => {
+  if (newProjectName.value === "" && project.value?.name) {
+    newProjectName.value = project.value.name;
+  }
+  if (newProjectName.value === project.value?.name) {
+    return;
+  }
+  await editProjectName(newProjectName.value.trim(), id);
 };
 </script>
 
@@ -43,8 +53,10 @@ const handleEditProjectName = () => {
         </RouterLink>
       </div>
       <div class="py-10 border-b">
-        <span class="font-medium text-2xl pr-4">{{ name }}</span>
-        <button @click="handleEditProjectName">
+        <span class="font-medium text-2xl pr-4">{{
+          project && project.name
+        }}</span>
+        <button @click="handleProjectNameEditModal">
           <IconEdit />
         </button>
         <dialog id="my_modal_1" class="modal">
@@ -56,7 +68,7 @@ const handleEditProjectName = () => {
               name="Enter a name for the project"
             />
             <div class="modal-action">
-              {/* if there is a button in form, it will close the modal */}
+              <button class="btn" @click="handleEditProjectName">Save</button>
               <button class="btn">Close</button>
             </div>
           </form>

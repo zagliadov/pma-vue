@@ -22,7 +22,6 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      console.log(response.data);
       membersCount.value = response?.data?.membersCount;
       members.value = response?.data?.users;
     } catch (error) {

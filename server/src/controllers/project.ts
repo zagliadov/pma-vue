@@ -165,3 +165,23 @@ export const addNewProject = async (req: any, res: Response) => {
     await prisma.$disconnect();
   }
 };
+
+export const editProjectName = async (req: Request, res: Response) => {
+  try {
+    const { newName, projectId } = req.body;
+    await prisma.$connect();
+    const project = await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        name: newName,
+      },
+    });
+    res.status(200).json({ project });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    prisma.$disconnect();
+  }
+};
