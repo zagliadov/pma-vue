@@ -4,6 +4,56 @@ import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail, getProjectById } from "./query";
 import prisma from "../db";
+import { ProjectAssignee } from "@prisma/client";
+import { IMembers } from "./interfaces";
+
+export const getAllAssignee = async (req: any, res: Response) => {
+  const { email } = req.userData;
+  try {
+    await prisma.$connect();
+    const members: { email: string }[] = await prisma.projectAssignee.findMany({
+      where: {
+        project: {
+          workspace: {
+            author: {
+              email,
+            },
+          },
+        },
+        projectCreator: false, // Exclude projectCreator
+      },
+      distinct: ["email"], // Get unique assignee by email
+      select: {
+        email: true,
+      },
+    });
+    
+    const uniqueEmails = members.map((member) => member.email);
+    const users: IMembers[] = await prisma.user.findMany({
+      where: {
+        email: {
+          in: uniqueEmails,
+        },
+      },
+      select: {
+        avatar_filename: true,
+        firstName: true,
+        lastName: true,
+        name: true,
+        email: true,
+      },
+    });
+    const missingEmails = uniqueEmails.filter((email) => !users.some((user) => user.email === email));
+    missingEmails.forEach((email) => {
+      users.push({email});
+    });
+    res.status(200).json({ membersCount: users.length, users });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+};
 
 export const getAssigneeProjects = async (req: any, res: Response) => {
   const { email } = req.userData;

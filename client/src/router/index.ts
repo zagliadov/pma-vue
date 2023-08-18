@@ -136,12 +136,14 @@ const router = createRouter({
       path: "/my_settings/:email/projects/edit_project/:id",
       name: "my_settings_edit_project",
       component: MySettingsEditProject,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
+      beforeEnter: async (to) => {
+        const id = Number(to.params.id);
+        const projectStore = useProjectStore();
+        const assigneeStore = useAssigneeStore();
+        const { getProject } = projectStore;
+        const { getAllAssignee } = assigneeStore;
+        await getAllAssignee();
+        await getProject(id);
       },
     },
     {
