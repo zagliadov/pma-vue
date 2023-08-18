@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail, getProjectById } from "./query";
 import prisma from "../db";
-import { ProjectAssignee } from "@prisma/client";
 import { IMembers } from "./interfaces";
 
 export const getAllAssignee = async (req: any, res: Response) => {

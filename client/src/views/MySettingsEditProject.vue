@@ -14,9 +14,18 @@ const projectStore = useProjectStore();
 const assigneeStore = useAssigneeStore();
 const { membersCount, members } = storeToRefs(assigneeStore);
 const { project } = storeToRefs(projectStore);
-const { name = "", description } = project.value as IProject;
+const { name = "", description, id } = project.value as IProject;
 const router = useRouter();
 const hoveredMember = ref<string | null>(null);
+const newProjectName = ref<string>(name);
+
+const handleEditProjectName = () => {
+  console.log(id);
+  const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
+  if (modal) {
+    modal?.showModal();
+  }
+};
 </script>
 
 <template>
@@ -35,9 +44,23 @@ const hoveredMember = ref<string | null>(null);
       </div>
       <div class="py-10 border-b">
         <span class="font-medium text-2xl pr-4">{{ name }}</span>
-        <button>
+        <button @click="handleEditProjectName">
           <IconEdit />
         </button>
+        <dialog id="my_modal_1" class="modal">
+          <form method="dialog" class="modal-box">
+            <h3 class="font-bold text-lg pb-4">Edit project name!</h3>
+            <CustomInput
+              v-model="newProjectName"
+              placeholder="Type here"
+              name="Enter a name for the project"
+            />
+            <div class="modal-action">
+              {/* if there is a button in form, it will close the modal */}
+              <button class="btn">Close</button>
+            </div>
+          </form>
+        </dialog>
         <div class="pt-5 max-w-[1000px]">
           <p class="text-gray-600">
             {{ description }}
@@ -61,12 +84,8 @@ const hoveredMember = ref<string | null>(null);
         >
           <div className="flex items-center">
             <div
+              v-if="!firstName"
               class="flex items-center justify-center w-10 h-10 bg-neutral-content rounded-full"
-              :style="{
-                backgroundPosition: 'center',
-                backgroundSize: 'contain',
-                backgroundImage: `url('http://localhost:9002/user/user_avatar/${avatar_filename}')`,
-              }"
             >
               <span v-if="firstName && !avatar_filename"
                 >{{ capitalizeFirstLetter(firstName) }}
@@ -75,6 +94,15 @@ const hoveredMember = ref<string | null>(null);
                 >{{ capitalizeFirstLetter(email) }}
               </span>
             </div>
+            <div
+              v-if="firstName"
+              class="flex items-center justify-center w-10 h-10 bg-neutral-content rounded-full"
+              :style="{
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundImage: `url('http://localhost:9002/user/user_avatar/${avatar_filename}')`,
+              }"
+            ></div>
             <span class="pl-5"
               >{{ firstName || email }} {{ lastName || "" }}</span
             >
