@@ -14,11 +14,12 @@ const projectStore = useProjectStore();
 const assigneeStore = useAssigneeStore();
 const { membersCount, members } = storeToRefs(assigneeStore);
 const { project } = storeToRefs(projectStore);
-const { editProjectName } = projectStore;
+const { editProjectName, deleteProject } = projectStore;
 const { description, id } = project.value as IProject;
 const router = useRouter();
 const hoveredMember = ref<string | null>(null);
 const newProjectName = ref<string>(project.value?.name as string);
+const deleteProjectName = ref<string>("");
 
 const handleProjectNameEditModal = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
@@ -35,6 +36,21 @@ const handleEditProjectName = async () => {
     return;
   }
   await editProjectName(newProjectName.value.trim(), id);
+};
+
+const handleProjectDeleteModal = () => {
+  const modal: HTMLDialogElement | null = document.querySelector("#my_modal_2");
+  if (modal) {
+    modal?.showModal();
+  }
+};
+
+const handleDeleteProject = async () => {
+  if (deleteProjectName.value.trim() === project.value?.name) {
+    await deleteProject(id).then(() => {
+      router.push(`/my_settings/${getEmailFromCurrentPath(router)}/projects`);
+    });
+  }
 };
 </script>
 
@@ -68,8 +84,8 @@ const handleEditProjectName = async () => {
               name="Enter a name for the project"
             />
             <div class="modal-action">
-              <button class="btn" @click="handleEditProjectName">Save</button>
               <button class="btn">Close</button>
+              <button class="btn" @click="handleEditProjectName">Save</button>
             </div>
           </form>
         </dialog>
@@ -130,9 +146,30 @@ const handleEditProjectName = async () => {
             project, all data will be lost</span
           >
           <div class="pt-5">
-            <button class="btn btn-error text-error-content text-opacity-50">
+            <button
+              class="btn btn-error text-error-content text-opacity-50"
+              @click="handleProjectDeleteModal"
+            >
               Delete project
             </button>
+            <dialog id="my_modal_2" class="modal">
+              <form method="dialog" class="modal-box">
+                <h3 class="font-bold text-lg pb-4">
+                  Are you sure you want to delete the project?
+                </h3>
+                <CustomInput
+                  v-model="deleteProjectName"
+                  placeholder="Type here"
+                  name="Enter project name:"
+                />
+                <div class="modal-action">
+                  <button class="btn">Close</button>
+                  <button class="btn btn-error" @click="handleDeleteProject">
+                    Delete
+                  </button>
+                </div>
+              </form>
+            </dialog>
           </div>
         </div>
       </div>

@@ -185,3 +185,20 @@ export const editProjectName = async (req: Request, res: Response) => {
     prisma.$disconnect();
   }
 };
+
+export const deleteProject = async (req: Request, res: Response) => {
+  try {
+    const { projectId } = req.params;
+    await prisma.$connect();
+    const deletedProject = await prisma.project.delete({
+      where: {
+        id: Number(projectId),
+      },
+    });
+    res.status(202).json({ deletedProject });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+};

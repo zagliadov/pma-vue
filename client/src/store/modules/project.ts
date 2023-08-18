@@ -10,16 +10,28 @@ export const useProjectStore = defineStore("project", () => {
   const totalProjectsCount = ref<number>(0);
   const allProjects = ref<IProject[]>([]);
 
+  const deleteProject = async (projectId: number) => {
+    try {
+      const response = await axios.delete(`${API_URL}/project/delete_project/${projectId}`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const editProjectName = async (newName: string, projectId: number) => {
     try {
-      const response = await axios.patch(`${API_URL}/project/edit_project_name`, { newName, projectId });
+      const response = await axios.patch(
+        `${API_URL}/project/edit_project_name`,
+        { newName, projectId }
+      );
       if (response.status === 200) {
         project.value = response?.data?.project;
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getAllProjects = async () => {
     const token = localStorage.getItem("token");
@@ -143,5 +155,6 @@ export const useProjectStore = defineStore("project", () => {
     getTotalProjectCount,
     getAllProjects,
     editProjectName,
+    deleteProject,
   };
 });
