@@ -29,7 +29,11 @@ import IconSettingPersonal from "../icons/IconSettingPersonal.vue";
 import IconInformationPersonal from "../icons/IconInformationPersonal.vue";
 import IconMoreVerticalSettings from "../icons/IconMoreVerticalSettings.vue";
 import IconClose from "../icons/IconClose.vue";
+import IconUsers from "../icons/IconUsers.vue";
+import IconEye from "../icons/IconEye.vue";
 import IconEdit from "../icons/IconEdit.vue";
+import IconTable from "../icons/IconTable.vue";
+import IconTimelineTable from "../icons/IconTimelineTable.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -69,6 +73,10 @@ const components = [
   { name: "IconMoreVerticalSettings", component: IconMoreVerticalSettings },
   { name: "IconEdit", component: IconEdit },
   { name: "IconClose", component: IconClose },
+  { name: "IconUsers", component: IconUsers },
+  { name: "IconEye", component: IconEye },
+  { name: "IconTable", component: IconTable },
+  { name: "IconTimelineTable", component: IconTimelineTable },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
