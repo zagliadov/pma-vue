@@ -100,6 +100,7 @@ const handleCloseSideMenu = () => {
                       :to="`/my_settings/${getEmailFromCurrentPath(
                         router
                       )}/projects`"
+                      @click="handleCloseSideMenu"
                       class="flex items-center justify-between p-3 hover:bg-neutral-content"
                     >
                       <div class="flex items-center">
@@ -111,6 +112,7 @@ const handleCloseSideMenu = () => {
                       :to="`/my_settings/${getEmailFromCurrentPath(
                         router
                       )}/projects`"
+                      @click="handleCloseSideMenu"
                       class="flex items-center justify-between p-3 hover:bg-neutral-content"
                     >
                       <div class="flex items-center">
@@ -119,7 +121,10 @@ const handleCloseSideMenu = () => {
                       </div>
                     </RouterLink>
                     <RouterLink
-                      :to="createMainTableRoute(router)"
+                      :to="`/${getEmailFromCurrentPath(
+                        router
+                      )}/workspace/${selectWorkspaceId}/project/${id}`"
+                      @click="handleCloseSideMenu"
                       class="flex items-center justify-between p-3 hover:bg-neutral-content"
                     >
                       <div class="flex items-center">
@@ -128,7 +133,10 @@ const handleCloseSideMenu = () => {
                       </div>
                     </RouterLink>
                     <RouterLink
-                      :to="createTimelineTableRoute(router)"
+                    :to="`/${getEmailFromCurrentPath(
+                        router
+                      )}/workspace/${selectWorkspaceId}/project/${id}/timeline`"
+                      @click="handleCloseSideMenu"
                       class="flex items-center justify-between p-3 hover:bg-neutral-content"
                     >
                       <div class="flex items-center">
