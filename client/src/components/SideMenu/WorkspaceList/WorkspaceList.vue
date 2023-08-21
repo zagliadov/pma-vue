@@ -70,9 +70,9 @@ const handleCloseSideMenu = () => {
             class="flex items-center text-gray-600 pl-2 hover:text-primary"
           >
             <div
-              class="flex items-center justify-center rounded bg-gray-300 w-8 h-8"
+              class="flex items-center"
             >
-              <span>{{ capitalizeFirstLetter(name) }}</span>
+              <span class="w-8 h-8 flex items-center justify-center rounded bg-gray-300">{{ capitalizeFirstLetter(name) }}</span>
             </div>
             <span class="text-base pl-2">{{ name }}</span>
           </RouterLink>
