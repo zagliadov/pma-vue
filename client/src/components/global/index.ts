@@ -34,6 +34,7 @@ import IconEye from "../icons/IconEye.vue";
 import IconEdit from "../icons/IconEdit.vue";
 import IconTable from "../icons/IconTable.vue";
 import IconTimelineTable from "../icons/IconTimelineTable.vue";
+import IconCheck from "../icons/IconCheck.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -77,6 +78,7 @@ const components = [
   { name: "IconEye", component: IconEye },
   { name: "IconTable", component: IconTable },
   { name: "IconTimelineTable", component: IconTimelineTable },
+  { name: "IconCheck", component: IconCheck },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },
