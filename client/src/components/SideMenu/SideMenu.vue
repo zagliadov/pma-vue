@@ -55,7 +55,7 @@ const handleCreateNewSpace = async () => {
         </button>
       </div>
       <div class="px-4 py-6">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center cursor-pointer" @click="handleSpaceOpen">
           <div class="flex items-center">
             <div class="border-2 border-neutral rounded-full w-5 h-5"></div>
             <span class="pl-1 text-lg">Your spaces</span>
@@ -63,7 +63,6 @@ const handleCreateNewSpace = async () => {
 
           <div class="pr-3">
             <button
-              @click="handleSpaceOpen"
               class="flex items-center"
               :class="{ 'rotate-180': isSpaceOpen }"
             >

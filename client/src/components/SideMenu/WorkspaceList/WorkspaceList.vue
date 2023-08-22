@@ -8,8 +8,6 @@ import {
   parseUsernameFromEmail,
   capitalizeFirstLetter,
   getEmailFromCurrentPath,
-  createMainTableRoute,
-  createTimelineTableRoute,
 } from "../../../helpers/helpers";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -43,11 +41,10 @@ const handleCloseSideMenu = () => {
   <div class="pt-4">
     <div v-for="{ name, id } in workspaces" :key="id" class="flex flex-col">
       <div class="flex items-center justify-between pt-2">
-        <div class="flex items-center">
+        <div class="flex items-center cursor-pointer" @click="handleOpenProject(id)">
           <button
             class="flex items-center"
             :class="{ 'rotate-180': selectWorkspaceId === id }"
-            @click="handleOpenProject(id)"
           >
             <IconChevron />
           </button>
@@ -133,7 +130,7 @@ const handleCloseSideMenu = () => {
                       </div>
                     </RouterLink>
                     <RouterLink
-                    :to="`/${getEmailFromCurrentPath(
+                      :to="`/${getEmailFromCurrentPath(
                         router
                       )}/workspace/${selectWorkspaceId}/project/${id}/timeline`"
                       @click="handleCloseSideMenu"
