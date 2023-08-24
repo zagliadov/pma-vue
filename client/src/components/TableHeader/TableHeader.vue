@@ -83,11 +83,15 @@ const handleDrop = (e) => {
             ></textarea>
           </div>
           <div class="px-6">
-            <div class="border border-dashed p-2" @dragover.prevent @drop="handleDrop">
-            <span>Перетащите файл сюда для загрузки</span>
+            <div
+              class="flex items-center justify-center border border-dashed p-4"
+              @dragover.prevent
+              @drop="handleDrop"
+            >
+              <IconUploadCloud />
+              <span class="pl-2 text-base-300">Drop files to attach or<span class="font-medium text-primary pl-2">browse</span></span>
+            </div>
           </div>
-          </div>
-          
         </div>
         <div class="modal-action px-4 py-2">
           <button class="btn">Cancel</button>
