@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
-import { IWorkspace } from "../interfaces.ts";
+import type { IWorkspace } from "../interfaces.ts";
 
 export const useWorkspaceStore = defineStore("workspace", () => {
   const workspaces = ref<IWorkspace[]>([]);
