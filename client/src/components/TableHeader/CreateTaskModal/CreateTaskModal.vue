@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import StatusModal from "./StatusModal/StatusModal.vue";
+import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
 
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
 const taskStatus = ref<string>("");
+const taskAssignee = ref<string[]>([]);
 
 const handleShowModalAddTask = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
@@ -14,10 +16,7 @@ const handleShowModalAddTask = () => {
   }
 };
 
-const handleAssigneeOpen = (e) => {
-  e.preventDefault();
-};
-const handleDrop = (e) => {
+const handleDrop = (e: any) => {
   e.preventDefault();
   const files = e.dataTransfer.files;
   if (files.length > 0) {
@@ -25,9 +24,14 @@ const handleDrop = (e) => {
   }
 };
 
-const handleTaskCreate = (e) => {
+const handleTaskCreate = (e: any) => {
   e.preventDefault();
-  console.log(taskName.value, taskDescription.value, taskStatus.value, taskColor.value);
+  console.log(
+    taskName.value,
+    taskDescription.value,
+    taskStatus.value,
+    taskColor.value
+  );
 };
 </script>
 
@@ -59,15 +63,12 @@ const handleTaskCreate = (e) => {
           />
         </div>
         <div class="flex items-center px-6 py-3">
-          <StatusModal v-model:taskStatus="taskStatus" v-model:taskColor="taskColor"/>
+          <StatusModal
+            v-model:taskStatus="taskStatus"
+            v-model:taskColor="taskColor"
+          />
           <div class="ml-5 h-6 border"></div>
-          <button
-            class="flex items-center border rounded px-4 py-2 ml-5"
-            @click="handleAssigneeOpen"
-          >
-            <IconMySettingsUser />
-            <span class="pl-2 text-sm font-medium text-neutral">Assignee</span>
-          </button>
+          <AssigneeModal v-model:taskAssignee="taskAssignee"/>
         </div>
 
         <div class="w-full px-6 pb-4 h-auto">

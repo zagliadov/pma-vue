@@ -2,11 +2,13 @@
 import { hexToRgba } from "../../../../helpers/helpers.js";
 import { ref } from "vue";
 
-const color = ref<string | null>(null);
-const status = ref<string | null>(null);
-const props = defineProps(['modelValue'])
+const { taskStatus, taskColor } = defineProps<{
+  taskStatus: string;
+  taskColor: string;
+}>();
+const emit = defineEmits(["update:taskStatus", "update:taskColor"]);
 
-const handleStatusOpen = (e) => {
+const handleStatusOpen = (e: any) => {
   e.preventDefault();
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_2");
   if (modal) {
@@ -14,16 +16,11 @@ const handleStatusOpen = (e) => {
   }
 };
 
-const handleChangeStatus = (c: string, s: string) => {
-  color.value = c;
-  status.value = s;
+const handleChangeStatus = (color: string, status: string) => {
+  emit("update:taskStatus", status);
+  emit("update:taskColor", color);
 };
 
-const handleSaveStatus = (e) => {
-  e.preventDefault();
-  console.log(props)
-
-};
 </script>
 
 <template>
@@ -31,9 +28,15 @@ const handleSaveStatus = (e) => {
     class="flex items-center justify-center border rounded px-4 py-2 w-[120px]"
     @click="handleStatusOpen"
   >
-    <IconCheck v-if="!color"/>
-    <div v-else :style="{ backgroundColor: color}" class="w-3 h-3 rounded"></div>
-    <span class="pl-2 text-sm font-medium">{{ (status === null) ? 'Status' : status }}</span>
+    <IconCheck v-if="!taskColor" />
+    <div
+      v-else
+      :style="{ backgroundColor: taskColor }"
+      class="w-3 h-3 rounded"
+    ></div>
+    <span class="pl-2 text-sm font-medium">{{
+      taskStatus.length === 0 ? "Status" : taskStatus
+    }}</span>
   </button>
   <dialog id="my_modal_2" class="modal">
     <form
@@ -100,7 +103,7 @@ const handleSaveStatus = (e) => {
         </div>
       </div>
       <div class="modal-action p-3">
-        <button class="btn w-full" @click="handleSaveStatus">
+        <button class="btn w-full">
           <IconPlus />
           <span class="text-primary">Save status</span>
         </button>
