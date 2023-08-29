@@ -2,25 +2,20 @@
 import { ref } from "vue";
 import StatusModal from "./StatusModal/StatusModal.vue";
 import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
+import FileUpload from "./FileUpload/FileUpload.vue";
+import FileList from "./FileList/FileList.vue";
 
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
 const taskStatus = ref<string>("");
 const taskAssignee = ref<string[]>([]);
+const taskFileArray = ref<any>([]);
 
 const handleShowModalAddTask = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
   if (modal) {
     modal?.showModal();
-  }
-};
-
-const handleDrop = (e: any) => {
-  e.preventDefault();
-  const files = e.dataTransfer.files;
-  if (files.length > 0) {
-    console.log(files, "files");
   }
 };
 
@@ -32,7 +27,7 @@ const handleTaskCreate = (e: any) => {
     taskStatus.value,
     taskColor.value
   );
-  console.log("taskAssignee=====================>", taskAssignee);
+  console.log("taskFileArray====================>", taskFileArray.value);
 };
 </script>
 
@@ -80,21 +75,8 @@ const handleTaskCreate = (e: any) => {
             class="textarea textarea-lg w-full focus:outline-none rounded bg-gray-100"
           ></textarea>
         </div>
-        <div class="px-6">
-          <div
-            class="flex items-center justify-center border border-dashed p-4"
-            @dragover.prevent
-            @drop="handleDrop"
-          >
-            <IconUploadCloud />
-            <span class="pl-2 text-base-300"
-              >Drop files to attach or<span
-                class="font-medium text-primary pl-2"
-                >browse</span
-              ></span
-            >
-          </div>
-        </div>
+        <FileList v-model:taskFileArray="taskFileArray" />
+        <FileUpload v-model:taskFileArray="taskFileArray" />
       </div>
       <div class="modal-action px-4 py-2">
         <button class="btn">Cancel</button>

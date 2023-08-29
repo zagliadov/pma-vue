@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { hexToRgba } from "../../../../helpers/helpers.js";
-import { ref } from "vue";
 
 const { taskStatus, taskColor } = defineProps<{
   taskStatus: string;

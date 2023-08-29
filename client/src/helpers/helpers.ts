@@ -116,3 +116,7 @@ export const hexToRgba = (hex: string, opacity: number) => {
   const b = parseInt(hex.substring(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
+
+export const bytesToMegabytes = (bytes: number) => {
+  return (bytes / 1024 / 1024).toFixed(2);
+};
