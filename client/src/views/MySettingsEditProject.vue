@@ -4,6 +4,7 @@ import {
   capitalizeFirstLetter,
   getEmailFromCurrentPath,
 } from "@/helpers/helpers";
+import { API_URL } from "@/helpers/constants";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/store/modules/project";
 import type { IProject } from "@/store/interfaces";
@@ -128,7 +129,7 @@ const handleDeleteProject = async () => {
               :style="{
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                backgroundImage: `url('http://localhost:9002/user/user_avatar/${avatar_filename}')`,
+                backgroundImage: `url('${API_URL}/user/user_avatar/${avatar_filename}')`,
               }"
             ></div>
             <span class="pl-5"

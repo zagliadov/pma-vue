@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../../store/modules/auth";
 import { useUserStore } from "../../../store/modules/user";
 import { capitalizeFirstLetter } from "../../../helpers/helpers";
+import { API_URL } from "@/helpers/constants";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -34,7 +35,7 @@ const getAvatar = () => {
     return {
       backgroundPosition: "center",
       backgroundSize: "contain",
-      backgroundImage: `url("http://localhost:9002/user/user_avatar/${existingUser.value?.avatar_filename}")`,
+      backgroundImage: `url("${API_URL}/user/user_avatar/${existingUser.value?.avatar_filename}")`,
     };
   }
 };

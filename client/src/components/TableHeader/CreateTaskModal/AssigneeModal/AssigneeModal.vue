@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import { capitalizeFirstLetter } from "@/helpers/helpers";
+import { API_URL } from "@/helpers/constants";
 import { useAssigneeStore } from "@/store/modules/assignee";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+
+interface IMember {
+  email: string;
+  avatar_filename?: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+}
 
 const { taskAssignee } = defineProps<{
   taskAssignee: string[];
@@ -11,7 +20,7 @@ const emit = defineEmits(["update:taskAssignee"]);
 const assigneeStore = useAssigneeStore();
 const { getAllAssignee } = assigneeStore;
 const { members } = storeToRefs(assigneeStore);
-const arr = ref<string[]>([]);
+const membersArray = ref<IMember[]>([]);
 
 const handleAssigneeModalOpen = async (e: any) => {
   e.preventDefault();
@@ -22,26 +31,71 @@ const handleAssigneeModalOpen = async (e: any) => {
   }
 };
 
-const handleAddAssignee = (e: any, email: string) => {
+const handleAddAssignee = (e: any, member: IMember) => {
   e.preventDefault();
-  arr.value.push(email);
-  emit("update:taskAssignee", arr.value);
-};
+  if (!membersArray.value) return;
+  const existingIndex = membersArray.value.findIndex(
+    (item) => item.email === member.email
+  );
 
-const handleClick = (e: any) => {
-  e.preventDefault();
-  console.log(taskAssignee);
+  if (existingIndex !== -1) {
+    const updatedArr = membersArray.value.filter(
+      (_, index) => index !== existingIndex
+    );
+    membersArray.value = updatedArr;
+  } else {
+    const updatedArr = [...membersArray.value, member];
+    membersArray.value = updatedArr;
+  }
+  emit("update:taskAssignee", membersArray.value);
 };
 </script>
 
 <template>
-  <button
-    class="ml-5 flex items-center justify-center border rounded px-4 py-2 w-[120px]"
-    @click="handleAssigneeModalOpen"
-  >
-    <IconMySettingsUser />
-    <span class="pl-2 text-sm font-medium text-neutral">Assignee</span>
-  </button>
+  <div class="flex items-center">
+    <button
+      v-if="membersArray && membersArray.length === 0"
+      class="flex items-center justify-center border rounded px-4 py-2 h-10 w-[120px]"
+      @click="handleAssigneeModalOpen"
+    >
+      <IconMySettingsUser />
+      <span class="pl-2 text-sm font-medium text-neutral">Assignee</span>
+    </button>
+    <div
+      v-else
+      class="flex items-center"
+      v-for="(member, index) in membersArray"
+      :key="member.email"
+    >
+      <div
+        :style="{
+          position: 'relative',
+          marginLeft: `${index - 20}px`,
+          zIndex: `${index + 2}`,
+          backgroundPosition: 'center',
+          backgroundSize: 'contain',
+          backgroundImage: member.avatar_filename
+            ? `url(${API_URL}/user/user_avatar/${member.avatar_filename})`
+            : 'none',
+        }"
+        class="flex items-center justify-center w-10 h-10 border rounded-full bg-white"
+      >
+        <span>
+          {{
+            !member.avatar_filename ? capitalizeFirstLetter(member.email) : ""
+          }}
+        </span>
+      </div>
+    </div>
+    <button
+      v-if="membersArray.length > 0"
+      @click="handleAssigneeModalOpen"
+      class="flex items-center justify-center w-10 h-10 border rounded-full bg-white relative ml-[-15px] z-50"
+    >
+      <IconPlus />
+    </button>
+  </div>
+
   <dialog id="my_modal_3" class="modal">
     <form
       method="dialog"
@@ -49,37 +103,44 @@ const handleClick = (e: any) => {
     >
       <div class="flex items-center justify-between border-b p-3">
         <span>Assignee</span>
-        <button @click="handleClick">
+        <button>
           <IconClose />
         </button>
       </div>
       <div>
         <div
-          v-for="{ email, avatar_filename, firstName, lastName } in members"
-          :key="email"
-          class="p-2"
+          v-for="member in members"
+          :key="member.email"
+          class="p-2 flex items-center hover:bg-base-300"
         >
-          <div class="flex items-center">
+          <button
+            class="flex items-center"
+            @click="handleAddAssignee($event, member)"
+          >
             <div
               :style="{
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                backgroundImage: avatar_filename
-                  ? `url(http://localhost:9002/user/user_avatar/${avatar_filename})`
+                backgroundImage: member.avatar_filename
+                  ? `url(${API_URL}/user/user_avatar/${member.avatar_filename})`
                   : 'none',
               }"
               class="flex items-center justify-center w-10 h-10 border rounded-full"
             >
               <span>
-                {{ !avatar_filename ? capitalizeFirstLetter(email) : "" }}
+                {{
+                  !member.avatar_filename
+                    ? capitalizeFirstLetter(member.email)
+                    : ""
+                }}
               </span>
             </div>
-            <button
-              @click="(e) => handleAddAssignee(e, email)"
-              class="pt-2 pl-2"
-            >
-              <span>{{ email }}</span>
-            </button>
+            <div class="pl-2">
+              <span>{{ member.email }}</span>
+            </div>
+          </button>
+          <div v-for="item in membersArray" class="flex items-center">
+            <IconCheck v-if="item.email === member.email" />
           </div>
         </div>
       </div>

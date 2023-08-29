@@ -32,6 +32,7 @@ const handleTaskCreate = (e: any) => {
     taskStatus.value,
     taskColor.value
   );
+  console.log("taskAssignee=====================>", taskAssignee);
 };
 </script>
 
@@ -67,8 +68,8 @@ const handleTaskCreate = (e: any) => {
             v-model:taskStatus="taskStatus"
             v-model:taskColor="taskColor"
           />
-          <div class="ml-5 h-6 border"></div>
-          <AssigneeModal v-model:taskAssignee="taskAssignee"/>
+          <div class="ml-5 h-6 pl-5 border-l"></div>
+          <AssigneeModal v-model:taskAssignee="taskAssignee" />
         </div>
 
         <div class="w-full px-6 pb-4 h-auto">
