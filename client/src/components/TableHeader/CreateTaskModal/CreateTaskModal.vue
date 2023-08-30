@@ -10,7 +10,7 @@ const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
 const taskStatus = ref<string>("");
 const taskAssignee = ref<string[]>([]);
-const taskFileArray = ref<any>([]);
+const taskFileArray = ref<File[]>([]);
 
 const handleShowModalAddTask = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
@@ -75,7 +75,7 @@ const handleTaskCreate = (e: any) => {
             class="textarea textarea-lg w-full focus:outline-none rounded bg-gray-100"
           ></textarea>
         </div>
-        <FileList v-model:taskFileArray="taskFileArray" />
+        <FileList v-model:fileArray="taskFileArray" />
         <FileUpload v-model:taskFileArray="taskFileArray" />
       </div>
       <div class="modal-action px-4 py-2">

@@ -2,21 +2,20 @@
 import { bytesToMegabytes } from "@/helpers/helpers";
 import { ref } from "vue";
 
-const { taskFileArray } = defineProps(["taskFileArray"]);
-const emit = defineEmits(["update:taskFileArray"]);
-const updatedFiles = ref<any>();
+const { fileArray } = defineProps(["fileArray"]);
+const emit = defineEmits(["update:fileArray"]);
 
-const handleRemoveFile = (e: any, name: string) => {
+const handleRemoveFile = (e: any, name: string, array: File) => {
   e.preventDefault();
-  console.log(taskFileArray)
-  // const updatedFiles = taskFileArray.filter((file: any) => file.name !== name);
-  // emit("update:taskFileArray", updatedFiles);
-}
+  const updatedFiles: File[] = array.filter((file: File) => file.name !== name);
+  emit("update:fileArray", updatedFiles);
+};
+
 </script>
 
 <template>
   <div class="flex items-center justify-center flex-wrap px-6 pb-3">
-    <div v-for="(file, index) in taskFileArray" :key="file.name" class="flex flex-col p-1">
+    <div v-for="(file, index) in fileArray" :key="file.name" class="flex flex-col p-1">
       <div
         class="flex flex-col justify-around border border-base-200 rounded w-[150px] h-[100px]"
       >
@@ -28,7 +27,7 @@ const handleRemoveFile = (e: any, name: string) => {
               bytesToMegabytes(file.size) + " MB"
             }}</span>
           </div>
-          <button @click="handleRemoveFile($event, file.name)">
+          <button @click="handleRemoveFile($event, file.name, fileArray)">
             <IconTrashNotification />
           </button>
         </div>
