@@ -4,23 +4,17 @@ import { API_URL } from "@/helpers/constants";
 import { useAssigneeStore } from "@/store/modules/assignee";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import type { ITaskAssignee } from "../../../../store/interfaces.ts";
 
-interface IMember {
-  email: string;
-  avatar_filename?: string;
-  firstName?: string;
-  lastName?: string;
-  name?: string;
-}
 
 const { taskAssignee } = defineProps<{
-  taskAssignee: string[];
+  taskAssignee: ITaskAssignee[];
 }>();
 const emit = defineEmits(["update:taskAssignee"]);
 const assigneeStore = useAssigneeStore();
 const { getAllAssignee } = assigneeStore;
 const { members } = storeToRefs(assigneeStore);
-const membersArray = ref<IMember[]>([]);
+const membersArray = ref<ITaskAssignee[]>([]);
 
 const handleAssigneeModalOpen = async (e: any) => {
   e.preventDefault();
@@ -31,7 +25,7 @@ const handleAssigneeModalOpen = async (e: any) => {
   }
 };
 
-const handleAddAssignee = (e: any, member: IMember) => {
+const handleAddAssignee = (e: any, member: ITaskAssignee) => {
   e.preventDefault();
   if (!membersArray.value) return;
   const existingIndex = membersArray.value.findIndex(
@@ -65,7 +59,7 @@ const handleAddAssignee = (e: any, member: IMember) => {
       v-else
       class="flex items-center"
       v-for="(member, index) in membersArray"
-      :key="member.email"
+      :key="member?.email"
     >
       <div
         :style="{
@@ -74,15 +68,15 @@ const handleAddAssignee = (e: any, member: IMember) => {
           zIndex: `${index + 2}`,
           backgroundPosition: 'center',
           backgroundSize: 'contain',
-          backgroundImage: member.avatar_filename
-            ? `url(${API_URL}/user/user_avatar/${member.avatar_filename})`
+          backgroundImage: member?.avatar_filename
+            ? `url(${API_URL}/user/user_avatar/${member?.avatar_filename})`
             : 'none',
         }"
         class="flex items-center justify-center w-10 h-10 border rounded-full bg-white"
       >
         <span>
           {{
-            !member.avatar_filename ? capitalizeFirstLetter(member.email) : ""
+            !member?.avatar_filename ? capitalizeFirstLetter(member?.email) : ""
           }}
         </span>
       </div>
@@ -110,7 +104,7 @@ const handleAddAssignee = (e: any, member: IMember) => {
       <div>
         <div
           v-for="member in members"
-          :key="member.email"
+          :key="member?.email"
           class="p-2 flex items-center hover:bg-base-300"
         >
           <button
@@ -121,26 +115,26 @@ const handleAddAssignee = (e: any, member: IMember) => {
               :style="{
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                backgroundImage: member.avatar_filename
-                  ? `url(${API_URL}/user/user_avatar/${member.avatar_filename})`
+                backgroundImage: member?.avatar_filename
+                  ? `url(${API_URL}/user/user_avatar/${member?.avatar_filename})`
                   : 'none',
               }"
               class="flex items-center justify-center w-10 h-10 border rounded-full"
             >
               <span>
                 {{
-                  !member.avatar_filename
-                    ? capitalizeFirstLetter(member.email)
+                  !member?.avatar_filename
+                    ? capitalizeFirstLetter(member?.email)
                     : ""
                 }}
               </span>
             </div>
             <div class="pl-2">
-              <span>{{ member.email }}</span>
+              <span>{{ member?.email }}</span>
             </div>
           </button>
           <div v-for="item in membersArray" class="flex items-center">
-            <IconCheck v-if="item.email === member.email" />
+            <IconCheck v-if="item?.email === member?.email" />
           </div>
         </div>
       </div>

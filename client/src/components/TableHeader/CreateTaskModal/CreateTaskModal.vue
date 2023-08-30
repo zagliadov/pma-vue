@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { getRouteParams } from "../../../helpers/helpers";
+import { useRouter } from "vue-router";
+import { useTaskStore } from "@/store/modules/task";
 import StatusModal from "./StatusModal/StatusModal.vue";
+import type LoginViewVue from "@/views/LoginView.vue";
 import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
 import FileUpload from "./FileUpload/FileUpload.vue";
 import FileList from "./FileList/FileList.vue";
+import type { ITaskAssignee } from "@/store/interfaces";
 
+const router = useRouter();
+const { projectId, email } = getRouteParams(router);
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
 const taskStatus = ref<string>("");
-const taskAssignee = ref<string[]>([]);
+const taskAssignee = ref<ITaskAssignee[]>([]);
 const taskFileArray = ref<File[]>([]);
+const taskStore = useTaskStore();
+const { createTask } = taskStore;
 
 const handleShowModalAddTask = () => {
   const modal: HTMLDialogElement | null = document.querySelector("#my_modal_1");
@@ -19,22 +28,35 @@ const handleShowModalAddTask = () => {
   }
 };
 
-const handleTaskCreate = (e: any) => {
+const handleTaskCreate = async (e: any) => {
   e.preventDefault();
-  console.log(
-    taskName.value,
-    taskDescription.value,
-    taskStatus.value,
-    taskColor.value
-  );
-  console.log("taskFileArray====================>", taskFileArray.value);
+  if (
+    taskName.value.length === 0 ||
+    taskDescription.value.length === 0 ||
+    taskColor.value.length === 0 ||
+    taskStatus.value.length === 0 ||
+    taskAssignee.value.length === 0 ||
+    taskFileArray.value.length === 0
+  ) {
+    console.error("Please fill in all required fields.");
+    return;
+  } else {
+    await createTask({
+      taskName: taskName.value,
+      taskDescription: taskDescription.value,
+      taskColor: taskColor.value,
+      taskStatus: taskStatus.value,
+      taskAssignee: taskAssignee.value,
+      taskFileArray: taskFileArray.value,
+    }, projectId, email);
+  }
 };
 </script>
 
 <template>
   <button
     @click="handleShowModalAddTask"
-    class="flex items-center bg-success-content px-3 py-2 rounded"
+    class="flex items-center bg-primary px-3 py-2 rounded"
   >
     <IconPlus class="stroke-base-100" />
     <span class="text-base-100 pl-2">Task</span>
@@ -76,11 +98,11 @@ const handleTaskCreate = (e: any) => {
           ></textarea>
         </div>
         <FileList v-model:fileArray="taskFileArray" />
-        <FileUpload v-model:taskFileArray="taskFileArray" />
+        <FileUpload v-model:fileArray="taskFileArray" />
       </div>
       <div class="modal-action px-4 py-2">
         <button class="btn">Cancel</button>
-        <button class="btn btn-success" @click="handleTaskCreate">
+        <button class="btn btn-primary" @click="handleTaskCreate">
           Create
         </button>
       </div>

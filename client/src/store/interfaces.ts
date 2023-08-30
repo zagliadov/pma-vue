@@ -24,6 +24,22 @@ export interface IProjectAssignees {
 
 export interface ITasks {}
 
+export interface ITaskAssignee {
+  email: string;
+  avatar_filename?: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+}
+export interface ICreateTask {
+  taskName: string;
+  taskDescription: string;
+  taskColor: string;
+  taskStatus: string;
+  taskAssignee: ITaskAssignee[];
+  taskFileArray: File[];
+}
+
 export interface IPersonalInformation {
   firstName: string;
   lastName: string;

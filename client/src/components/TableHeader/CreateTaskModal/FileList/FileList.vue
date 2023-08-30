@@ -5,7 +5,7 @@ import { ref } from "vue";
 const { fileArray } = defineProps(["fileArray"]);
 const emit = defineEmits(["update:fileArray"]);
 
-const handleRemoveFile = (e: any, name: string, array: File) => {
+const handleRemoveFile = (e: any, name: string, array: File[]) => {
   e.preventDefault();
   const updatedFiles: File[] = array.filter((file: File) => file.name !== name);
   emit("update:fileArray", updatedFiles);

@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const localFileArray = ref<File>([]);
-const { taskFileArray } = defineProps<{
-  taskFileArray: File;
+const localFileArray = ref<File[]>([]);
+const { fileArray } = defineProps<{
+  fileArray: File[];
 }>();
-const emit = defineEmits(["update:taskFileArray"]);
+const emit = defineEmits(["update:fileArray"]);
 
 const handleDrop = async (e: any) => {
   e.preventDefault();
   const file = e.target.files[0];
-  emit("update:taskFileArray", file);
+  const existingFile = localFileArray.value.find(
+    (f: File) => f.name === file.name
+  );
+  if (!existingFile) {
+    localFileArray.value.push(file);
+    emit("update:fileArray", localFileArray.value);
+  }
 };
 
 const handleUploadFile = async (e: any) => {
@@ -21,7 +27,7 @@ const handleUploadFile = async (e: any) => {
   );
   if (!existingFile) {
     localFileArray.value.push(file);
-    emit("update:taskFileArray", localFileArray.value);
+    emit("update:fileArray", localFileArray.value);
   }
 };
 </script>

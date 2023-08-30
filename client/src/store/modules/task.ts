@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
+import type { ICreateTask } from "../interfaces";
 
 export const useTaskStore = defineStore("task", () => {
 
@@ -26,7 +27,12 @@ export const useTaskStore = defineStore("task", () => {
     }
   };
 
+  const createTask = async (userData: ICreateTask, projectId: number, email: string) => {
+    console.log(projectId, email);
+  }
+
   return {
     uploadFile,
+    createTask,
   };
 });
