@@ -61,9 +61,9 @@ CREATE TABLE "Task" (
 -- CreateTable
 CREATE TABLE "TaskFile" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "taskId" INTEGER NOT NULL,
-    "fileName" TEXT NOT NULL,
-    CONSTRAINT "TaskFile_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "taskId" INTEGER,
+    "fileName" TEXT,
+    CONSTRAINT "TaskFile_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable

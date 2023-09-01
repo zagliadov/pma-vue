@@ -82,7 +82,7 @@ export const getProject = async (req: any, res: Response) => {
       return res.status(400).json({ message: "User does not exist" });
     }
     if (!projectId) return;
-    const project = await prisma.project.findFirst({
+    const project = await prisma.project.findUnique({
       where: {
         id: projectId,
       },

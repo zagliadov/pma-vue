@@ -5,14 +5,6 @@ import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
 
 export const useTaskStore = defineStore("task", () => {
-  const uploadFile = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("File", file);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const createTask = async (
     userData: ICreateTask,
@@ -47,7 +39,6 @@ export const useTaskStore = defineStore("task", () => {
   };
 
   return {
-    uploadFile,
     createTask,
   };
 });

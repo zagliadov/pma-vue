@@ -41,7 +41,6 @@ const handleAddAssignee = (e: any, member: ITaskAssignee) => {
     const updatedArr = [...membersArray.value, member];
     membersArray.value = updatedArr;
   }
-  console.log(members.value)
   emit("update:taskAssignee", membersArray.value);
 };
 </script>
@@ -65,7 +64,7 @@ const handleAddAssignee = (e: any, member: ITaskAssignee) => {
       <div
         :style="{
           position: 'relative',
-          marginLeft: `${index - 20}px`,
+          marginLeft: index === 0 ? '0px' : `${index - 20}px`,
           zIndex: `${index + 2}`,
           backgroundPosition: 'center',
           backgroundSize: 'contain',
@@ -102,7 +101,7 @@ const handleAddAssignee = (e: any, member: ITaskAssignee) => {
           <IconClose />
         </button>
       </div>
-      <div>
+      <div class="overflow-scroll">
         <div
           v-for="member in members"
           :key="member?.email"
