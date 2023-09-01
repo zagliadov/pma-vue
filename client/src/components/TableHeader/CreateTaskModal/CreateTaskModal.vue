@@ -9,13 +9,13 @@ import StatusModal from "./StatusModal/StatusModal.vue";
 import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
 import FileUpload from "./FileUpload/FileUpload.vue";
 import FileList from "./FileList/FileList.vue";
-import type { ITaskAssignee } from "@/store/interfaces";
+import type { IExistingUser, ITaskAssignee } from "@/store/interfaces";
 
 const router = useRouter();
+const { projectId } = getRouteParams(router);
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
-const { email } = existingUser.value;
-const { projectId } = getRouteParams(router);
+const { email } = existingUser.value as IExistingUser;
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
@@ -41,17 +41,18 @@ const handleTaskCreate = async (e: any) => {
     taskStatus.value.length === 0 ||
     taskAssignee.value.length === 0 ||
     taskFileArray.value.length === 0
+
   ) {
     console.error("Please fill in all required fields.");
     return;
   } else {
     await createTask({
-    taskName: taskName.value,
-    taskDescription: taskDescription.value,
-    taskColor: taskColor.value,
-    taskStatus: taskStatus.value,
-    taskAssignee: taskAssignee.value,
-}, projectId, email, taskFileArray.value,);
+      taskName: taskName.value,
+      taskDescription: taskDescription.value,
+      taskColor: taskColor.value,
+      taskStatus: taskStatus.value,
+      taskAssignee: taskAssignee.value,
+    }, projectId, email, taskFileArray.value);
   }
 };
 </script>
