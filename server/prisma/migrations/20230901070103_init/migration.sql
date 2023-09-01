@@ -49,7 +49,6 @@ CREATE TABLE "Task" (
     "name" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "file_name" TEXT NOT NULL,
     "task_goal_start" DATETIME,
     "task_goal_end" DATETIME,
     "projectId" INTEGER NOT NULL,
@@ -57,6 +56,14 @@ CREATE TABLE "Task" (
     "assigneeId" INTEGER,
     CONSTRAINT "Task_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Task_blockedById_fkey" FOREIGN KEY ("blockedById") REFERENCES "Task" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "TaskFile" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "taskId" INTEGER NOT NULL,
+    "fileName" TEXT NOT NULL,
+    CONSTRAINT "TaskFile_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

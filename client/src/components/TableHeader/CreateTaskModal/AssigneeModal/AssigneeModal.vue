@@ -41,6 +41,7 @@ const handleAddAssignee = (e: any, member: ITaskAssignee) => {
     const updatedArr = [...membersArray.value, member];
     membersArray.value = updatedArr;
   }
+  console.log(members.value)
   emit("update:taskAssignee", membersArray.value);
 };
 </script>

@@ -1,8 +1,7 @@
 import express from "express";
 const router = express.Router();
-import { verifyToken } from "../controllers/middleware";
-import { uploadFile } from "../controllers/task";
+import { createTask } from "../controllers/task";
 
-router.post("/upload_file", verifyToken, uploadFile);
+router.post("/create_task", createTask);
 
 export default router;

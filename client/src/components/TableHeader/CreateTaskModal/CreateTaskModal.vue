@@ -2,16 +2,20 @@
 import { ref } from "vue";
 import { getRouteParams } from "../../../helpers/helpers";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import { useTaskStore } from "@/store/modules/task";
+import { useAuthStore } from "@/store/modules/auth";
 import StatusModal from "./StatusModal/StatusModal.vue";
-import type LoginViewVue from "@/views/LoginView.vue";
 import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
 import FileUpload from "./FileUpload/FileUpload.vue";
 import FileList from "./FileList/FileList.vue";
 import type { ITaskAssignee } from "@/store/interfaces";
 
 const router = useRouter();
-const { projectId, email } = getRouteParams(router);
+const authStore = useAuthStore();
+const { existingUser } = storeToRefs(authStore);
+const { email } = existingUser.value;
+const { projectId } = getRouteParams(router);
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
@@ -42,13 +46,12 @@ const handleTaskCreate = async (e: any) => {
     return;
   } else {
     await createTask({
-      taskName: taskName.value,
-      taskDescription: taskDescription.value,
-      taskColor: taskColor.value,
-      taskStatus: taskStatus.value,
-      taskAssignee: taskAssignee.value,
-      taskFileArray: taskFileArray.value,
-    }, projectId, email);
+    taskName: taskName.value,
+    taskDescription: taskDescription.value,
+    taskColor: taskColor.value,
+    taskStatus: taskStatus.value,
+    taskAssignee: taskAssignee.value,
+}, projectId, email, taskFileArray.value,);
   }
 };
 </script>

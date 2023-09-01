@@ -30,6 +30,7 @@ export interface ITaskAssignee {
   firstName?: string;
   lastName?: string;
   name?: string;
+  id?: number;
 }
 export interface ICreateTask {
   taskName: string;
@@ -37,7 +38,6 @@ export interface ICreateTask {
   taskColor: string;
   taskStatus: string;
   taskAssignee: ITaskAssignee[];
-  taskFileArray: File[];
 }
 
 export interface IPersonalInformation {

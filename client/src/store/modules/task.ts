@@ -5,31 +5,46 @@ import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
 
 export const useTaskStore = defineStore("task", () => {
-
   const uploadFile = async (file: File) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     try {
       const formData = new FormData();
       formData.append("File", file);
-      const response = await axios.post(
-        `${API_URL}/task/upload_file`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const createTask = async (userData: ICreateTask, projectId: number, email: string) => {
-    console.log(projectId, email);
-  }
+  const createTask = async (
+    userData: ICreateTask,
+    projectId: number,
+    email: string,
+    taskFileArray: File[]
+  ) => {
+    try {
+      const formData = new FormData();
+      formData.append("userData", JSON.stringify(userData));
+      formData.append("projectId", projectId.toString());
+      formData.append("email", email);
+
+      taskFileArray.forEach((file, index) => {
+        formData.append(`taskFileArray[${index}]`, file);
+      });
+
+      const response = await axios.post(
+        `${API_URL}/task/create_task`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Task created successfully", response.data);
+    } catch (error) {
+      console.error("Error creating task", error);
+    }
+  };
 
   return {
     uploadFile,

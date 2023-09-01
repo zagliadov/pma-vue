@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { bytesToMegabytes } from "@/helpers/helpers";
-import { ref } from "vue";
 
 const { fileArray } = defineProps(["fileArray"]);
 const emit = defineEmits(["update:fileArray"]);

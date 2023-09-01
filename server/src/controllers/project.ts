@@ -75,7 +75,6 @@ export const getProjects = async (req: any, res: Response) => {
 export const getProject = async (req: any, res: Response) => {
   const { email } = req.userData;
   const { projectId } = req.body;
-
   try {
     await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });

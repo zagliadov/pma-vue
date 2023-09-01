@@ -40,6 +40,7 @@ export const getAllAssignee = async (req: any, res: Response) => {
         lastName: true,
         name: true,
         email: true,
+        id: true,
       },
     });
     const missingEmails = uniqueEmails.filter((email) => !users.some((user) => user.email === email));

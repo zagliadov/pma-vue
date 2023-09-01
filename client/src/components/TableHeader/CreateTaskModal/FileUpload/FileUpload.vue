@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 const localFileArray = ref<File[]>([]);
-const { fileArray } = defineProps<{
+defineProps<{
   fileArray: File[];
 }>();
 const emit = defineEmits(["update:fileArray"]);
