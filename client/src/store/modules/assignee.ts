@@ -27,7 +27,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   const getAssigneeProjects = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;

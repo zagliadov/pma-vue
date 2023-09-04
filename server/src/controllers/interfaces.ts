@@ -42,3 +42,15 @@ export interface IProjectAssignees {
   projectCreator: boolean;
   isEmailConfirmed: boolean;
 }
+
+export interface ITaskAssignee {
+  id: number;
+  email: string;
+  userId: number;
+  projectCreator: boolean;
+  isEmailConfirmed: boolean;
+  avatar_filename?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  name?: string | null;
+}

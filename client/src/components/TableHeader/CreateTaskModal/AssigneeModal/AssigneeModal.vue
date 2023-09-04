@@ -103,7 +103,7 @@ const handleAddAssignee = (
           <IconClose />
         </button>
       </div>
-      <div class="overflow-scroll">
+      <div class="overflow-y-scroll">
         <div
           v-for="member in members"
           :key="member?.email"
