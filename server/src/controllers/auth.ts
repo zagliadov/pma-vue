@@ -67,6 +67,12 @@ export const createAccount = async (req: Request, res: Response) => {
             isEmailConfirmed: true,
           },
         });
+        await prisma.taskAssignee.updateMany({
+          where: { email },
+          data: {
+            userId: id,
+          },
+        });
       }
       return res.status(201).json({ message: "User create" });
     }
