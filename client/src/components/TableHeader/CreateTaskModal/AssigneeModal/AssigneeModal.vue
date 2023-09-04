@@ -6,8 +6,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import type { ITaskAssignee } from "../../../../store/interfaces.ts";
 
-
-const { taskAssignee } = defineProps<{
+defineProps<{
   taskAssignee: ITaskAssignee[];
 }>();
 const emit = defineEmits(["update:taskAssignee"]);
@@ -25,7 +24,10 @@ const handleAssigneeModalOpen = async (e: any) => {
   }
 };
 
-const handleAddAssignee = (e: any, member: ITaskAssignee) => {
+const handleAddAssignee = (
+  e: any,
+  member: ITaskAssignee | { email: string }
+) => {
   e.preventDefault();
   if (!membersArray.value) return;
   const existingIndex = membersArray.value.findIndex(

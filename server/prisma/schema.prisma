@@ -67,8 +67,17 @@ model Task {
   blockedBy       Task?     @relation("BlockingTask", fields: [blockedById], references: [id])
   blockedById     Int?
   blockingTasks   Task[]    @relation("BlockingTask")
-  assigneeId      Int?
+  taskAssignee    TaskAssignee[]
 }
+
+model TaskAssignee {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  email        String
+  task         Task     @relation(fields: [taskId], references: [id])
+  taskId       Int
+}
+
 
 model TaskFile {
   id     Int      @id @default(autoincrement())
