@@ -79,6 +79,10 @@ export interface IExistingUser {
 }
 
 export interface IMembers {
+  id: number;
+  userId: number;
+  projectCreator: boolean;
+  isEmailConfirmed: boolean;
   avatar_filename?: string | null;
   email: string;
   firstName?: string | null;

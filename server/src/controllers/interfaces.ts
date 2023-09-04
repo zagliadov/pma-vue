@@ -42,11 +42,3 @@ export interface IProjectAssignees {
   projectCreator: boolean;
   isEmailConfirmed: boolean;
 }
-
-export interface IMembers {
-  avatar_filename?: string | null;
-  email: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  name?: string | null;
-}

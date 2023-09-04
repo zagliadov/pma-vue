@@ -4,13 +4,12 @@ import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import { getProjectAssigneeByEmail, getProjectById } from "./query";
 import prisma from "../db";
-import { IMembers } from "./interfaces";
 
 export const getAllAssignee = async (req: any, res: Response) => {
   const { email } = req.userData;
   try {
     await prisma.$connect();
-    const members: { email: string }[] = await prisma.projectAssignee.findMany({
+    const members = await prisma.projectAssignee.findMany({
       where: {
         project: {
           workspace: {
@@ -19,19 +18,20 @@ export const getAllAssignee = async (req: any, res: Response) => {
             },
           },
         },
-        projectCreator: false, // Exclude projectCreator
       },
-      distinct: ["email"], // Get unique assignee by email
+      distinct: ["email"], // Get unique project members by email.
       select: {
+        id: true,
         email: true,
+        userId: true,
+        projectCreator: true,
+        isEmailConfirmed: true,
       },
     });
-    
-    const uniqueEmails = members.map((member) => member.email);
-    const users: IMembers[] = await prisma.user.findMany({
+    const users = await prisma.user.findMany({
       where: {
         email: {
-          in: uniqueEmails,
+          in: members.map((member) => member.email), // In this case, users are selected whose email field is present in the array of emails obtained from the members array.
         },
       },
       select: {
@@ -43,11 +43,16 @@ export const getAllAssignee = async (req: any, res: Response) => {
         id: true,
       },
     });
-    const missingEmails = uniqueEmails.filter((email) => !users.some((user) => user.email === email));
-    missingEmails.forEach((email) => {
-      users.push({email});
+
+    // Combining the results into one array.
+    const combinedResults = members.map((member) => {
+      const matchingUser = users.find((user) => user.email === member.email);
+      return matchingUser ? { ...member, ...matchingUser } : member;
     });
-    res.status(200).json({ membersCount: users.length, users });
+
+    res
+      .status(200)
+      .json({ membersCount: combinedResults.length, combinedResults });
   } catch (error) {
     handleError(error, res);
   } finally {
