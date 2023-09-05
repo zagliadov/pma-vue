@@ -55,15 +55,18 @@ const TaskSchema = object({
   taskAssignee: TaskAssigneeSchema,
 });
 
-export const createTask = async (req: Request, res: Response) => {
+export const createTask = async (req: any, res: Response) => {
   try {
-    const { userData, projectId, email } = req.body;
+    const { email, id } = req.userData;
+    const { userData, projectId } = req.body;
     const taskFileArray: any = req?.files;
-    // const destinationPath = `${__dirname}/taskFiles/`;
-    // _.forEach(taskFileArray, async (file) => {
-    //   const newFileName = encodeURI(projectId + "-" + file.name);
-    //   await file.mv(`${destinationPath}${newFileName}`);
-    // });
+    const destinationPath = `${__dirname}/taskFiles/`;
+    await Promise.all(
+      _.map(taskFileArray, async (file) => {
+        const newFileName = encodeURI(projectId + "-" + file.name);
+        await file.mv(`${destinationPath}${newFileName}`);
+      })
+    );
     const task: TaskData = parse(TaskSchema, JSON.parse(userData));
     const newTask = await prisma.task.create({
       data: {
@@ -73,27 +76,65 @@ export const createTask = async (req: Request, res: Response) => {
         projectId: Number(projectId),
       },
     });
-    let newTaskAssignee
-    _.forEach(task.taskAssignee, async (assignee) => {
-      console.log(assignee);
-      newTaskAssignee = await prisma.taskAssignee.create({
-        data: {
-          userId: assignee.userId,
-          email: assignee.email,
-          taskId: newTask.id,
-        },
-      });
-    });
-    console.log(newTaskAssignee);
 
-    // for (const file of taskFileArray) {
-    //   const uploadedFile = await prisma.taskFile.create({
-    //     data: {
-    //       taskId: task.id,
-    //       fileName: file.name,
-    //     },
-    //   });
-    // }
+    // Create an array of tasks to assign
+    // The code creates an array called taskAssignees using await Promise.all(). This array contains an initial object with data related to the current user (userId, email, taskId, projectCreator, and isEmailConfirmed).
+    // Additionally, it maps over the task.taskAssignee array, filtering out elements where the assignee.email is not equal to the current user's email. For each filtered element, it asynchronously queries the prisma.user database to find unique user data based on the assignee.email.
+    // The mapped result is an array of objects, each containing information about an assignee for the task. This information includes the user's userId, email, taskId, projectCreator, and isEmailConfirmed.
+    // In summary, taskAssignees is an array that combines the current user's information with information about other assignees for a task, fetched from the database. The resulting array is an important part of the task creation process.
+    const taskAssignees = await Promise.all([
+      {
+        userId: id,
+        email: email,
+        taskId: newTask.id,
+        projectCreator: true,
+        isEmailConfirmed: true,
+      },
+      ..._.map(
+        _.filter(task.taskAssignee, (assignee) => assignee.email !== email),
+        async (assignee) => {
+          const assigneeUser = await prisma.user.findUnique({
+            where: { email: assignee.email },
+          });
+
+          return {
+            userId: assignee.userId,
+            email: assignee.email,
+            taskId: newTask.id,
+            projectCreator: false,
+            isEmailConfirmed: assigneeUser ? true : false,
+          };
+        }
+      ),
+    ]);
+
+    // Creating Assigned User Records
+    await Promise.all(
+      _.map(taskAssignees, async (assignee) => {
+        console.log(assignee);
+        await prisma.taskAssignee.create({
+          data: {
+            userId: assignee.userId,
+            email: assignee.email,
+            taskId: assignee.taskId,
+            projectCreator: assignee.projectCreator,
+            isEmailConfirmed: assignee.isEmailConfirmed,
+          },
+        });
+      })
+    );
+
+    // Creating task file records
+    await Promise.all(
+      _.map(taskFileArray, async (file) => {
+        await prisma.taskFile.create({
+          data: {
+            taskId: newTask.id,
+            fileName: projectId + "-" + file.name,
+          },
+        });
+      })
+    );
 
     res.status(201).json({ message: "Task created successfully" });
   } catch (error) {
