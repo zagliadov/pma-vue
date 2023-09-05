@@ -2,20 +2,15 @@
 import { ref } from "vue";
 import { getRouteParams } from "../../../helpers/helpers";
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useTaskStore } from "@/store/modules/task";
-import { useAuthStore } from "@/store/modules/auth";
 import StatusModal from "./StatusModal/StatusModal.vue";
 import AssigneeModal from "./AssigneeModal/AssigneeModal.vue";
 import FileUpload from "./FileUpload/FileUpload.vue";
 import FileList from "./FileList/FileList.vue";
-import type { IExistingUser, ITaskAssignee } from "@/store/interfaces";
+import type { ITaskAssignee } from "@/store/interfaces";
 
 const router = useRouter();
 const { projectId } = getRouteParams(router);
-const authStore = useAuthStore();
-const { existingUser } = storeToRefs(authStore);
-const { email } = existingUser.value as IExistingUser;
 const taskName = ref<string>("");
 const taskDescription = ref<string>("");
 const taskColor = ref<string>("");
@@ -52,7 +47,7 @@ const handleTaskCreate = async (e: any) => {
       taskColor: taskColor.value,
       taskStatus: taskStatus.value,
       taskAssignee: taskAssignee.value,
-    }, projectId, email, taskFileArray.value);
+    }, projectId, taskFileArray.value);
   }
 };
 </script>

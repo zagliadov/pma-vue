@@ -5,18 +5,17 @@ import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
 
 export const useTaskStore = defineStore("task", () => {
-
   const createTask = async (
     userData: ICreateTask,
     projectId: number,
-    email: string,
     taskFileArray: File[]
   ) => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
       const formData = new FormData();
       formData.append("userData", JSON.stringify(userData));
       formData.append("projectId", projectId.toString());
-      formData.append("email", email);
 
       taskFileArray.forEach((file, index) => {
         formData.append(`taskFileArray[${index}]`, file);
@@ -28,6 +27,7 @@ export const useTaskStore = defineStore("task", () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`,
           },
         }
       );
