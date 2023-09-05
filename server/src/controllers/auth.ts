@@ -71,6 +71,7 @@ export const createAccount = async (req: Request, res: Response) => {
           where: { email },
           data: {
             userId: id,
+            isEmailConfirmed: true,
           },
         });
       }
