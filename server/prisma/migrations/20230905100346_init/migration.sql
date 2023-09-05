@@ -63,6 +63,8 @@ CREATE TABLE "TaskAssignee" (
     "userId" INTEGER NOT NULL,
     "email" TEXT NOT NULL,
     "taskId" INTEGER NOT NULL,
+    "projectCreator" BOOLEAN NOT NULL,
+    "isEmailConfirmed" BOOLEAN NOT NULL,
     CONSTRAINT "TaskAssignee_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -85,9 +87,19 @@ CREATE TABLE "Subtask" (
     "description" TEXT NOT NULL,
     "taskId" INTEGER NOT NULL,
     "blockedById" INTEGER,
-    "assigneeId" INTEGER,
     CONSTRAINT "Subtask_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Subtask_blockedById_fkey" FOREIGN KEY ("blockedById") REFERENCES "Subtask" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "SubtaskAssignee" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" INTEGER NOT NULL,
+    "email" TEXT NOT NULL,
+    "subtaskId" INTEGER NOT NULL,
+    "projectCreator" BOOLEAN NOT NULL,
+    "isEmailConfirmed" BOOLEAN NOT NULL,
+    CONSTRAINT "SubtaskAssignee_subtaskId_fkey" FOREIGN KEY ("subtaskId") REFERENCES "Subtask" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

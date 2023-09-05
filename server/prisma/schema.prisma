@@ -8,20 +8,20 @@ datasource db {
 }
 
 model User {
-  id               Int         @id @default(autoincrement())
-  email            String      @unique
-  name             String?
-  firstName        String?
-  lastName         String?
-  phoneNumber      String?
-  language         String?
-  timezone         String?
+  id                     Int         @id @default(autoincrement())
+  email                  String      @unique
+  name                   String?
+  firstName              String?
+  lastName               String?
+  phoneNumber            String?
+  language               String?
+  timezone               String?
   startOfTheCalendarWeek String?
-  timeFormat       String?
-  dateFormat       String?
-  password         String
-  workspace        Workspace[]
-  avatar_filename  String?
+  timeFormat             String?
+  dateFormat             String?
+  password               String
+  workspace              Workspace[]
+  avatar_filename        String?
 }
 
 model Workspace {
@@ -33,57 +33,57 @@ model Workspace {
 }
 
 model Project {
-  id          Int               @id @default(autoincrement())
-  name        String
-  description String
-  workspace   Workspace         @relation(fields: [workspaceId], references: [id])
-  workspaceId Int
-  tasks       Task[]
+  id               Int               @id @default(autoincrement())
+  name             String
+  description      String
+  workspace        Workspace         @relation(fields: [workspaceId], references: [id])
+  workspaceId      Int
+  tasks            Task[]
   projectAssignees ProjectAssignee[]
 }
 
 model ProjectAssignee {
-  id              Int     @id @default(autoincrement())
-  userId          Int?
-  email           String
-  project         Project @relation(fields: [projectId], references: [id])
-  projectId       Int
-  projectCreator  Boolean
+  id               Int     @id @default(autoincrement())
+  userId           Int?
+  email            String
+  project          Project @relation(fields: [projectId], references: [id])
+  projectId        Int
+  projectCreator   Boolean
   isEmailConfirmed Boolean
 }
 
-
 model Task {
-  id              Int       @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   name            String
   status          String
   description     String
   taskFiles       TaskFile[]
   task_goal_start DateTime?
   task_goal_end   DateTime?
-  project         Project   @relation(fields: [projectId], references: [id])
+  project         Project        @relation(fields: [projectId], references: [id])
   projectId       Int
   subtasks        Subtask[]
-  blockedBy       Task?     @relation("BlockingTask", fields: [blockedById], references: [id])
+  blockedBy       Task?          @relation("BlockingTask", fields: [blockedById], references: [id])
   blockedById     Int?
-  blockingTasks   Task[]    @relation("BlockingTask")
+  blockingTasks   Task[]         @relation("BlockingTask")
   taskAssignee    TaskAssignee[]
 }
 
 model TaskAssignee {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  email        String
-  task         Task     @relation(fields: [taskId], references: [id])
-  taskId       Int
+  id     Int    @id @default(autoincrement())
+  userId Int
+  email  String
+  task   Task   @relation(fields: [taskId], references: [id])
+  taskId Int
+  projectCreator   Boolean
+  isEmailConfirmed Boolean
 }
 
-
 model TaskFile {
-  id     Int      @id @default(autoincrement())
-  taskId Int?
+  id       Int     @id @default(autoincrement())
+  taskId   Int?
   fileName String?
-  task   Task?     @relation(fields: [taskId], references: [id])
+  task     Task?   @relation(fields: [taskId], references: [id])
 }
 
 model Subtask {
@@ -99,5 +99,15 @@ model Subtask {
   blockedBy          Subtask?  @relation("BlockingSubtask", fields: [blockedById], references: [id])
   blockedById        Int?
   blockingSubtasks   Subtask[] @relation("BlockingSubtask")
-  assigneeId         Int?
+  subtaskAssignee    SubtaskAssignee[]
+}
+
+model SubtaskAssignee {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  email  String
+  subtask   Subtask   @relation(fields: [subtaskId], references: [id])
+  subtaskId Int
+  projectCreator   Boolean
+  isEmailConfirmed Boolean
 }
