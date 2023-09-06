@@ -5,10 +5,11 @@ import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import { getEmailFromCurrentPath } from "../../helpers/helpers";
 import { useRouter } from "vue-router";
+import type { IExistingUser } from "@/store/interfaces";
 
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
-const { name } = existingUser.value;
+const { name } = existingUser?.value as IExistingUser;
 const router = useRouter();
 </script>
 

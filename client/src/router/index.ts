@@ -12,16 +12,9 @@ import Notification from "../views/Notification.vue";
 import Projects from "../views/Projects.vue";
 import MySettingsEditProject from "../views/MySettingsEditProject.vue";
 import Information from "../views/Information.vue";
-import { useAuthStore } from "../store/modules/auth";
-import { useProjectStore } from "../store/modules/project";
-import { useAssigneeStore } from "@/store/modules/assignee";
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+import { authMiddleware, editProjectMiddleware, homeMiddleware, loginMiddleware, projectViewMiddleware, projectsDataMiddleware } from "./middleware/middleware";
 
-
-const homeMiddleware = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-
-  next("login");
-};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,19 +23,13 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-      beforeEnter: async () => {
-        return "login";
-      },
+      beforeEnter: homeMiddleware,
     },
-    { 
+    {
       path: "/login",
       name: "login",
       component: LoginView,
-      beforeEnter: async () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("color");
-        localStorage.removeItem("color_id");
-      },
+      beforeEnter: loginMiddleware,
     },
     {
       path: "/forgot_password",
@@ -57,133 +44,81 @@ const router = createRouter({
     {
       path: "/:email/workspace/:workspace_id",
       name: "no_projects",
+      meta: { requiresAuth: true },
       component: NoProjects,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: authMiddleware,
     },
     {
       path: "/:email/workspace/:workspace_id/create_project",
       name: "create_project",
+      meta: { requiresAuth: true },
       component: CreateProject,
+      beforeEnter: authMiddleware,
     },
     {
       path: "/:email/workspace/:workspace_id/project/:project_id",
       name: "project_view",
+      meta: { requiresAuth: true },
       component: ProjectTable,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: [authMiddleware, projectViewMiddleware],
     },
     {
       path: "/:email/workspace/:workspace_id/project/:project_id/timeline",
       name: "project_timeline_view",
+      meta: { requiresAuth: true },
       component: TimelineTable,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: [authMiddleware, projectViewMiddleware],
     },
     {
       path: "/my_settings/:email",
       name: "my_settings",
+      meta: { requiresAuth: true },
       component: MySettings,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: authMiddleware,
     },
     {
       path: "/my_settings/:email/notification",
       name: "notification",
+      meta: { requiresAuth: true },
       component: Notification,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: authMiddleware,
     },
     {
       path: "/my_settings/:email/projects",
       name: "projects",
+      meta: { requiresAuth: true },
       component: Projects,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const projectStore = useProjectStore();
-        const assigneeStore = useAssigneeStore();
-        const { checkAuthentication } = auth;
-        const { getTotalProjectCount, getAllProjects } = projectStore;
-        const { getAssigneeProjects } = assigneeStore;
-        getTotalProjectCount();
-        getAllProjects();
-        getAssigneeProjects();
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
+      beforeEnter: async (
+        to: RouteLocationNormalized,
+        from: RouteLocationNormalized,
+        next: NavigationGuardNext
+      ) => {
+        await authMiddleware(to, from, next);
+        await projectsDataMiddleware(to, from, next);
       },
     },
     {
       path: "/my_settings/:email/projects/edit_project/:id",
       name: "my_settings_edit_project",
+      meta: { requiresAuth: true },
       component: MySettingsEditProject,
-      beforeEnter: async (to) => {
-        const id = Number(to.params.id);
-        const projectStore = useProjectStore();
-        const assigneeStore = useAssigneeStore();
-        const { getProject } = projectStore;
-        const { getAllAssignee } = assigneeStore;
-        await getAllAssignee();
-        await getProject(id);
+      beforeEnter: async (
+        to: RouteLocationNormalized,
+        from: RouteLocationNormalized,
+        next: NavigationGuardNext
+      ) => {
+        await editProjectMiddleware(to, from, next);
+        await authMiddleware(to, from, next);
       },
     },
     {
       path: "/my_settings/:email/information",
       name: "information",
+      meta: { requiresAuth: true },
       component: Information,
-      beforeEnter: async () => {
-        const auth = useAuthStore();
-        const { checkAuthentication } = auth;
-        const isValid = await checkAuthentication();
-        if (!isValid) return "login";
-        return isValid;
-      },
+      beforeEnter: authMiddleware,
     },
   ],
 });
-
-router.beforeEach(async (to, from, next) => {
-  if (to.name === "project_view" || to.name === "project_timeline_view") {
-    // Assuming you have a function getProject that fetches project data based on projectId
-    const projectId: number = Number(to.params.project_id);
-    try {
-      const projectStore = useProjectStore();
-      const { getProject } = projectStore;
-      await getProject(projectId);
-      next();
-    } catch (error) {
-      console.error("Error fetching project data:", error);
-      next({ name: "login" });
-    }
-  } else {
-    next();
-  }
-});
-
 
 export default router;

@@ -7,12 +7,13 @@ import {
   parseUsernameFromEmail,
   getWorkspaceIdFromCurrentPath,
 } from "@/helpers/helpers";
+import type { IExistingUser } from "@/store/interfaces";
 
 const differenceStore = useDiffStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const { existingUser } = storeToRefs(authStore);
-const { email } = existingUser.value;
+const { email } = existingUser.value as IExistingUser;
 const { isSideMenuOpen } = storeToRefs(differenceStore);
 </script>
 
