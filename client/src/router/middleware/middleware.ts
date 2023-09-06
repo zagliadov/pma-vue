@@ -3,6 +3,8 @@ import { useAuthStore } from "@/store/modules/auth";
 import { useProjectStore } from "@/store/modules/project";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
+
+// Middleware function for the home route.
 export const homeMiddleware = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -10,6 +12,9 @@ export const homeMiddleware = async (
 ) => {
   next("login");
 };
+
+
+// Middleware function for the login route.
 
 export const loginMiddleware = async (
   to: RouteLocationNormalized,
@@ -21,6 +26,9 @@ export const loginMiddleware = async (
   localStorage.removeItem("color_id");
   next();
 };
+
+
+// Middleware function for routes requiring authentication.
 
 export const authMiddleware = async (
   to: RouteLocationNormalized,
@@ -38,7 +46,7 @@ export const authMiddleware = async (
     }
   }
 };
-
+// Middleware function for fetching project data.
 export const projectsDataMiddleware = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -61,6 +69,7 @@ export const projectsDataMiddleware = async (
   }
 };
 
+// Middleware function for editing a project.
 export const editProjectMiddleware = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -81,6 +90,7 @@ export const editProjectMiddleware = async (
   }
 };
 
+// Middleware function for viewing project details.
 export const projectViewMiddleware = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
