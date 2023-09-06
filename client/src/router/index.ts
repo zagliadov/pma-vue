@@ -1,21 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import LoginView from "../views/LoginView.vue";
+import ForgotPasswordView from "../views/ForgotPasswordView.vue";
+import CreateAccountView from "../views/CreateAccountView.vue";
+import NoProjects from "../views/NoProjects.vue";
+import CreateProject from "../views/CreateProject.vue";
+import ProjectTable from "../views/ProjectTable.vue";
+import TimelineTable from "../views/TimelineTable.vue";
+import MySettings from "../views/MySettings.vue";
+import Notification from "../views/Notification.vue";
+import Projects from "../views/Projects.vue";
+import MySettingsEditProject from "../views/MySettingsEditProject.vue";
+import Information from "../views/Information.vue";
 import { useAuthStore } from "../store/modules/auth";
 import { useProjectStore } from "../store/modules/project";
 import { useAssigneeStore } from "@/store/modules/assignee";
-
-const LoginView = () => import("../views/LoginView.vue");
-const ForgotPasswordView = () => import("../views/ForgotPasswordView.vue");
-const CreateAccountView = () => import("../views/CreateAccountView.vue");
-const NoProjects = () => import("../views/NoProjects.vue");
-const CreateProject = () => import("../views/CreateProject.vue");
-const ProjectTable = () => import("../views/ProjectTable.vue");
-const TimelineTable = () => import("../views/TimelineTable.vue");
-const MySettings = () => import("../views/MySettings.vue");
-const Notification = () => import("../views/Notification.vue");
-const Projects = () => import("../views/Projects.vue");
-const MySettingsEditProject = () => import("../views/MySettingsEditProject.vue");
-const Information = () => import("../views/Information.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
