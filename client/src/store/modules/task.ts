@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
@@ -27,7 +26,7 @@ export const useTaskStore = defineStore("task", () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

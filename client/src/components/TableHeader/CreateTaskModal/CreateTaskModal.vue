@@ -36,18 +36,22 @@ const handleTaskCreate = async (e: any) => {
     taskStatus.value.length === 0 ||
     taskAssignee.value.length === 0 ||
     taskFileArray.value.length === 0
-
   ) {
     console.error("Please fill in all required fields.");
     return;
   } else {
-    await createTask({
-      taskName: taskName.value,
-      taskDescription: taskDescription.value,
-      taskColor: taskColor.value,
-      taskStatus: taskStatus.value,
-      taskAssignee: taskAssignee.value,
-    }, projectId, taskFileArray.value);
+    await createTask(
+      {
+        taskName: taskName.value,
+        taskDescription: taskDescription.value,
+        taskColor: taskColor.value,
+        taskStatus: taskStatus.value,
+        taskAssignee: taskAssignee.value,
+      },
+      projectId,
+      taskFileArray.value
+    );
+    handleShowModalAddTask();
   }
 };
 </script>
