@@ -15,6 +15,13 @@ import Information from "../views/Information.vue";
 import { useAuthStore } from "../store/modules/auth";
 import { useProjectStore } from "../store/modules/project";
 import { useAssigneeStore } from "@/store/modules/assignee";
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+
+
+const homeMiddleware = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+
+  next("login");
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
