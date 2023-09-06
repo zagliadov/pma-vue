@@ -1,5 +1,7 @@
 import { User, Project, ProjectAssignee } from "@prisma/client";
 import prisma from "../db";
+import { IProjectAssignees } from "./interfaces";
+import * as _ from "lodash";
 
 export const getProjectAssigneeByEmail = async (
   email: string
@@ -87,5 +89,86 @@ export const getUserWithWorkspacesAndProjects = async (
     return null;
   } finally {
     await prisma.$disconnect();
+  }
+};
+
+/**
+ * Create project assignees in the database based on the provided data.
+ *
+ * @param {IProjectAssignees[]} projectAssignees - An array of objects representing project assignees.
+ *
+ * @throws {Error} Throws an error if the creation of project assignees fails.
+ */
+export const createProjectAssignees = async (
+  projectAssignees: IProjectAssignees[]
+): Promise<void> => {
+  try {
+    _.forEach(projectAssignees, async (assignee) => {
+      await prisma.projectAssignee.create({
+        data: {
+          userId: assignee.userId,
+          email: assignee.email,
+          projectId: assignee.projectId,
+          projectCreator: assignee.projectCreator,
+          isEmailConfirmed: assignee.isEmailConfirmed,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Error creating project assignees:", error);
+    throw new Error("Failed to create project assignees");
+  }
+};
+
+/**
+ * Create a new project in the database.
+ *
+ * @param {string} projectName - The name of the new project.
+ * @param {string} projectDescription - The description of the new project.
+ * @param {number} workspaceId - The ID of the workspace to which the project belongs.
+ *
+ * @returns {Promise<Project>} - A Promise that resolves to the newly created Project object.
+ */
+export const createNewProject = async (
+  projectName: string,
+  projectDescription: string,
+  workspaceId: number
+): Promise<Project> => {
+  try {
+    const project = await prisma.project.create({
+      data: {
+        name: projectName,
+        description: projectDescription,
+        workspaceId,
+      },
+    });
+    return project;
+  } catch (error) {
+    console.error("Error creating project:", error);
+    throw new Error("Failed to create project");
+  }
+};
+
+/**
+ * Retrieve projects by workspace ID from the database.
+ *
+ * @param {number} workspaceId - The ID of the workspace to filter projects by.
+ *
+ * @returns {Promise<Project[]>} - A Promise that resolves to an array of projects belonging to the specified workspace.
+ */
+export const getProjectsByWorkspaceId = async (
+  workspaceId: number
+): Promise<Project[]> => {
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        workspaceId: workspaceId,
+      },
+    });
+
+    return projects;
+  } catch (error) {
+    console.error("Error retrieving projects by workspace ID:", error);
+    throw new Error("Failed to retrieve projects by workspace ID");
   }
 };

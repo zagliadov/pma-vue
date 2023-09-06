@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 import { IProjectAssignees } from "./interfaces";
+import { Project } from "@prisma/client";
+import * as _ from "lodash";
+import { createNewProject, createProjectAssignees, getProjectsByWorkspaceId } from "./query";
 
 export const getAllProjects = async (req: any, res: Response) => {
   const { email } = req.userData;
@@ -109,14 +112,13 @@ export const addNewProject = async (req: any, res: Response) => {
     if (!existingUser) {
       return res.status(400).json({ message: "User does not exist" });
     }
-    const project = await prisma.project.create({
-      data: {
-        name: projectName,
-        description: projectDescription,
-        workspaceId,
-      },
-    });
-    const projectId: number = project.id;
+    const newProject: Project = await createNewProject(
+      projectName,
+      projectDescription,
+      workspaceId
+    );
+    const projectId: number = newProject.id;
+
     const projectAssignees: IProjectAssignees[] = [];
     projectAssignees.push({
       userId: id,
@@ -140,23 +142,9 @@ export const addNewProject = async (req: any, res: Response) => {
         });
       }
     }
-    for (const assignee of projectAssignees) {
-      await prisma.projectAssignee.create({
-        data: {
-          userId: assignee.userId,
-          email: assignee.email,
-          projectId: assignee.projectId,
-          projectCreator: assignee.projectCreator,
-          isEmailConfirmed: assignee.isEmailConfirmed,
-        },
-      });
-    }
+    await createProjectAssignees(projectAssignees);
 
-    const projects = await prisma.project.findMany({
-      where: {
-        workspaceId: workspaceId,
-      },
-    });
+    const projects = await getProjectsByWorkspaceId(workspaceId);
     return res.status(200).json({ projects });
   } catch (error) {
     handleError(error, res);
