@@ -145,6 +145,7 @@ export const createTask = async (req: any, res: Response) => {
     const { userData, projectId } = req.body;
     const taskFileArray: any = req?.files;
     const destinationPath = `${__dirname}/taskFiles/`;
+    await prisma.$connect();
     await moveFiles(taskFileArray, destinationPath, projectId);
     const task: TaskData = parse(TaskSchema, JSON.parse(userData));
     const newTask = await createNewTask(task, Number(projectId));
@@ -190,5 +191,7 @@ export const createTask = async (req: any, res: Response) => {
   } catch (error) {
     console.error("Error creating task:", error);
     throw new Error("Failed to create task");
+  } finally {
+    prisma.$disconnect();
   }
 };
