@@ -28,7 +28,6 @@ const handleShowModalAddTask = () => {
 };
 
 const handleTaskCreate = async (e: any) => {
-  e.preventDefault();
   if (
     taskName.value.length === 0 ||
     taskDescription.value.length === 0 ||
@@ -37,6 +36,7 @@ const handleTaskCreate = async (e: any) => {
     taskAssignee.value.length === 0 ||
     taskFileArray.value.length === 0
   ) {
+    e.preventDefault();
     console.error("Please fill in all required fields.");
     return;
   } else {
@@ -51,7 +51,6 @@ const handleTaskCreate = async (e: any) => {
       projectId,
       taskFileArray.value
     );
-    handleShowModalAddTask();
   }
 };
 </script>

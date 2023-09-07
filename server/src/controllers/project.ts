@@ -82,22 +82,64 @@ export const getProjects = async (req: any, res: Response) => {
 export const getProject = async (req: any, res: Response) => {
   const { email } = req.userData;
   const { projectId } = req.body;
+
   try {
     await prisma.$connect();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ message: "User does not exist" });
     }
+
     if (!projectId) return;
+
     const project = await prisma.project.findUnique({
       where: {
         id: projectId,
       },
       include: {
-        tasks: true,
+        tasks: {
+          include: {
+            taskAssignee: true,
+            subtasks: true,
+          },
+        },
         projectAssignees: true,
       },
     });
+
+    if (project) {
+      await Promise.all(
+        project &&
+          project.tasks.map(async (item) => {
+            const userEmails = item.taskAssignee.map(
+              (assignee) => assignee.email
+            );
+            const users = await prisma.user.findMany({
+              where: {
+                email: { in: userEmails },
+              },
+              select: {
+                avatar_filename: true,
+                firstName: true,
+                lastName: true,
+                name: true,
+                email: true,
+                id: true,
+              },
+            });
+
+            const combinedResults = item.taskAssignee.map((member) => {
+              const matchingUser = users.find(
+                (user) => user.email === member.email
+              );
+              return matchingUser ? { ...member, ...matchingUser } : member;
+            });
+
+            item.taskAssignee = combinedResults;
+          })
+      );
+    }
+
     return res.status(200).json({ project });
   } catch (error) {
     handleError(error, res);

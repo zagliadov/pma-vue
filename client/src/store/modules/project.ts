@@ -112,6 +112,7 @@ export const useProjectStore = defineStore("project", () => {
         }
       );
       if (response.status === 200) {
+        console.log(response.data.project)
         project.value = response.data.project;
       } else {
         console.log("Failed to get project");
