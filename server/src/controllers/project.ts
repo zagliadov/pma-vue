@@ -1,12 +1,16 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
 import { IProjectAssignees } from "./interfaces";
 import { Project } from "@prisma/client";
 import * as _ from "lodash";
-import { createNewProject, createProjectAssignees, getProjectsByWorkspaceId } from "./query";
+import {
+  createNewProject,
+  createProjectAssignees,
+  getProjectsByWorkspaceId,
+} from "./query";
 
 export const getAllProjects = async (req: any, res: Response) => {
   const { email } = req.userData;
@@ -147,7 +151,8 @@ export const addNewProject = async (req: any, res: Response) => {
     const projects = await getProjectsByWorkspaceId(workspaceId);
     return res.status(200).json({ projects });
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in addNewProject handler:", error);
+    throw new Error("Error in addNewProject handler");
   } finally {
     await prisma.$disconnect();
   }
@@ -167,9 +172,10 @@ export const editProjectName = async (req: Request, res: Response) => {
     });
     res.status(200).json({ project });
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in editProjectName handler:", error);
+    throw new Error("Error in editProjectName handler:");
   } finally {
-    prisma.$disconnect();
+    await prisma.$disconnect();
   }
 };
 
