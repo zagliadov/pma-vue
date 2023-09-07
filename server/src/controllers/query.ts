@@ -1,6 +1,6 @@
 import { User, Project, ProjectAssignee } from "@prisma/client";
 import prisma from "../db";
-import { IProjectAssignees } from "./interfaces";
+import { IProject, IProjectAssignees } from "./interfaces";
 import * as _ from "lodash";
 
 export const getProjectAssigneeByEmail = async (
@@ -172,3 +172,49 @@ export const getProjectsByWorkspaceId = async (
     throw new Error("Failed to retrieve projects by workspace ID");
   }
 };
+
+export const updateTaskAssigneeDetailsWithUsers = async (project: IProject | any) => {
+  console.log(project)
+  if (!project) {
+    return; // Exit if there's no project
+  }
+
+  if (!project.tasks || !Array.isArray(project.tasks)) {
+    return; // Exit if tasks are missing or not an array
+  }
+
+  await Promise.all(
+    project.tasks.map(async (item: any) => {
+      if (!item.taskAssignee || !Array.isArray(item.taskAssignee)) {
+        return; // Exit if taskAssignee is missing or not an array
+      }
+
+      const userEmails = item.taskAssignee.map((assignee: any) => assignee.email);
+
+      if (!userEmails.length) {
+        return; // Exit if there are no user emails to look up
+      }
+
+      const users = await prisma.user.findMany({
+        where: {
+          email: { in: userEmails },
+        },
+        select: {
+          avatar_filename: true,
+          firstName: true,
+          lastName: true,
+          name: true,
+          email: true,
+          id: true,
+        },
+      });
+
+      const combinedResults = item.taskAssignee.map((member: any) => {
+        const matchingUser = users.find((user) => user.email === member.email);
+        return matchingUser ? { ...member, ...matchingUser } : member;
+      });
+
+      item.taskAssignee = combinedResults;
+    })
+  );
+}

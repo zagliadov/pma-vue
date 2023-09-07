@@ -36,6 +36,7 @@ export interface CreateUserOutput {
 }
 
 export interface IProjectAssignees {
+  id?: number;
   userId: number;
   email: string;
   projectId: number;
@@ -53,4 +54,29 @@ export interface ITaskAssignee {
   firstName?: string | null;
   lastName?: string | null;
   name?: string | null;
+}
+
+export interface ITask {
+  id: number;
+  name: string;
+  status: string;
+  description: string;
+  taskFiles: any;
+  task_goal_start: boolean | null;
+  task_goal_end: boolean | null;
+  projectId: number;
+  subtasks: any;
+  blockedBy: any;
+  blockedById: number | null;
+  blockingTasks: any;
+  taskAssignee: ITaskAssignee[];
+}
+
+export interface IProject {
+  id: number;
+  name: string;
+  description: string;
+  workspaceId: number;
+  tasks: ITask[];
+  projectAssignees: IProjectAssignees[]
 }
