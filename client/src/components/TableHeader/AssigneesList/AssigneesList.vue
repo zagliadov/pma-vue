@@ -13,8 +13,8 @@ const lengthDifference = assignees.length - assigneeArray.length;
 </script>
 
 <template>
-  <div className="flex items-center pl-4">
-    <div v-for="(assignee, index) in assigneeArray">
+  <div className="flex items-center pl-10">
+    <div v-for="(assignee, index) in assigneeArray" :key="assignee.id">
       <div
         :style="{
           position: 'relative',

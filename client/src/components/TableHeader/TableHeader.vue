@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CreateTaskModal from "./CreateTaskModal/CreateTaskModal.vue";
 import AssigneesList from "./AssigneesList/AssigneesList.vue";
+import ShowMeAssigneesButton from "./ShowMeAssigneesButton/ShowMeAssigneesButton.vue";
 
 
 </script>
@@ -9,5 +10,6 @@ import AssigneesList from "./AssigneesList/AssigneesList.vue";
   <div class="p-2 flex">
     <CreateTaskModal />
     <AssigneesList />
+    <ShowMeAssigneesButton />
   </div>
 </template>

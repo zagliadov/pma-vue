@@ -58,7 +58,7 @@ const handleTaskCreate = async (e: any) => {
 <template>
   <button
     @click="handleShowModalAddTask"
-    class="flex items-center bg-primary px-3 py-2 rounded"
+    class="flex items-center bg-primary px-5 py-2 rounded"
   >
     <IconPlus class="stroke-base-100" />
     <span class="text-base-100 pl-2">Task</span>
