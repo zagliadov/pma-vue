@@ -183,68 +183,88 @@ export const updateTaskAssigneeDetailsWithUsers = async (
   if (!project.tasks || !Array.isArray(project.tasks)) {
     return; // Exit if tasks are missing or not an array
   }
+  try {
+    await Promise.all(
+      project.tasks.map(async (item: any) => {
+        if (!item.taskAssignee || !Array.isArray(item.taskAssignee)) {
+          return; // Exit if taskAssignee is missing or not an array
+        }
 
-  await Promise.all(
-    project.tasks.map(async (item: any) => {
-      if (!item.taskAssignee || !Array.isArray(item.taskAssignee)) {
-        return; // Exit if taskAssignee is missing or not an array
-      }
+        const userEmails = item.taskAssignee.map(
+          (assignee: any) => assignee.email
+        );
 
-      const userEmails = item.taskAssignee.map(
-        (assignee: any) => assignee.email
-      );
+        if (!userEmails.length) {
+          return; // Exit if there are no user emails to look up
+        }
 
-      if (!userEmails.length) {
-        return; // Exit if there are no user emails to look up
-      }
+        const users = await prisma.user.findMany({
+          where: {
+            email: { in: userEmails },
+          },
+          select: {
+            avatar_filename: true,
+            firstName: true,
+            lastName: true,
+            name: true,
+            email: true,
+            id: true,
+          },
+        });
 
-      const users = await prisma.user.findMany({
-        where: {
-          email: { in: userEmails },
-        },
-        select: {
-          avatar_filename: true,
-          firstName: true,
-          lastName: true,
-          name: true,
-          email: true,
-          id: true,
-        },
-      });
+        const combinedResults = item.taskAssignee.map((member: any) => {
+          const matchingUser = users.find(
+            (user) => user.email === member.email
+          );
+          return matchingUser ? { ...member, ...matchingUser } : member;
+        });
 
-      const combinedResults = item.taskAssignee.map((member: any) => {
-        const matchingUser = users.find((user) => user.email === member.email);
-        return matchingUser ? { ...member, ...matchingUser } : member;
-      });
-
-      item.taskAssignee = combinedResults;
-    })
-  );
+        item.taskAssignee = combinedResults;
+      })
+    );
+  } catch (error) {
+    console.error("Failed to update task assignee:", error);
+    throw new Error("Failed to update task assignee");
+  }
 };
 
+/**
+ * Updates project assignee details with user information.
+ *
+ * @param {IProject | any} project - The project object containing assignee information.
+ * @throws {Error} If failed to update project assignee details.
+ * @returns {Promise<void>} A Promise that resolves once the assignee details are updated.
+ */
 export const updateProjectAssigneeDetailsWithUsers = async (
   project: IProject | any
 ) => {
-  await Promise.all(
-    _.map(project.projectAssignees, async (assignee) => {
-      const users = await prisma.user.findMany({
-        where: {
-          email: { in: assignee.email },
-        },
-        select: {
-          avatar_filename: true,
-          firstName: true,
-          lastName: true,
-          name: true,
-          email: true,
-          id: true,
-        },
-      });
-      const combinedResults = project.projectAssignees.map((member: any) => {
-        const matchingUser = users.find((user) => user.email === member.email);
-        return matchingUser ? { ...member, ...matchingUser } : member;
-      });
-      project.projectAssignees = combinedResults;
-    })
-  );
+  try {
+    await Promise.all(
+      _.map(project.projectAssignees, async (assignee) => {
+        const users = await prisma.user.findMany({
+          where: {
+            email: { in: assignee.email },
+          },
+          select: {
+            avatar_filename: true,
+            firstName: true,
+            lastName: true,
+            name: true,
+            email: true,
+            id: true,
+          },
+        });
+        const combinedResults = project.projectAssignees.map((member: any) => {
+          const matchingUser = users.find(
+            (user) => user.email === member.email
+          );
+          return matchingUser ? { ...member, ...matchingUser } : member;
+        });
+        project.projectAssignees = combinedResults;
+      })
+    );
+  } catch (error) {
+    console.error("Failed to update project assignee:", error);
+    throw new Error("Failed to update project assignee");
+  }
 };
