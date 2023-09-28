@@ -173,8 +173,9 @@ export const getProjectsByWorkspaceId = async (
   }
 };
 
-export const updateTaskAssigneeDetailsWithUsers = async (project: IProject | any) => {
-  console.log(project)
+export const updateTaskAssigneeDetailsWithUsers = async (
+  project: IProject | any
+) => {
   if (!project) {
     return; // Exit if there's no project
   }
@@ -189,7 +190,9 @@ export const updateTaskAssigneeDetailsWithUsers = async (project: IProject | any
         return; // Exit if taskAssignee is missing or not an array
       }
 
-      const userEmails = item.taskAssignee.map((assignee: any) => assignee.email);
+      const userEmails = item.taskAssignee.map(
+        (assignee: any) => assignee.email
+      );
 
       if (!userEmails.length) {
         return; // Exit if there are no user emails to look up
@@ -217,4 +220,31 @@ export const updateTaskAssigneeDetailsWithUsers = async (project: IProject | any
       item.taskAssignee = combinedResults;
     })
   );
-}
+};
+
+export const updateProjectAssigneeDetailsWithUsers = async (
+  project: IProject | any
+) => {
+  await Promise.all(
+    _.map(project.projectAssignees, async (assignee) => {
+      const users = await prisma.user.findMany({
+        where: {
+          email: { in: assignee.email },
+        },
+        select: {
+          avatar_filename: true,
+          firstName: true,
+          lastName: true,
+          name: true,
+          email: true,
+          id: true,
+        },
+      });
+      const combinedResults = project.projectAssignees.map((member: any) => {
+        const matchingUser = users.find((user) => user.email === member.email);
+        return matchingUser ? { ...member, ...matchingUser } : member;
+      });
+      project.projectAssignees = combinedResults;
+    })
+  );
+};

@@ -10,6 +10,7 @@ import {
   createNewProject,
   createProjectAssignees,
   getProjectsByWorkspaceId,
+  updateProjectAssigneeDetailsWithUsers,
   updateTaskAssigneeDetailsWithUsers,
 } from "./query";
 
@@ -108,7 +109,7 @@ export const getProject = async (req: any, res: Response) => {
       },
     });
     await updateTaskAssigneeDetailsWithUsers(project);
-
+    await updateProjectAssigneeDetailsWithUsers(project);
     return res.status(200).json({ project });
   } catch (error) {
     handleError(error, res);
