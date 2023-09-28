@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/store/modules/user";
+
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { isMySettingsRoute } from "../../helpers/helpers";
@@ -17,7 +18,6 @@ const {
 } = storeToRefs(userStore);
 const router = useRouter();
 const { updatePersonalInformation } = userStore;
-
 const handleSaveChanges = async () => {
   await updatePersonalInformation({
     firstName: firstName.value,
@@ -31,10 +31,13 @@ const handleSaveChanges = async () => {
     dateFormat: dateFormat.value,
   });
 };
+const handleNavigateBack = () => {
+  router.go(-1);
+}
 </script>
 
 <template>
-  <button class="flex items-center">
+  <button class="flex items-center" @click="handleNavigateBack">
     <IconLeftArrow />
     <span class="pl-2">Back to table</span>
   </button>
