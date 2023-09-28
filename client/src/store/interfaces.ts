@@ -20,6 +20,7 @@ export interface IProjectAssignees {
   projectId: number;
   projectCreator: boolean;
   isEmailConfirmed: boolean;
+  avatar_filename?: string;
 }
 
 export interface ITasks {}

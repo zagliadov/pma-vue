@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import CreateTaskModal from "./CreateTaskModal/CreateTaskModal.vue";
-import { storeToRefs } from "pinia";
-import { useProjectStore } from "@/store/modules/project";
+import AssigneesList from "./AssigneesList/AssigneesList.vue";
 
-const projectStore = useProjectStore();
-const { project } = storeToRefs(projectStore);
-const assignees = project?.value?.projectAssignees;
+
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="p-2 flex">
     <CreateTaskModal />
-    <div v-for="(id, email ) in assignees">
-
-    </div>
+    <AssigneesList />
   </div>
 </template>
