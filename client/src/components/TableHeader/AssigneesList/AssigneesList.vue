@@ -37,7 +37,7 @@ const lengthDifference = assignees.length - assigneeArray.length;
         </span>
       </div>
     </div>
-    <div class="flex items-center justify-center w-10 h-10 border rounded-full bg-white ml-[-15px] z-30">
+    <div class="flex items-center justify-center w-10 h-10 border rounded-full bg-white ml-[-15px] z-10">
       <span>+ {{ lengthDifference }}</span>
     </div>
   </div>
