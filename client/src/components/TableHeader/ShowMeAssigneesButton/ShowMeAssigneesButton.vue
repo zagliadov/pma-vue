@@ -2,10 +2,12 @@
 import { useProjectStore } from "../../../store/modules/project";
 import { useAssigneeStore } from "../../../store/modules/assignee";
 import { storeToRefs } from "pinia";
-import { capitalizeFirstLetter } from "../../../helpers/helpers";
+import { useRouter } from "vue-router";
+import { capitalizeFirstLetter, getProjectIdFromCurrentPath } from "../../../helpers/helpers";
 import { ref } from "vue";
 import { API_URL } from "../../../helpers/constants";
 
+const router = useRouter();
 const projectStore = useProjectStore();
 const assigneeStore = useAssigneeStore();
 const { removeProjectAssignee } = assigneeStore;
@@ -13,9 +15,10 @@ const { project } = storeToRefs(projectStore);
 const assignees = project?.value?.projectAssignees;
 const assigneesLength = project?.value?.projectAssignees.length;
 const hoveredAssignee = ref<number | null>(null);
+const projectId = getProjectIdFromCurrentPath(router);
 
-const handleRemoveProjectAssignee = async (id: number) => {
-  await removeProjectAssignee(id)
+const handleRemoveProjectAssignee = async (assigneeId: number, projectId: number) => {
+  await removeProjectAssignee(assigneeId, projectId);
 };
 const handleAddMembers = () => {
   console.log("add members fn");
@@ -74,7 +77,7 @@ const handleAddMembers = () => {
               v-if="hoveredAssignee === assignee.id"
               class="flex items-center"
             >
-              <button @click="handleRemoveProjectAssignee(assignee.id)">
+              <button @click="handleRemoveProjectAssignee(assignee.id, projectId)">
                 <IconClose />
               </button>
             </div>

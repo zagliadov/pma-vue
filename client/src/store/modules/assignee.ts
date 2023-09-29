@@ -50,9 +50,9 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
-  const removeProjectAssignee = async (id: number) => {
-    socket.emit("removeProjectAssignee", id);
-    socket.on("removeProjectAssignee", data => {
+  const removeProjectAssignee = async (assigneeId: number, projectId: number) => {
+    socket.emit("project:removeProjectAssignee", { assigneeId, projectId });
+    socket.on("project:removeProjectAssignee", data => {
       console.log(data)
     })
   };

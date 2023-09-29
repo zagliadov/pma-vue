@@ -11,7 +11,7 @@ import user from "./routes/user";
 import task from "./routes/task";
 import http from "http";
 import { Server } from "socket.io";
-import { socketHandler } from "./socket/socket";
+import { registerProjectHandlers } from "./socket/projectHandlers";
 
 const app = express();
 const server = http.createServer(app);
@@ -36,7 +36,11 @@ app.use("/project", project);
 app.use("/assignee", assignee);
 app.use("/user", user);
 app.use("/task", task);
-socketHandler(io);
+
+const onConnection = (socket: any) => {
+  registerProjectHandlers(io, socket);
+};
+io.on("connection", onConnection);
 
 app.use("/controllers/uploads", express.static("./controllers/uploads"));
 
