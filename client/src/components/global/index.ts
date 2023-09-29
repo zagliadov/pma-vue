@@ -36,6 +36,8 @@ import IconTable from "../icons/IconTable.vue";
 import IconTimelineTable from "../icons/IconTimelineTable.vue";
 import IconCheck from "../icons/IconCheck.vue";
 import IconUploadCloud from "../icons/IconUploadCloud.vue";
+import IconFilter from "../icons/IconFilter.vue";
+import IconShare from "../icons/IconShare.vue";
 import Footer from "../Footer/Footer.vue";
 import Navigation from "../Navigation/Navigation.vue";
 import Layout from "../Layout/Layout.vue";
@@ -81,6 +83,8 @@ const components = [
   { name: "IconTimelineTable", component: IconTimelineTable },
   { name: "IconCheck", component: IconCheck },
   { name: "IconUploadCloud", component: IconUploadCloud },
+  { name: "IconFilter", component: IconFilter },
+  { name: "IconShare", component: IconShare },
   { name: "Footer", component: Footer },
   { name: "Navigation", component: Navigation },
   { name: "Layout", component: Layout },

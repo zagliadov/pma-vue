@@ -12,8 +12,8 @@ export const removeProjectAssignee = async (io: any, payload: number) => {
   }
 };
 
-export const registerProjectHandlers = (io: any, socket: any) => {
-  socket.on("project:removeProjectAssignee", (payload: number) => {
+export const registerProjectHandlers = async (io: any, socket: any) => {
+  await socket.on("project:removeProjectAssignee", (payload: number) => {
     removeProjectAssignee(io, payload);
   });
 };

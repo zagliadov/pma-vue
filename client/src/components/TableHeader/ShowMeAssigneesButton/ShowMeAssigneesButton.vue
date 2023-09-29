@@ -26,7 +26,7 @@ const handleAddMembers = () => {
 </script>
 
 <template>
-  <details class="dropdown pl-10">
+  <details class="dropdown pl-10 pr-2">
     <summary class="btn bg-transparent border-none">
       <IconEye /><span>Show me</span>
     </summary>
@@ -86,7 +86,7 @@ const handleAddMembers = () => {
       </div>
 
       <div class="px-4 py-2">
-        <button class="btn w-full" @click="handleAddMembers">
+        <button class="btn w-full bg-green-50" @click="handleAddMembers">
           <IconPlus />
           <span class="text-primary">Add members</span>
         </button>

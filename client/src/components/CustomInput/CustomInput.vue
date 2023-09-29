@@ -57,7 +57,7 @@ const handleInputBlur = () => {
     :type="type"
     :name="name"
     :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
+    @input="$emit('update:modelValue', $event?.target?.value)"
     :placeholder="placeholder"
     @focus="handleInputFocused(name as string)"
     @blur="handleInputBlur"
