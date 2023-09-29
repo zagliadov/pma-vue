@@ -2,14 +2,21 @@
 import { API_URL } from "../../../helpers/constants";
 import { capitalizeFirstLetter } from "../../../helpers/helpers";
 import { useProjectStore } from "../../../store/modules/project";
-import { storeToRefs } from "pinia";
+import { ref, computed } from "vue";
 
 const projectStore = useProjectStore();
-const { project } = storeToRefs(projectStore);
-const assignees = project?.value?.projectAssignees;
-const assigneeArray =
-  assignees.length > 3 ? assignees.slice(0, 3) : assignees.slice();
-const lengthDifference = assignees.length - assigneeArray.length;
+const assigneeArray = ref<any>(
+  projectStore?.project?.projectAssignees &&
+    projectStore?.project?.projectAssignees?.length > 3
+    ? projectStore?.project?.projectAssignees.slice(0, 3)
+    : projectStore?.project?.projectAssignees.slice()
+);
+
+const lengthDifference = computed(
+  () =>
+    projectStore?.project?.projectAssignees &&
+    projectStore?.project?.projectAssignees?.length - assigneeArray.value.length
+);
 </script>
 
 <template>
@@ -37,7 +44,9 @@ const lengthDifference = assignees.length - assigneeArray.length;
         </span>
       </div>
     </div>
-    <div class="flex items-center justify-center w-10 h-10 border rounded-full bg-white ml-[-15px] z-10">
+    <div
+      class="flex items-center justify-center w-10 h-10 border rounded-full bg-white ml-[-15px] z-10"
+    >
       <span>+ {{ lengthDifference }}</span>
     </div>
   </div>

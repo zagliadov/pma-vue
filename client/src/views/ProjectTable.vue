@@ -16,7 +16,6 @@ watch(
     await getProject(Number(newProjectId));
   }
 );
-
 </script>
 
 <template>

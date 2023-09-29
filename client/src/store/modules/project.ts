@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
-import type { IProject, IAddNewProjectData } from "../interfaces";
+import type {
+  IProject,
+  IAddNewProjectData,
+} from "../interfaces";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
@@ -12,7 +15,9 @@ export const useProjectStore = defineStore("project", () => {
 
   const deleteProject = async (projectId: number) => {
     try {
-      const response = await axios.delete(`${API_URL}/project/delete_project/${projectId}`);
+      const response = await axios.delete(
+        `${API_URL}/project/delete_project/${projectId}`
+      );
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -112,7 +117,7 @@ export const useProjectStore = defineStore("project", () => {
         }
       );
       if (response.status === 200) {
-        console.log(response.data.project)
+        console.log(response.data.project);
         project.value = response.data.project;
       } else {
         console.log("Failed to get project");
