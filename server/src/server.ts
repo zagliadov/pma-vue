@@ -9,10 +9,20 @@ import project from "./routes/project";
 import assignee from "./routes/assignee";
 import user from "./routes/user";
 import task from "./routes/task";
+import http from "http";
+import { Server } from "socket.io";
+import { socketHandler } from "./socket/socket";
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
+  },
+});
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(
   fileUpload({
     createParentPath: true,
@@ -26,9 +36,10 @@ app.use("/project", project);
 app.use("/assignee", assignee);
 app.use("/user", user);
 app.use("/task", task);
+socketHandler(io);
 
 app.use("/controllers/uploads", express.static("./controllers/uploads"));
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

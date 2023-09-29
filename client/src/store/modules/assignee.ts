@@ -3,6 +3,9 @@ import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IMembers } from "../interfaces";
+import { io } from "socket.io-client";
+
+const socket = io(API_URL);
 
 export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<any>([]);
@@ -47,11 +50,19 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
+  const removeProjectAssignee = async (id: number) => {
+    socket.emit("removeProjectAssignee", id);
+    socket.on("removeProjectAssignee", data => {
+      console.log(data)
+    })
+  };
+
   return {
     assigneeProjects,
     membersCount,
     members,
     getAssigneeProjects,
     getAllAssignee,
+    removeProjectAssignee,
   };
 });
