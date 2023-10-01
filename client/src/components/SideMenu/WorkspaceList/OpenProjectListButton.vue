@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const { id, name, selectWorkspaceId, handleOpenProject } = defineProps([
-  "id",
-  "name",
-  "selectWorkspaceId",
-  "handleOpenProject",
-]);
+const { id, name, selectWorkspaceId, handleOpenProject } = defineProps<{
+  id: number
+  name: string
+  selectWorkspaceId: number
+  handleOpenProject: Function
+}>();
 </script>
 
 <template>
