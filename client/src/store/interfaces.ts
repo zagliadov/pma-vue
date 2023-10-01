@@ -21,6 +21,9 @@ export interface IProjectAssignees {
   projectCreator: boolean;
   isEmailConfirmed: boolean;
   avatar_filename?: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
 }
 
 export interface ITasks {}
