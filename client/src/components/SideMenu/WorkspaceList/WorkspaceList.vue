@@ -3,37 +3,34 @@ import { useWorkspaceStore } from "@/store/modules/workspace";
 import { useDiffStore } from "@/store/modules/difference";
 import { useProjectStore } from "@/store/modules/project";
 import { useAuthStore } from "@/store/modules/auth";
+import OpenProjectListButton from "./OpenProjectListButton.vue";
+import CreateNewProjectButton from "./CreateNewProjectButton.vue";
+import ProjectWorkspaceLink from "./ProjectWorkspaceLink.vue";
+import ProjectOptionsMenu from "./ProjectOptionsMenu.vue";
 import { storeToRefs } from "pinia";
-import {
-  parseUsernameFromEmail,
-  capitalizeFirstLetter,
-  getEmailFromCurrentPath,
-} from "../../../helpers/helpers";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import type { IExistingUser } from "@/store/interfaces";
 
 const workspaceStore = useWorkspaceStore();
 const projectStore = useProjectStore();
 const authStore = useAuthStore();
 const differenceStore = useDiffStore();
 const { projects } = storeToRefs(projectStore);
+const { getProjects } = projectStore;
 const { workspaces } = storeToRefs(workspaceStore);
 const { existingUser } = storeToRefs(authStore);
-const { email } = existingUser.value;
-const { getProjects } = projectStore;
+const { email } = existingUser.value as IExistingUser;
 const { setIsSideMenuOpen } = differenceStore;
 const selectWorkspaceId = ref<number>(0);
 const hoveredProjectId = ref<number | null>(null);
-const router = useRouter();
 
+const handleCloseSideMenu = () => {
+  setIsSideMenuOpen();
+};
 const handleOpenProject = async (workspaceId: number) => {
   await getProjects(workspaceId).then(() => {
     selectWorkspaceId.value = workspaceId;
   });
-};
-
-const handleCloseSideMenu = () => {
-  setIsSideMenuOpen();
 };
 </script>
 
@@ -41,26 +38,17 @@ const handleCloseSideMenu = () => {
   <div class="pt-4">
     <div v-for="{ name, id } in workspaces" :key="id" class="flex flex-col">
       <div class="flex items-center justify-between pt-2">
-        <div class="flex items-center cursor-pointer" @click="handleOpenProject(id)">
-          <button
-            class="flex items-center"
-            :class="{ 'rotate-180': selectWorkspaceId === id }"
-          >
-            <IconChevron />
-          </button>
-          <span class="pl-2">{{ name }}</span>
-        </div>
-        <div class="flex items-center pr-3">
-          <RouterLink
-            :to="`/${parseUsernameFromEmail(
-              email
-            )}/workspace/${id}/create_project`"
-            @click="handleCloseSideMenu"
-            class="text-gray-600 font-medium text-sm pl-2 hover:text-primary"
-          >
-            <IconPlus class="stroke-neutral" />
-          </RouterLink>
-        </div>
+        <OpenProjectListButton
+          :id="id"
+          :name="name"
+          :selectWorkspaceId="selectWorkspaceId"
+          :handleOpenProject="handleOpenProject"
+        />
+        <CreateNewProjectButton
+          :email="email"
+          :id="id"
+          :handleCloseSideMenu="handleCloseSideMenu"
+        />
       </div>
 
       <div v-if="selectWorkspaceId === id" class="pt-1 pl-4">
@@ -70,81 +58,19 @@ const handleCloseSideMenu = () => {
             @mouseenter="hoveredProjectId = id"
             @mouseleave="hoveredProjectId = null"
           >
-            <RouterLink
-              :to="`/${parseUsernameFromEmail(
-                email
-              )}/workspace/${selectWorkspaceId}/project/${id}`"
-              @click="handleCloseSideMenu"
-              class="flex items-center text-gray-600 pl-2 hover:text-primary"
-            >
-              <div>
-                <span
-                  class="w-8 h-8 flex items-center justify-center rounded bg-gray-300"
-                  >{{ capitalizeFirstLetter(name) }}</span
-                >
-              </div>
-              <span class="text-base pl-2 pr-4 w-[260px]">{{ name }}</span>
-            </RouterLink>
-
-            <div v-if="hoveredProjectId === id" class="dropdown dropdown-right">
-              <button tabIndex="{0}">
-                <IconMoreVerticalSettings />
-              </button>
-              <div tabindex="{0}" class="dropdown-content z-[1] menu p-5">
-                <div class="w-[180px] shadow bg-base-100 rounded">
-                  <div>
-                    <RouterLink
-                      :to="`/my_settings/${getEmailFromCurrentPath(
-                        router
-                      )}/projects`"
-                      @click="handleCloseSideMenu"
-                      class="flex items-center justify-between p-3 hover:bg-neutral-content"
-                    >
-                      <div class="flex items-center">
-                        <IconMySettingsProject />
-                        <span class="pl-3">Settings</span>
-                      </div>
-                    </RouterLink>
-                    <RouterLink
-                      :to="`/my_settings/${getEmailFromCurrentPath(
-                        router
-                      )}/projects`"
-                      @click="handleCloseSideMenu"
-                      class="flex items-center justify-between p-3 hover:bg-neutral-content"
-                    >
-                      <div class="flex items-center">
-                        <IconUsers />
-                        <span class="pl-3">Members</span>
-                      </div>
-                    </RouterLink>
-                    <RouterLink
-                      :to="`/${getEmailFromCurrentPath(
-                        router
-                      )}/workspace/${selectWorkspaceId}/project/${id}`"
-                      @click="handleCloseSideMenu"
-                      class="flex items-center justify-between p-3 hover:bg-neutral-content"
-                    >
-                      <div class="flex items-center">
-                        <IconTable />
-                        <span class="pl-3">Main Table</span>
-                      </div>
-                    </RouterLink>
-                    <RouterLink
-                      :to="`/${getEmailFromCurrentPath(
-                        router
-                      )}/workspace/${selectWorkspaceId}/project/${id}/timeline`"
-                      @click="handleCloseSideMenu"
-                      class="flex items-center justify-between p-3 hover:bg-neutral-content"
-                    >
-                      <div class="flex items-center">
-                        <IconTimelineTable />
-                        <span class="pl-3">Timeline</span>
-                      </div>
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProjectWorkspaceLink
+              :email="email"
+              :id="id"
+              :selectWorkspaceId="selectWorkspaceId"
+              :name="name"
+              :handleCloseSideMenu="handleCloseSideMenu"
+            />
+            <ProjectOptionsMenu
+              :hoveredProjectId="hoveredProjectId"
+              :id="id"
+              :handleCloseSideMenu="handleCloseSideMenu"
+              :selectWorkspaceId="selectWorkspaceId"
+            />
           </div>
         </div>
       </div>

@@ -29,8 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
         success.value = true;
         existingUser.value = response.data?.existingUser;
       }
-    } catch (error) {
-      const message = error?.response?.data?.message;
+    } catch (error: any) {
+      const message = error?.response?.data?.message || "";
       const status = error?.response?.status || 0;
       if (message && status) {
         errorMessage.value = message;
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore("auth", () => {
       );
 
       if (response.status === 201) success.value = true;
-    } catch (error) {
+    } catch (error: any) {
       errorStatus.value = error?.response?.status || 0;
       errorMessage.value = "User with this email already exists";
     }
