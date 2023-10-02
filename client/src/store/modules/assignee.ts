@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
-import type { IMembers } from "../interfaces";
+import type { IMembers, IProjectAssignees } from "../interfaces";
 import { io } from "socket.io-client";
 
 const socket = io(API_URL);
@@ -11,6 +11,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<any>([]);
   const membersCount = ref<number>(0);
   const members = ref<IMembers[]>([]);
+  const projectAssignees = ref<IProjectAssignees[]>([]);
 
   const getAllAssignee = async () => {
     const token = localStorage.getItem("token");
@@ -57,12 +58,23 @@ export const useAssigneeStore = defineStore("assignee", () => {
     })
   };
 
+  const getProjectAssignees = async (projectId: number) => {
+    try {
+      const response = await axios.get(`${API_URL}/assignee/get_project_assignees/${projectId}`);
+      projectAssignees.value = response.data.projectAssignees;
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  }
+
   return {
     assigneeProjects,
     membersCount,
     members,
+    projectAssignees,
     getAssigneeProjects,
     getAllAssignee,
     removeProjectAssignee,
+    getProjectAssignees,
   };
 });

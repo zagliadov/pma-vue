@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
-import { IProject, IProjectAssignees, ITaskAssignee } from "./interfaces";
+import { IProjectAssignees, ITaskAssignee } from "./interfaces";
 import { Project } from "@prisma/client";
 import * as _ from "lodash";
 import {
@@ -195,12 +195,30 @@ export const deleteProject = async (req: Request, res: Response) => {
   try {
     const { projectId } = req.params;
     await prisma.$connect();
-    const deletedProject = await prisma.project.delete({
-      where: {
-        id: Number(projectId),
+    const project = await prisma.project.findUnique({
+      where: { id: Number(projectId) },
+      include: {
+        tasks: true,
+        projectAssignees: true,
       },
     });
-    res.status(202).json({ deletedProject });
+
+    if (!project) {
+      throw new Error('Проект не найден');
+    }
+    await prisma.task.deleteMany({
+      where: { projectId: project.id },
+    });
+
+    await prisma.projectAssignee.deleteMany({
+      where: { projectId: project.id },
+    });
+
+    await prisma.project.delete({
+      where: { id: Number(projectId) },
+    });
+
+    return { success: true, message: 'Проект успешно удален' };
   } catch (error) {
     handleError(error, res);
   } finally {

@@ -79,11 +79,12 @@ export const editProjectMiddleware = async (
   const projectStore = useProjectStore();
   const assigneeStore = useAssigneeStore();
   const { getProject } = projectStore;
-  const { getAllAssignee } = assigneeStore;
+  const { getAllAssignee, getProjectAssignees } = assigneeStore;
 
   try {
     await getAllAssignee();
     await getProject(id);
+    await getProjectAssignees(id);
   } catch (error) {
     console.error("Error fetching project data:", error);
     next({ name: "login" });

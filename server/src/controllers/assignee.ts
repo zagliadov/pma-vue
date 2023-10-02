@@ -80,3 +80,43 @@ export const getAssigneeProjects = async (req: any, res: Response) => {
     handleError(error, res);
   }
 };
+
+export const getProjectAssignees = async (req: Request, res: Response) => {
+  try {
+    const { project_id } = req.params;
+    await prisma.$connect();
+    let projectAssignees = await prisma.projectAssignee.findMany({
+      where: {
+        projectId: Number(project_id),
+      },
+    });
+    const userIds = projectAssignees.map((assignee) => Number(assignee.userId));
+    const users = await prisma.user.findMany({
+      where: {
+        id: {
+          in: userIds,
+        },
+      },
+      select: {
+        avatar_filename: true,
+        firstName: true,
+        lastName: true,
+        name: true,
+        email: true,
+        id: true,
+      },
+    });
+    const combinedResults = projectAssignees.map((assignee) => {
+      const matchingUser = users.find(
+        (user) => user.id === Number(assignee.userId)
+      );
+      return matchingUser ? { ...assignee, ...matchingUser } : assignee;
+    });
+
+    res.status(200).json({ projectAssignees: combinedResults });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+};

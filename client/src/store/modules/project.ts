@@ -15,10 +15,9 @@ export const useProjectStore = defineStore("project", () => {
 
   const deleteProject = async (projectId: number) => {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${API_URL}/project/delete_project/${projectId}`
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +116,6 @@ export const useProjectStore = defineStore("project", () => {
         }
       );
       if (response.status === 200) {
-        console.log(response.data.project);
         project.value = response.data.project;
       } else {
         console.log("Failed to get project");

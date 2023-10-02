@@ -15,9 +15,8 @@ const handleProjectDeleteModal = () => {
 
 const handleDeleteProject = async () => {
   if (deleteProjectName.value.trim() === projectStore?.project?.name) {
-    await deleteProject(projectStore?.project?.id).then(() => {
-      router.push(`/my_settings/${getEmailFromCurrentPath(router)}/projects`);
-    });
+    router.push(`/my_settings/${getEmailFromCurrentPath(router)}/projects`);
+    await deleteProject(projectStore?.project?.id);
   }
 };
 </script>
@@ -44,14 +43,14 @@ const handleDeleteProject = async () => {
           <CustomInput
             v-model="deleteProjectName"
             placeholder="Type here"
-            name="Enter project name:"
+            :name="`If you want to delete a project, enter the project name: ${projectStore?.project?.name}`"
           />
           <div class="modal-action">
             <button class="btn">Close</button>
-            <button class="btn btn-error" @click="handleDeleteProject">
+          </div>
+          <button class="btn btn-error" @click="handleDeleteProject()">
               Delete
             </button>
-          </div>
         </form>
       </dialog>
     </div>

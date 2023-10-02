@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { capitalizeFirstLetter } from "../../../helpers/helpers";
-import { useAssigneeStore } from "../../../store/modules/assignee";
+import { useAssigneeStore } from "@/store/modules/assignee";
 import { API_URL } from "../../../helpers/constants";
 import { ref } from "vue";
 
@@ -10,12 +10,13 @@ const hoveredMember = ref<string | null>(null);
 
 <template>
   <div
+    v-if="assigneeStore.projectAssignees"
     v-for="{
       email,
       avatar_filename,
       firstName,
       lastName,
-    } in assigneeStore.members"
+    } in assigneeStore.projectAssignees"
     class="flex items-center justify-between rounded p-2 mt-4 hover:bg-base-200"
     @mouseenter="hoveredMember = email"
     @mouseleave="hoveredMember = null"
