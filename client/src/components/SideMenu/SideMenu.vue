@@ -45,20 +45,10 @@ const handleCreateNewSpace = async (newWorkspaceName: any) => {
     <div class="w-[400px] h-screen border-r absolute bg-white z-10">
       <SideMenuHeader />
       <div class="px-4 py-6">
-        <OpenSpaceButton
-          :handleSpaceOpen="handleSpaceOpen"
-          :isSpaceOpen="isSpaceOpen"
-        />
-        <SpaceCreationButton
-          :isSpaceOpen="isSpaceOpen"
-          :handleOpenSpaceCreation="handleOpenSpaceCreation"
-        />
-        <NewWorkspaceForm
-          :errorMessage="errorMessage"
-          :errorStatus="errorStatus"
-          :isCreateSpace="isCreateSpace"
-          :handleCreateNewSpace="handleCreateNewSpace"
-        />
+        <OpenSpaceButton :handleSpaceOpen="handleSpaceOpen" :isSpaceOpen="isSpaceOpen" />
+        <SpaceCreationButton :isSpaceOpen="isSpaceOpen" :handleOpenSpaceCreation="handleOpenSpaceCreation" />
+        <NewWorkspaceForm :errorMessage="errorMessage" :errorStatus="errorStatus" :isCreateSpace="isCreateSpace"
+          :handleCreateNewSpace="handleCreateNewSpace" />
         <WorkspaceList v-if="isSpaceOpen" />
       </div>
 

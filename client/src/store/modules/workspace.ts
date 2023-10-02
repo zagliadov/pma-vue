@@ -45,7 +45,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
       );
       successStatus.value = response?.status;
       workspaces.value = response?.data?.workspaces;
-    } catch (error) {
+    } catch (error: any) {
       errorMessage.value = error?.response?.data?.message;
       errorStatus.value = error?.response?.status;
     }

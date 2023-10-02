@@ -26,7 +26,7 @@ export const useProjectStore = defineStore("project", () => {
 
   const editProjectName = async (newName: string, projectId: number) => {
     try {
-      const response = await axios.patch(
+      const response = await axios.post(
         `${API_URL}/project/edit_project_name`,
         { newName, projectId }
       );

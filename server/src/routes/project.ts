@@ -16,7 +16,7 @@ router.post("/add_new_project", verifyToken, addNewProject);
 router.post("/get_project", verifyToken, getProject);
 router.post("/get_total_project_count", verifyToken, getTotalProjectCount);
 router.post("/get_all_projects", verifyToken, getAllProjects);
-router.patch("/edit_project_name", editProjectName);
+router.post("/edit_project_name", editProjectName);
 router.delete("/delete_project/:projectId", deleteProject);
 
 export default router;

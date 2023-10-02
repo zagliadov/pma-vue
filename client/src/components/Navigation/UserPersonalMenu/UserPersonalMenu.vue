@@ -10,10 +10,11 @@ import {
   isNotificationRoute,
   isMySettingsRoute
 } from "../../../helpers/helpers";
+import type { IExistingUser } from "@/store/interfaces";
 
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
-const { name, firstName, lastName, email } = existingUser.value;
+const { name, firstName, lastName, email } = existingUser.value as IExistingUser;
 const router = useRouter();
 const firstLetterInUpperCase = capitalizeFirstLetter(name);
 </script>

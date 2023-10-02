@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useUserStore } from "@/store/modules/user";
-import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 const userStore = useUserStore();
-const authStore = useAuthStore();
 const { firstName, lastName, userName, phoneNumber } = storeToRefs(userStore);
-const { existingUser } = storeToRefs(authStore);
 const isValidPhoneNumber = ref<boolean>(false);
 const validatePhoneNumber = () => {
   const phoneRegex = /^\+\d-\d{3}-\d{3}-\d{4}$/;

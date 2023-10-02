@@ -16,7 +16,9 @@ const router = useRouter();
 
 <template>
   <div class="flex items-center" v-if="isProjectViewRoute(router)">
-    <span class="font-medium text-lg pr-4 truncate max-w-[150px]">{{ project?.name }}</span>
+    <span class="font-medium text-lg pr-4 truncate max-w-[150px]">{{
+      project?.name
+    }}</span>
     <div class="border-r border-base-300 h-4 w-1"></div>
     <RouterLink
       :to="createMainTableRoute(router)"

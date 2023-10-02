@@ -1,23 +1,15 @@
 <script setup lang="ts">
 import NotificationsDropdown from "./NotificationsDropdown/NotificationsDropdown.vue";
 import UserPersonalMenu from "./UserPersonalMenu/UserPersonalMenu.vue";
-import { useAuthStore } from "@/store/modules/auth";
-import { storeToRefs } from "pinia";
 import { getEmailFromCurrentPath } from "../../helpers/helpers";
 import { useRouter } from "vue-router";
-import type { IExistingUser } from "@/store/interfaces";
 
-const authStore = useAuthStore();
-const { existingUser } = storeToRefs(authStore);
-const { name } = existingUser?.value as IExistingUser;
 const router = useRouter();
 </script>
 
 <template>
   <div class="flex justify-around items-center min-w-[200px] relative">
-    <RouterLink
-      :to="`/my_settings/${getEmailFromCurrentPath(router)}/information`"
-    >
+    <RouterLink :to="`/my_settings/${getEmailFromCurrentPath(router)}/information`">
       <IconHelp />
     </RouterLink>
     <NotificationsDropdown />

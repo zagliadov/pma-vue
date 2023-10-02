@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import type { IExistingUser } from "@/store/interfaces";
 import { useAuthStore } from "../../../store/modules/auth";
 import { storeToRefs } from "pinia";
 
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
 
-const { firstName, lastName, email } = existingUser.value;
+const { firstName, lastName, email } = existingUser.value as IExistingUser;
 </script>
 
 <template>

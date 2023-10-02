@@ -5,12 +5,13 @@ import { useAuthStore } from "../../../store/modules/auth";
 import { useUserStore } from "../../../store/modules/user";
 import { capitalizeFirstLetter } from "../../../helpers/helpers";
 import { API_URL } from "@/helpers/constants";
+import type { IExistingUser } from "@/store/interfaces";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const { existingUser } = storeToRefs(authStore);
 const { uploadPhoto, removeAvatar } = userStore;
-const { name } = existingUser.value;
+const { name } = existingUser.value as IExistingUser;
 const colorAvatar = ref<string>(localStorage.getItem("color") || "#6e5ee6");
 const colorId = ref<number>(Number(localStorage.getItem("color_id")) || 0);
 const inputFile = ref(null);

@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { RouterLink, useRouter } from "vue-router";
 import { ref } from "vue";
 import { parseUsernameFromEmail } from "@/helpers/helpers";
+import type { IExistingUser } from "@/store/interfaces";
 
 const auth = useAuthStore();
 const { logIn } = auth;
@@ -19,7 +20,7 @@ const handleLogin = async () => {
     password.value = "";
   }
   if (success.value) {
-    const { email, workspace } = existingUser.value;
+    const { email, workspace } = existingUser.value as IExistingUser;
     const { id: workspaceId } = workspace[0];
     router.push(`/${parseUsernameFromEmail(email)}/workspace/${workspaceId}`);
   }
