@@ -6,6 +6,7 @@ import {
 import { useProjectStore } from "../../../store/modules/project";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import DeleteUniqProject from "./DeleteUniqProject.vue";
 
 const projectStore = useProjectStore();
 const router = useRouter();
@@ -44,10 +45,11 @@ const hoveredProjectId = ref<number | null>(null);
               <IconEdit />
               <span class="pl-2">Edit project</span>
             </RouterLink>
-            <RouterLink :to="``" class="flex items-center p-3 hover:bg-gray-50">
+            <DeleteUniqProject :name="name" :id="id" />
+            <!-- <RouterLink :to="``" class="flex items-center p-3 hover:bg-gray-50">
               <IconTrashNotification class="stroke-error" />
               <span class="pl-2 text-error">Delete project</span>
-            </RouterLink>
+            </RouterLink> -->
           </div>
         </div>
       </div>

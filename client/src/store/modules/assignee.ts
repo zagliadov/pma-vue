@@ -51,21 +51,26 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
-  const removeProjectAssignee = async (assigneeId: number, projectId: number) => {
+  const removeProjectAssignee = async (
+    assigneeId: number,
+    projectId: number
+  ) => {
     socket.emit("project:removeProjectAssignee", { assigneeId, projectId });
-    socket.on("project:removeProjectAssignee", data => {
-      console.log(data)
-    })
+    socket.on("project:removeProjectAssignee", (data) => {
+      console.log(data);
+    });
   };
 
   const getProjectAssignees = async (projectId: number) => {
     try {
-      const response = await axios.get(`${API_URL}/assignee/get_project_assignees/${projectId}`);
+      const response = await axios.get(
+        `${API_URL}/assignee/get_project_assignees/${projectId}`
+      );
       projectAssignees.value = response.data.projectAssignees;
     } catch (error) {
       console.error("An error occurred:", error);
     }
-  }
+  };
 
   return {
     assigneeProjects,
