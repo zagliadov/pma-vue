@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import {
   createNewProject,
   createProjectAssignees,
+  getAllProjectsByEmail,
   getProjectsByWorkspaceId,
   updateProjectAssigneeDetailsWithUsers,
   updateTaskAssigneeDetailsWithUsers,
@@ -18,15 +19,7 @@ export const getAllProjects = async (req: any, res: Response) => {
   const { email } = req.userData;
   try {
     await prisma.$connect();
-    const allProjects = await prisma.project.findMany({
-      where: {
-        workspace: {
-          author: {
-            email,
-          },
-        },
-      },
-    });
+    const allProjects = await getAllProjectsByEmail(email);
 
     res.status(200).json({ allProjects });
   } catch (error) {
@@ -40,15 +33,7 @@ export const getTotalProjectCount = async (req: any, res: Response) => {
   const { email } = req.userData;
   try {
     await prisma.$connect();
-    const allProjects = await prisma.project.findMany({
-      where: {
-        workspace: {
-          author: {
-            email,
-          },
-        },
-      },
-    });
+    const allProjects = await getAllProjectsByEmail(email);
     const totalProjectsCount = allProjects.length;
     res.status(200).json({ totalProjectsCount });
   } catch (error) {
@@ -191,9 +176,10 @@ export const editProjectName = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteProject = async (req: Request, res: Response) => {
+export const deleteProject = async (req: any, res: Response) => {
   try {
     const { projectId } = req.params;
+    const { email } = req.userData;
     await prisma.$connect();
     const project = await prisma.project.findUnique({
       where: { id: Number(projectId) },
@@ -204,7 +190,7 @@ export const deleteProject = async (req: Request, res: Response) => {
     });
 
     if (!project) {
-      throw new Error('Проект не найден');
+      throw new Error("Project not found");
     }
     await prisma.task.deleteMany({
       where: { projectId: project.id },
@@ -217,8 +203,8 @@ export const deleteProject = async (req: Request, res: Response) => {
     await prisma.project.delete({
       where: { id: Number(projectId) },
     });
-
-    return { success: true, message: 'Проект успешно удален' };
+    const allProjects = await getAllProjectsByEmail(email);
+    res.status(200).json({ allProjects });
   } catch (error) {
     handleError(error, res);
   } finally {

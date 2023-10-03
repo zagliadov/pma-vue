@@ -46,10 +46,6 @@ const hoveredProjectId = ref<number | null>(null);
               <span class="pl-2">Edit project</span>
             </RouterLink>
             <DeleteUniqProject :name="name" :id="id" />
-            <!-- <RouterLink :to="``" class="flex items-center p-3 hover:bg-gray-50">
-              <IconTrashNotification class="stroke-error" />
-              <span class="pl-2 text-error">Delete project</span>
-            </RouterLink> -->
           </div>
         </div>
       </div>

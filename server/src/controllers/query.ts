@@ -268,3 +268,21 @@ export const updateProjectAssigneeDetailsWithUsers = async (
     throw new Error("Failed to update project assignee");
   }
 };
+
+export const getAllProjectsByEmail = async (email: string) => {
+  try {
+    const allProjects = await prisma.project.findMany({
+      where: {
+        workspace: {
+          author: {
+            email,
+          },
+        },
+      },
+    });
+    return allProjects;
+  } catch (error) {
+    console.error("Failed to get projects:", error);
+    throw new Error("Failed to get projects");
+  }
+};

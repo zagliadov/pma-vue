@@ -15,9 +15,16 @@ export const useProjectStore = defineStore("project", () => {
 
   const deleteProject = async (projectId: number) => {
     try {
-      await axios.delete(
-        `${API_URL}/project/delete_project/${projectId}`
+      const token = localStorage.getItem("token");
+      const response = await axios.delete(
+        `${API_URL}/project/delete_project/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      allProjects.value = response.data.allProjects;
     } catch (error) {
       console.log(error);
     }
