@@ -3,9 +3,6 @@ import { ref } from "vue";
 import axios from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IMembers, IProjectAssignees } from "../interfaces";
-import { io } from "socket.io-client";
-
-const socket = io(API_URL);
 
 export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<any>([]);
@@ -53,12 +50,24 @@ export const useAssigneeStore = defineStore("assignee", () => {
 
   const removeProjectAssignee = async (
     assigneeId: number,
-    projectId: number
+    projectId: number,
+    assigneeEmail: string,
   ) => {
-    socket.emit("project:removeProjectAssignee", { assigneeId, projectId });
-    socket.on("project:removeProjectAssignee", (data) => {
-      console.log(data);
-    });
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const response = await axios.delete(
+        `${API_URL}/assignee/remove_assignee/${assigneeId}/${assigneeEmail}/from_project/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data, "response.data from store, fn: removeProjectAssignee")
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   const getProjectAssignees = async (projectId: number) => {

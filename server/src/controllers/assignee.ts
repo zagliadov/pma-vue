@@ -2,7 +2,11 @@ import dotenv from "dotenv";
 dotenv.config();
 import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
-import { getProjectAssigneeByEmail, getProjectById } from "./query";
+import {
+  deleteAssigneeById,
+  getProjectAssigneeByEmail,
+  getProjectById,
+} from "./query";
 import prisma from "../db";
 
 export const getAllAssignee = async (req: any, res: Response) => {
@@ -114,6 +118,49 @@ export const getProjectAssignees = async (req: Request, res: Response) => {
     });
 
     res.status(200).json({ projectAssignees: combinedResults });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+export const removeProjectAssignee = async (req: any, res: Response) => {
+  try {
+    const { email } = req.userData;
+    const { project_id, assignee_id, assignee_email } = req.params;
+    await prisma.$connect();
+    const isProjectCreator = await prisma.projectAssignee.findFirst({
+      where: {
+        email: email,
+        projectId: Number(project_id),
+      },
+    });
+    if (!isProjectCreator || !isProjectCreator.projectCreator)
+      return res.status(403).json({ message: "No access" });
+    const projectAssignee = await prisma.projectAssignee.findFirst({
+      where: {
+        projectId: Number(project_id),
+        userId: Number(assignee_id),
+      },
+    });
+    if (projectAssignee) await deleteAssigneeById(projectAssignee.id);
+    if (projectAssignee === null) {
+      const unregisteredUser = await prisma.projectAssignee.findFirst({
+        where: {
+          projectId: Number(project_id),
+          email: assignee_email,
+        },
+      });
+      if (unregisteredUser === null)
+        return res.status(404).json({
+          message: `User not found in project with id: ${project_id}`,
+        });
+      await deleteAssigneeById(unregisteredUser.id);
+      res.status(200).json({
+        message: `The user has been successfully removed from the project with id: ${project_id}`,
+      });
+    }
   } catch (error) {
     handleError(error, res);
   } finally {
