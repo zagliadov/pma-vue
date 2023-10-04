@@ -286,3 +286,15 @@ export const getAllProjectsByEmail = async (email: string) => {
     throw new Error("Failed to get projects");
   }
 };
+
+export const deleteAssigneeById = async (id: number) => {
+  try {
+    await prisma.projectAssignee.delete({
+      where: {
+        id: id,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to delete project assignee", error);
+  }
+};
