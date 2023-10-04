@@ -15,7 +15,7 @@ const handleOpenModal = async () => {
   if (modal) modal?.showModal();
 };
 
-const createProject = async (workspaceId) => {
+const createProject = async (workspaceId: number) => {
   router.push(`/${getEmailFromCurrentPath(router)}/workspace/${workspaceId}/create_project`)
 }
 </script>
