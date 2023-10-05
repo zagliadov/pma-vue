@@ -19,7 +19,7 @@ const handleRemoveProjectAssignee = async (
 </script>
 
 <template>
-  <div v-if="hoveredAssignee === assigneeId" class="flex items-center">
+  <div v-if="hoveredAssignee === assigneeEmail" class="flex items-center">
     <button @click="handleRemoveProjectAssignee(assigneeId, projectId, assigneeEmail)">
       <IconClose />
     </button>
