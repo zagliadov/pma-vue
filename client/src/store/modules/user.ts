@@ -15,24 +15,22 @@ export const useUserStore = defineStore("user", () => {
   const phoneNumber = ref<string>(existingUser?.value?.phoneNumber || "");
   const language = ref<string>(existingUser?.value?.language || "");
   const timezone = ref<string>(existingUser?.value?.timezone || "");
-  const startOfTheCalendarWeek = ref<string>(existingUser?.value?.startOfTheCalendarWeek || "");
+  const startOfTheCalendarWeek = ref<string>(
+    existingUser?.value?.startOfTheCalendarWeek || ""
+  );
   const timeFormat = ref<string>(existingUser?.value?.timeFormat || "");
   const dateFormat = ref<string>(existingUser?.value?.dateFormat || "");
-  
+  const isProjectCreator = ref<boolean>(false);
 
   const updatePersonalInformation = async (data: IPersonalInformation) => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      await axios.post(
-        `${API_URL}/user/update_personal_information`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${API_URL}/user/update_personal_information`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -101,6 +99,25 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
+  const checkProjectCreator = async (projectId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return console.log("Token not found");
+      const response = await axios.post(
+        `${API_URL}/user/check_project_creator`,
+        { projectId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data, "Check Project Creator");
+    } catch (error) {
+      console.log("Some kind of server error: ", error);
+    }
+  };
+
   return {
     firstName,
     lastName,
@@ -111,8 +128,10 @@ export const useUserStore = defineStore("user", () => {
     startOfTheCalendarWeek,
     timeFormat,
     dateFormat,
+    isProjectCreator,
     uploadPhoto,
     removeAvatar,
     updatePersonalInformation,
+    checkProjectCreator,
   };
 });

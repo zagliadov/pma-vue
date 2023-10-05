@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useProjectStore } from "../../../store/modules/project";
+import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 import { getProjectIdFromCurrentPath } from "../../../helpers/helpers";
 import { ref } from "vue";
@@ -10,8 +11,9 @@ import AddMembersButton from "./AddMembersButton.vue";
 import AssigneeAvatar from "./AssigneeAvatar.vue";
 
 const router = useRouter();
+const userStore = useUserStore();
 const projectStore = useProjectStore();
-const hoveredAssignee = ref<number | null>(null);
+const hoveredAssignee = ref<string | null>(null);
 const projectId = getProjectIdFromCurrentPath(router);
 </script>
 
@@ -24,14 +26,14 @@ const projectId = getProjectIdFromCurrentPath(router);
       class="shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-60 p-0"
     >
       <MembersCount :projectStore="projectStore" />
-      <div class="border-b">
+      <div>
         <div
           v-for="assignee in projectStore?.project?.projectAssignees || []"
           class="px-2 py-1"
         >
           <div
             class="hover:bg-gray-200 flex items-center justify-between rounded p-1"
-            @mouseenter="hoveredAssignee = assignee.id"
+            @mouseenter="hoveredAssignee = assignee.email"
             @mouseleave="hoveredAssignee = null"
           >
             <div class="flex items-center">
@@ -39,7 +41,7 @@ const projectId = getProjectIdFromCurrentPath(router);
               <AssigneeName :assignee="assignee" />
             </div>
             <RemoveAssigneeButton
-              v-if="!assignee.projectCreator"
+              v-if="userStore.isProjectCreator"
               :assigneeId="assignee.id"
               :hoveredAssignee="hoveredAssignee"
               :projectId="projectId"
@@ -48,7 +50,7 @@ const projectId = getProjectIdFromCurrentPath(router);
           </div>
         </div>
       </div>
-      <AddMembersButton :projectId="projectId" />
+      <AddMembersButton :projectId="projectId"  v-if="userStore.isProjectCreator"/>
     </div>
   </details>
 </template>

@@ -3,7 +3,7 @@ dotenv.config();
 import { Request, Response } from "express";
 import prisma from "../db";
 import { handleError } from "../helpers/helpers";
-import { getUserWithWorkspacesAndProjects } from "./query";
+import { getProjectById, getUserWithWorkspacesAndProjects } from "./query";
 import { IUserData } from "./interfaces";
 
 export const uploadPhoto = async (req: any, res: Response) => {
@@ -119,3 +119,29 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
     await prisma.$disconnect();
   }
 };
+
+export const checkProjectCreator = async (req: any, res: Response) => {
+  const { email } = req.userData;
+    const { projectId } = req.body;
+  try {
+    await prisma.$connect();
+    const project = await prisma.projectAssignee.findFirst({
+      where: {
+        email: email,
+        projectId: projectId
+      },
+      select: {
+        projectCreator: true
+      }
+    });
+
+    if (project && project.projectCreator) {
+      res.status(200).json({ isProjectCreator: project.projectCreator });
+    }
+    res.status(404).json({ message: "No information needed" });
+  } catch (error) {
+    handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+}

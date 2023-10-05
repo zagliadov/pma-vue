@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useAssigneeStore } from "@/store/modules/assignee";
+
+const assigneeStore = useAssigneeStore();
+const { addNewAssignee } = assigneeStore
 const { projectId } = defineProps(["projectId"]);
 const newAssigneeEmail = ref<string>("");
 
-const handleAddAssignee = (projectId: number, newAssigneeEmail: string) => {
-  console.log("add members fn", projectId, newAssigneeEmail);
+const handleAddAssignee = async (projectId: number, newAssigneeEmail: string) => {
+  await addNewAssignee(projectId, newAssigneeEmail);
 };
 
 const handleOpenModal = () => {
