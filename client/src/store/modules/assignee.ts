@@ -51,7 +51,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
   const removeProjectAssignee = async (
     assigneeId: number,
     projectId: number,
-    assigneeEmail: string,
+    assigneeEmail: string
   ) => {
     try {
       const token = localStorage.getItem("token");
@@ -64,7 +64,10 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      console.log(response.data, "response.data from store, fn: removeProjectAssignee")
+      console.log(
+        response.data,
+        "response.data from store, fn: removeProjectAssignee"
+      );
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -81,6 +84,29 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
+  const addNewAssignee = async (
+    projectId: number,
+    newAssigneeEmail: string
+  ) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return console.log("Token not found");
+
+      const response = await axios.post(
+        `${API_URL}/assignee/add_new_assignee`,
+        { projectId, newAssigneeEmail },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data, "Check Project Creator");
+    } catch (error) {
+      console.log("Some kind of server error: ", error);
+    }
+  };
+
   return {
     assigneeProjects,
     membersCount,
@@ -90,5 +116,6 @@ export const useAssigneeStore = defineStore("assignee", () => {
     getAllAssignee,
     removeProjectAssignee,
     getProjectAssignees,
+    addNewAssignee,
   };
 });

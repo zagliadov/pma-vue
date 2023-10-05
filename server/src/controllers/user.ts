@@ -2,8 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { Request, Response } from "express";
 import prisma from "../db";
-import { handleError } from "../helpers/helpers";
-import { getProjectById, getUserWithWorkspacesAndProjects } from "./query";
+import { getUserWithWorkspacesAndProjects } from "./query";
 import { IUserData } from "./interfaces";
 
 export const uploadPhoto = async (req: any, res: Response) => {
@@ -37,7 +36,8 @@ export const uploadPhoto = async (req: any, res: Response) => {
     }
     return res.status(200).json({ existingUser });
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in uploadPhoto handler:", error);
+    throw new Error("Error in uploadPhoto handler");
   } finally {
     await prisma.$disconnect();
   }
@@ -48,7 +48,8 @@ export const downloadPhoto = async (req: any, res: any) => {
     const imageName = req.params.image_name;
     res.sendFile(`${__dirname}/uploads/${imageName}`);
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in downloadPhoto handler:", error);
+    throw new Error("Error in downloadPhoto handler");
   }
 };
 
@@ -71,7 +72,8 @@ export const removeAvatarFilename = async (
     }
     res.status(200).json({ existingUser });
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in removeAvatarFilename handler:", error);
+    throw new Error("Error in removeAvatarFilename handler");
   } finally {
     await prisma.$disconnect();
   }
@@ -114,7 +116,8 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
     }
     res.status(200).end();
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in updatePersonalInformation handler:", error);
+    throw new Error("Error in updatePersonalInformation handler");
   } finally {
     await prisma.$disconnect();
   }
@@ -122,26 +125,26 @@ export const updatePersonalInformation = async (req: any, res: Response) => {
 
 export const checkProjectCreator = async (req: any, res: Response) => {
   const { email } = req.userData;
-    const { projectId } = req.body;
+  const { projectId } = req.body;
   try {
     await prisma.$connect();
     const project = await prisma.projectAssignee.findFirst({
       where: {
         email: email,
-        projectId: projectId
+        projectId: projectId,
       },
       select: {
-        projectCreator: true
-      }
+        projectCreator: true,
+      },
     });
 
     if (project && project.projectCreator) {
       res.status(200).json({ isProjectCreator: project.projectCreator });
     }
-    res.status(404).json({ message: "No information needed" });
   } catch (error) {
-    handleError(error, res);
+    console.error("Error in checkProjectCreator handler:", error);
+    throw new Error("Error in checkProjectCreator handler");
   } finally {
     await prisma.$disconnect();
   }
-}
+};

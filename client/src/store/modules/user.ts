@@ -112,7 +112,7 @@ export const useUserStore = defineStore("user", () => {
           },
         }
       );
-      console.log(response.data, "Check Project Creator");
+      isProjectCreator.value = response?.data?.isProjectCreator;
     } catch (error) {
       console.log("Some kind of server error: ", error);
     }
