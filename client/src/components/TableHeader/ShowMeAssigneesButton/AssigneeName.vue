@@ -8,7 +8,7 @@ const { assignee } = defineProps(["assignee"]);
       {{
         assignee.firstName || assignee.lastName
           ? `${assignee.firstName} ${assignee.lastName}`
-          : assignee.name
+          : assignee.email
       }}
     </span>
   </div>
