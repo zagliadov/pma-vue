@@ -1,15 +1,8 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { ref } from "vue";
 import { API_URL } from "../../helpers/constants";
-import type { IExistingUser } from "../interfaces";
-
-interface ICreateAccountRequest {
-  username: string;
-  workspace: string;
-  email: string;
-  password: string;
-}
+import type { ICreateAccountRequest, IExistingUser } from "../interfaces";
 
 export const useAuthStore = defineStore("auth", () => {
   const success = ref<boolean>(false);
@@ -19,22 +12,31 @@ export const useAuthStore = defineStore("auth", () => {
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      const response: AxiosResponse<{
+        errorMessage: string;
+        errorStatus: string;
+        token: string;
+        existingUser: IExistingUser | null;
+      }> = await axios.post(`${API_URL}/auth/login`, {
         email,
         password,
       });
       if (response.status === 200) {
-        const token = response?.data?.token;
+        const token: string = response?.data?.token;
         localStorage.setItem("token", token);
         success.value = true;
         existingUser.value = response.data?.existingUser;
       }
-    } catch (error: any) {
-      const message = error?.response?.data?.message || "";
-      const status = error?.response?.status || 0;
-      if (message && status) {
-        errorMessage.value = message;
-        errorStatus.value = status;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        const message: string = error?.response?.data?.message || "";
+        const status: number = error?.response?.status || 0;
+        if (message && status) {
+          errorMessage.value = message;
+          errorStatus.value = status;
+        }
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
   };
@@ -52,33 +54,36 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password,
       };
-      const response = await axios.post(
-        `${API_URL}/auth/create_account`,
-        requestData
-      );
-
-      if (response.status === 201) success.value = true;
-    } catch (error: any) {
-      errorStatus.value = error?.response?.status || 0;
-      errorMessage.value = "User with this email already exists";
+      await axios.post(`${API_URL}/auth/create_account`, requestData);
+      success.value = true;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        errorStatus.value = error?.response?.status || 0;
+        errorMessage.value = "User with this email already exists";
+      } else {
+        throw new Error("Some server error occurred");
+      }
     }
   };
 
-  const checkAuthentication = async () => {
-    const token = localStorage.getItem("token");
+  const checkAuthentication = async (): Promise<boolean> => {
+    const token: string | null = localStorage.getItem("token");
     if (token) {
-      const response = await axios.post(
-        `${API_URL}/auth/verify_token`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response: AxiosResponse<{ existingUser: IExistingUser }> =
+        await axios.post(
+          `${API_URL}/auth/verify_token`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       if (response.status === 200) {
         existingUser.value = response?.data?.existingUser;
         return true;
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
     return false;

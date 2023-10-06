@@ -26,7 +26,36 @@ export interface IProjectAssignees {
   name?: string;
 }
 
-export interface ITasks {}
+export interface ISubtask {
+  id: number;
+  name: string;
+  status: string;
+  subtask_goal_start: Date;
+  subtask_goal_end: Date;
+  file_name: string[];
+  description: string;
+  task: ITask[];
+  taskId: number;
+  blockedBy: ISubtask[];
+  blockedById: number;
+  blockingSubtasks: ISubtask[];
+  subtaskAssignee: any;
+}
+export interface ITask {
+  id: number;
+  name: string;
+  status: string;
+  description: string;
+  taskFiles: string[];
+  task_goal_start: Date | null;
+  task_goal_end: Date | null;
+  projectId: number;
+  subtasks: any;
+  blockedBy: ITask[];
+  blockedById: number | null;
+  blockingTasks: ITask[];
+  taskAssignee: ITaskAssignee[];
+}
 
 export interface ITaskAssignee {
   email: string;
@@ -55,12 +84,15 @@ export interface IPersonalInformation {
   timeFormat: string;
   dateFormat: string;
 }
-export interface IProject {
+
+export interface IAssigneeProjects {
+  description: string;
   id: number;
   name: string;
-  description: string;
-  workspace: IWorkspace[];
   workspaceId: number;
+}
+export interface IProject extends IAssigneeProjects {
+  workspace: IWorkspace[];
   tasks: any;
   projectAssignees: IProjectAssignees[];
 }
@@ -92,4 +124,11 @@ export interface IMembers {
   firstName?: string | null;
   lastName?: string | null;
   name?: string | null;
+}
+
+export interface ICreateAccountRequest {
+  username: string;
+  workspace: string;
+  email: string;
+  password: string;
 }

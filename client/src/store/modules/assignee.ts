@@ -1,8 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import axios, { type AxiosResponse } from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
-import type { IMembers, IProjectAssignees } from "../interfaces";
+import type {
+  IAssigneeProjects,
+  IMembers,
+  IProjectAssignees,
+} from "../interfaces";
 
 export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<any>([]);
@@ -11,11 +15,14 @@ export const useAssigneeStore = defineStore("assignee", () => {
   const projectAssignees = ref<IProjectAssignees[]>([]);
   const message = ref<string | null>(null);
 
-  const getAllAssignee = async () => {
-    const token = localStorage.getItem("token");
+  const getAllAssignee = async (): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
+      const response: AxiosResponse<{
+        membersCount: number;
+        combinedResults: IProjectAssignees[];
+      }> = await axios.post(
         `${API_URL}/assignee/get_all_assignee`,
         {},
         {
@@ -26,26 +33,32 @@ export const useAssigneeStore = defineStore("assignee", () => {
       );
       membersCount.value = response?.data?.membersCount;
       members.value = response?.data?.combinedResults;
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log("Some kind of server error: ", error);
+      }
     }
   };
-  const getAssigneeProjects = async () => {
-    const token = localStorage.getItem("token");
+
+  const getAssigneeProjects = async (): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
-        `${API_URL}/assignee/get_assignee_projects`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response: AxiosResponse<{ assigneeProjects: IAssigneeProjects[] }> =
+        await axios.post(
+          `${API_URL}/assignee/get_assignee_projects`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       assigneeProjects.value = response?.data?.assigneeProjects;
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log("Some kind of server error: ", error);
+      }
     }
   };
 
@@ -53,11 +66,11 @@ export const useAssigneeStore = defineStore("assignee", () => {
     assigneeId: number,
     projectId: number,
     assigneeEmail: string
-  ) => {
+  ): Promise<void> => {
     try {
-      const token = localStorage.getItem("token");
+      const token: string | null = localStorage.getItem("token");
       if (!token) return;
-      const response = await axios.delete(
+      await axios.delete(
         `${API_URL}/assignee/remove_assignee/${assigneeId}/${assigneeEmail}/from_project/${projectId}`,
         {
           headers: {
@@ -65,35 +78,36 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      console.log(
-        response.data,
-        "response.data from store, fn: removeProjectAssignee"
-      );
-    } catch (error) {
-      console.error("An error occurred:", error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log("Some kind of server error: ", error);
+      }
     }
   };
 
   const getProjectAssignees = async (projectId: number): Promise<void> => {
     try {
-      const response: AxiosResponse<{ projectAssignees: any[] }> = await axios.get(
-        `${API_URL}/assignee/get_project_assignees/${projectId}`
-      );
+      const response: AxiosResponse<{ projectAssignees: IProjectAssignees[] }> =
+        await axios.get(
+          `${API_URL}/assignee/get_project_assignees/${projectId}`
+        );
       projectAssignees.value = response.data.projectAssignees;
-    } catch (error) {
-      console.error("An error occurred:", error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log("Some kind of server error: ", error);
+      }
     }
   };
 
   const addAssigneeToProject = async (
     projectId: number,
     newAssigneeEmail: string
-  ) => {
+  ): Promise<void> => {
     try {
-      const token = localStorage.getItem("token");
+      const token: string | null = localStorage.getItem("token");
       if (!token) return console.log("Token not found");
 
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/assignee/add_new_assignee_to_project`,
         { projectId, newAssigneeEmail },
         {
@@ -102,10 +116,13 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      console.log(response.data, "Check ");
-    } catch (error: any) {
-      console.log("Some kind of server error: ", error);
-      message.value = error.response.data.message;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log("Some kind of server error: ", error);
+        message.value = error.response?.data.message || "Unknown server error";
+      } else {
+        console.error("An error occurred:", error);
+      }
     }
   };
 
