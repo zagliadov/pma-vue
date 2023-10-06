@@ -2,10 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
-import type {
-  IProject,
-  IAddNewProjectData,
-} from "../interfaces";
+import type { IProject, IAddNewProjectData } from "../interfaces";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
@@ -16,14 +13,12 @@ export const useProjectStore = defineStore("project", () => {
   const deleteProject = async (projectId: number): Promise<void> => {
     try {
       const token: string | null = localStorage.getItem("token");
-      const response: AxiosResponse<{allProjects: IProject[]}> = await axios.delete(
-        `${API_URL}/project/delete_project/${projectId}`,
-        {
+      const response: AxiosResponse<{ allProjects: IProject[] }> =
+        await axios.delete(`${API_URL}/project/delete_project/${projectId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        });
       allProjects.value = response.data.allProjects;
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
@@ -34,90 +29,102 @@ export const useProjectStore = defineStore("project", () => {
     }
   };
 
-  const editProjectName = async (newName: string, projectId: number) => {
+  const editProjectName = async (
+    newName: string,
+    projectId: number
+  ): Promise<void> => {
     try {
-      const response = await axios.post(
+      const response: AxiosResponse<{ project: IProject }> = await axios.post(
         `${API_URL}/project/edit_project_name`,
         { newName, projectId }
       );
-      if (response.status === 200) {
-        project.value = response?.data?.project;
+      project.value = response?.data?.project;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      } else {
+        throw new Error("Some server error occurred:");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
-  const getAllProjects = async () => {
-    const token = localStorage.getItem("token");
+  const getAllProjects = async (): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
-        `${API_URL}/project/get_all_projects`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        allProjects.value = response?.data?.allProjects;
+      const response: AxiosResponse<{ allProjects: IProject[] }> =
+        await axios.post(
+          `${API_URL}/project/get_all_projects`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      allProjects.value = response?.data?.allProjects;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      } else {
+        throw new Error("Some server error occurred:");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
-  const getTotalProjectCount = async () => {
-    const token = localStorage.getItem("token");
+  const getTotalProjectCount = async (): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post(
-        `${API_URL}/project/get_total_project_count`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        totalProjectsCount.value = response?.data?.totalProjectsCount;
+      const response: AxiosResponse<{ totalProjectsCount: number }> =
+        await axios.post(
+          `${API_URL}/project/get_total_project_count`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      totalProjectsCount.value = response?.data?.totalProjectsCount;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      } else {
+        throw new Error("Some server error occurred:");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const getProjects = async (workspaceId: number): Promise<void> => {
-    const token = localStorage.getItem("token");
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post<{ projects: IProject[] }>(
-        `${API_URL}/project/get_projects`,
-        { workspaceId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        projects.value = response.data.projects;
+      const response: AxiosResponse<{ projects: IProject[] }> =
+        await axios.post<{ projects: IProject[] }>(
+          `${API_URL}/project/get_projects`,
+          { workspaceId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      projects.value = response.data.projects;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
       } else {
-        console.log("Failed to get projects");
+        throw new Error("Some server error occurred");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const getProject = async (projectId: number): Promise<void> => {
-    const token = localStorage.getItem("token");
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post<{ project: IProject }>(
+      const response: AxiosResponse<{ project: IProject }> = await axios.post(
         `${API_URL}/project/get_project`,
         { projectId },
         {
@@ -126,36 +133,33 @@ export const useProjectStore = defineStore("project", () => {
           },
         }
       );
-      if (response.status === 200) {
-        project.value = response.data.project;
+      project.value = response.data.project;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
       } else {
-        console.log("Failed to get project");
+        throw new Error("Some server error occurred");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const addNewProject = async (data: IAddNewProjectData): Promise<void> => {
-    const token = localStorage.getItem("token");
+    const token: string | null = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.post<{ projects: IProject[] }>(
-        `${API_URL}/project/add_new_project`,
-        data,
-        {
+      const response: AxiosResponse<{ projects: IProject[] }> =
+        await axios.post(`${API_URL}/project/add_new_project`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      if (response.status === 200) {
-        projects.value = response.data.projects;
+        });
+      projects.value = response.data.projects;
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
       } else {
-        console.log("Failed to get projects");
+        throw new Error("Some server error occurred");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
