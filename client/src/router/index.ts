@@ -19,6 +19,7 @@ import {
   editProjectMiddleware,
   homeMiddleware,
   loginMiddleware,
+  projectAssigneesMiddleware,
   projectViewMiddleware,
   projectsDataMiddleware,
 } from "./middleware/middleware";
@@ -67,7 +68,12 @@ const router = createRouter({
       name: "project_view",
       meta: { requiresAuth: true },
       component: ProjectTable,
-      beforeEnter: [authMiddleware, checkProjectCreatorMiddleware, projectViewMiddleware],
+      beforeEnter: [
+        authMiddleware,
+        checkProjectCreatorMiddleware,
+        projectAssigneesMiddleware,
+        projectViewMiddleware,
+      ],
     },
     {
       path: "/:email/workspace/:workspace_id/project/:project_id/timeline",

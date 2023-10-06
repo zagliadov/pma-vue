@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAssigneeStore } from "@/store/modules/assignee";
+import { getProjectIdFromCurrentPath } from "@/helpers/helpers";
+import { useRouter } from "vue-router";
 
 const assigneeStore = useAssigneeStore();
-const { addNewAssignee } = assigneeStore
-const { projectId } = defineProps(["projectId"]);
+const { addNewAssignee } = assigneeStore;
 const newAssigneeEmail = ref<string>("");
-
-const handleAddAssignee = async (projectId: number, newAssigneeEmail: string) => {
+const router = useRouter();
+const projectId = getProjectIdFromCurrentPath(router);
+const handleAddAssignee = async (
+  projectId: number,
+  newAssigneeEmail: string
+) => {
   await addNewAssignee(projectId, newAssigneeEmail);
 };
 
@@ -28,19 +33,13 @@ const handleOpenModal = () => {
       <div class="modal-box">
         <h3 class="font-bold text-lg pb-4">Add a new assignee</h3>
         <div class="flex relative form-control w-full">
-          <CustomInput
-            v-model="newAssigneeEmail"
-            placeholder="Type here"
-            name="Enter the email address of the new assignee"
-          />
+          <CustomInput v-model="newAssigneeEmail" placeholder="Type here"
+            name="Enter the email address of the new assignee" />
         </div>
         <div class="modal-action">
           <form method="dialog">
             <button class="btn">Close</button>
-            <button
-              class="btn btn-primary ml-3"
-              @click="handleAddAssignee(projectId, newAssigneeEmail)"
-            >
+            <button class="btn btn-primary ml-3" @click="handleAddAssignee(projectId, newAssigneeEmail)">
               Add a new assignee
             </button>
           </form>

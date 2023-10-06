@@ -6,7 +6,6 @@ import { useRouter } from "vue-router";
 import { watch } from "vue";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
-
 // Middleware function for the home route.
 export const homeMiddleware = async (
   to: RouteLocationNormalized,
@@ -15,7 +14,6 @@ export const homeMiddleware = async (
 ) => {
   next("login");
 };
-
 
 // Middleware function for the login route.
 
@@ -29,7 +27,6 @@ export const loginMiddleware = async (
   localStorage.removeItem("color_id");
   next();
 };
-
 
 // Middleware function for routes requiring authentication.
 
@@ -134,6 +131,28 @@ export const checkProjectCreatorMiddleware = async (
     next();
   } catch (error) {
     console.error("Error fetching project creator data:", error);
-      next({ name: "login" });
+    next({ name: "login" });
   }
-}
+};
+
+export const projectAssigneesMiddleware = async (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const router = useRouter();
+  const assigneeStore = useAssigneeStore();
+  const { getProjectAssignees } = assigneeStore;
+  try {
+    watch(
+      () => Number(router.currentRoute.value.params.project_id),
+      async (newProjectId: number) => {
+        await getProjectAssignees(Number(newProjectId));
+      }
+    );
+    next();
+  } catch (error) {
+    console.error("Error fetching project assignees data:", error);
+    next({ name: "login" });
+  }
+};

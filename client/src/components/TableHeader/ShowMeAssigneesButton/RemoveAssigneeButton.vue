@@ -1,20 +1,24 @@
 <script setup lang="ts">
+import { getProjectIdFromCurrentPath } from "@/helpers/helpers";
 import { useAssigneeStore } from "../../../store/modules/assignee";
+import { useRouter } from "vue-router";
 
-const { assigneeId, projectId, hoveredAssignee, assigneeEmail } = defineProps([
+const { assigneeId, hoveredAssignee, assigneeEmail } = defineProps([
   "assigneeId",
-  "projectId",
   "hoveredAssignee",
   "assigneeEmail",
 ]);
+const router = useRouter();
+const projectId = getProjectIdFromCurrentPath(router);
 const assigneeStore = useAssigneeStore();
-const { removeProjectAssignee } = assigneeStore;
+const { removeProjectAssignee, getProjectAssignees } = assigneeStore;
 const handleRemoveProjectAssignee = async (
   assigneeId: number,
   projectId: number,
-  assigneeEmail: string,
+  assigneeEmail: string
 ) => {
   await removeProjectAssignee(assigneeId, projectId, assigneeEmail);
+  await getProjectAssignees(Number(projectId));
 };
 </script>
 
