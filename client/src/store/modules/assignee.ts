@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IMembers, IProjectAssignees } from "../interfaces";
 
@@ -9,6 +9,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
   const membersCount = ref<number>(0);
   const members = ref<IMembers[]>([]);
   const projectAssignees = ref<IProjectAssignees[]>([]);
+  const message = ref<string | null>(null);
 
   const getAllAssignee = async () => {
     const token = localStorage.getItem("token");
@@ -73,9 +74,9 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
-  const getProjectAssignees = async (projectId: number) => {
+  const getProjectAssignees = async (projectId: number): Promise<void> => {
     try {
-      const response = await axios.get(
+      const response: AxiosResponse<{ projectAssignees: any[] }> = await axios.get(
         `${API_URL}/assignee/get_project_assignees/${projectId}`
       );
       projectAssignees.value = response.data.projectAssignees;
@@ -84,7 +85,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
     }
   };
 
-  const addNewAssignee = async (
+  const addAssigneeToProject = async (
     projectId: number,
     newAssigneeEmail: string
   ) => {
@@ -93,7 +94,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
       if (!token) return console.log("Token not found");
 
       const response = await axios.post(
-        `${API_URL}/assignee/add_new_assignee`,
+        `${API_URL}/assignee/add_new_assignee_to_project`,
         { projectId, newAssigneeEmail },
         {
           headers: {
@@ -101,9 +102,10 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      console.log(response.data, "Check Project Creator");
-    } catch (error) {
+      console.log(response.data, "Check ");
+    } catch (error: any) {
       console.log("Some kind of server error: ", error);
+      message.value = error.response.data.message;
     }
   };
 
@@ -112,10 +114,11 @@ export const useAssigneeStore = defineStore("assignee", () => {
     membersCount,
     members,
     projectAssignees,
+    message,
     getAssigneeProjects,
     getAllAssignee,
     removeProjectAssignee,
     getProjectAssignees,
-    addNewAssignee,
+    addAssigneeToProject,
   };
 });

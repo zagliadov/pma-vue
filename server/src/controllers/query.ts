@@ -121,6 +121,32 @@ export const createProjectAssignees = async (
 };
 
 /**
+ * Creates a project assignee with the provided information.
+ *
+ * @param {IProjectAssignees} assignee - The assignee object to be created.
+ * @throws {Error} If the operation fails.
+ * @returns {Promise<void>} A Promise that resolves once the assignee is created.
+ */
+export const createProjectAssignee = async (
+  assignee: IProjectAssignees
+): Promise<void> => {
+  try {
+    await prisma.projectAssignee.create({
+      data: {
+        userId: assignee.userId,
+        email: assignee.email,
+        projectId: assignee.projectId,
+        projectCreator: assignee.projectCreator,
+        isEmailConfirmed: assignee.isEmailConfirmed,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating project assignee:", error);
+    throw new Error("Failed to create project assignee");
+  }
+};
+
+/**
  * Create a new project in the database.
  *
  * @param {string} projectName - The name of the new project.

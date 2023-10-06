@@ -1,13 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import {
+  createProjectAssignee,
   deleteAssigneeById,
   getProjectAssigneeByEmail,
   getProjectById,
 } from "./query";
 import prisma from "../db";
+import { IProjectAssignees } from "./interfaces";
 
 export const getAllAssignee = async (req: any, res: Response) => {
   const { email } = req.userData;
@@ -163,6 +165,44 @@ export const removeProjectAssignee = async (req: any, res: Response) => {
     }
   } catch (error) {
     handleError(error, res);
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+export const addAssigneeToProject = async (
+  req: any,
+  res: Response
+): Promise<void> => {
+  const { projectId, newAssigneeEmail } = req.body;
+  try {
+    await prisma.$connect();
+    const user = await prisma.user.findUnique({
+      where: {
+        email: newAssigneeEmail,
+      },
+    });
+    if (!user) {
+      await createProjectAssignee({
+        userId: 0,
+        email: newAssigneeEmail,
+        projectId: projectId,
+        projectCreator: false,
+        isEmailConfirmed: false,
+      });
+    } else {
+      await createProjectAssignee({
+        userId: user.id,
+        email: user.email,
+        projectId: projectId,
+        projectCreator: false,
+        isEmailConfirmed: true,
+      });
+    }
+    res.end();
+  } catch (error) {
+    console.error("Error in add assignee to project handler:", error);
+    throw new Error("Error in add assignee to project handler");
   } finally {
     await prisma.$disconnect();
   }

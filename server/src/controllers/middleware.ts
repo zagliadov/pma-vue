@@ -3,6 +3,7 @@ dotenv.config();
 import { Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { handleError } from "../helpers/helpers";
+import prisma from "../db";
 
 interface IDecodedToken {
   id: number;
@@ -46,5 +47,56 @@ export const verifyToken = async (
     }
   } catch (error) {
     handleError(error, res);
+  }
+};
+
+export const checkEmailMiddleware = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email } = req.userData;
+  const { newAssigneeEmail } = req.body;
+  try {
+    if (newAssigneeEmail !== email) {
+      next();
+    } else {
+      res.status(409).json({
+        message:
+          "You are trying to add your email to a project of which you are the publisher.",
+      });
+    }
+  } catch (error) {
+    console.error("Error in checkEmail handler:", error);
+    throw new Error("Error in checkEmail handler");
+  }
+};
+
+export const isAssigneeMiddleware = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  const { projectId, newAssigneeEmail } = req.body;
+  try {
+    await prisma.$connect();
+    const isAssignee = await prisma.projectAssignee.findFirst({
+      where: {
+        projectId: projectId,
+        email: newAssigneeEmail,
+      },
+    });
+    if (isAssignee) {
+      res
+        .status(409)
+        .json({ message: "User is already a successor for this project." });
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.error("Error in isAssigneeMiddleware handler:", error);
+    throw new Error("Error in isAssigneeMiddleware handler");
+  } finally {
+    await prisma.$disconnect();
   }
 };

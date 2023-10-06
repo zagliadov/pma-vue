@@ -5,18 +5,20 @@ import { getProjectIdFromCurrentPath } from "@/helpers/helpers";
 import { useRouter } from "vue-router";
 
 const assigneeStore = useAssigneeStore();
-const { addNewAssignee } = assigneeStore;
+const { addAssigneeToProject, getProjectAssignees } = assigneeStore;
 const newAssigneeEmail = ref<string>("");
 const router = useRouter();
 const projectId = getProjectIdFromCurrentPath(router);
+
 const handleAddAssignee = async (
   projectId: number,
   newAssigneeEmail: string
-) => {
-  await addNewAssignee(projectId, newAssigneeEmail);
+): Promise<void> => {
+  await addAssigneeToProject(projectId, newAssigneeEmail);
+  await getProjectAssignees(projectId);
 };
 
-const handleOpenModal = () => {
+const handleOpenModal = (): void => {
   const modal: HTMLDialogElement | null =
     document.querySelector("#add_new_assignee");
   if (modal) modal?.showModal();
