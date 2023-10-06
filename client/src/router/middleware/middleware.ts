@@ -82,11 +82,10 @@ export const editProjectMiddleware = async (
   const { getAllAssignee, getProjectAssignees } = assigneeStore;
 
   try {
-    if (id) {
-      await getAllAssignee();
-      await getProject(id);
-      await getProjectAssignees(id);
-    }
+    if (!id) return;
+    await getAllAssignee();
+    await getProject(id);
+    await getProjectAssignees(id);
   } catch (error) {
     console.error("Error fetching project data:", error);
     next({ name: "login" });
@@ -104,6 +103,7 @@ export const projectViewMiddleware = async (
     try {
       const projectStore = useProjectStore();
       const { getProject } = projectStore;
+      if (!projectId) return;
       await getProject(projectId);
       next();
     } catch (error) {
@@ -127,6 +127,7 @@ export const checkProjectCreatorMiddleware = async (
     watch(
       () => router.currentRoute.value.params.project_id,
       async (newProjectId) => {
+        if (!newProjectId) return;
         await checkProjectCreator(Number(newProjectId));
       }
     );
@@ -147,8 +148,9 @@ export const projectAssigneesMiddleware = async (
   const { getProjectAssignees } = assigneeStore;
   try {
     watch(
-      () => Number(router.currentRoute.value.params.project_id),
-      async (newProjectId: number) => {
+      () => router?.currentRoute?.value?.params?.project_id,
+      async (newProjectId) => {
+        if (!newProjectId) return;
         await getProjectAssignees(Number(newProjectId));
       }
     );

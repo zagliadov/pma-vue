@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import axios from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type {
   IProject,
@@ -13,10 +13,10 @@ export const useProjectStore = defineStore("project", () => {
   const totalProjectsCount = ref<number>(0);
   const allProjects = ref<IProject[]>([]);
 
-  const deleteProject = async (projectId: number) => {
+  const deleteProject = async (projectId: number): Promise<void> => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.delete(
+      const token: string | null = localStorage.getItem("token");
+      const response: AxiosResponse<{allProjects: IProject[]}> = await axios.delete(
         `${API_URL}/project/delete_project/${projectId}`,
         {
           headers: {
@@ -25,8 +25,12 @@ export const useProjectStore = defineStore("project", () => {
         }
       );
       allProjects.value = response.data.allProjects;
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      } else {
+        throw new Error("Some server error occurred");
+      }
     }
   };
 

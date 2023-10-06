@@ -106,7 +106,6 @@ const router = createRouter({
         from: RouteLocationNormalized,
         next: NavigationGuardNext
       ) => {
-        await authMiddleware(to, from, next);
         await projectsDataMiddleware(to, from, next);
       },
     },

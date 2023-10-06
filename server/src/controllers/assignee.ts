@@ -91,7 +91,7 @@ export const getProjectAssignees = async (req: Request, res: Response) => {
   try {
     const { project_id } = req.params;
     await prisma.$connect();
-    console.log(project_id, "project_id");
+    if (!project_id) return res.end();
     let projectAssignees = await prisma.projectAssignee.findMany({
       where: {
         projectId: Number(project_id),

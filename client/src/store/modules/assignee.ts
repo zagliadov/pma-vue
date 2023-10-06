@@ -36,6 +36,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.log("Some kind of server error: ", error);
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
   };
@@ -58,6 +60,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.log("Some kind of server error: ", error);
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
   };
@@ -81,6 +85,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.log("Some kind of server error: ", error);
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
   };
@@ -95,6 +101,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.log("Some kind of server error: ", error);
+      } else {
+        throw new Error("Some server error occurred");
       }
     }
   };
@@ -121,7 +129,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
         console.log("Some kind of server error: ", error);
         message.value = error.response?.data.message || "Unknown server error";
       } else {
-        console.error("An error occurred:", error);
+        throw new Error("Some server error occurred");
       }
     }
   };
