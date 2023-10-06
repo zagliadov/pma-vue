@@ -16,7 +16,6 @@ export const useAuthStore = defineStore("auth", () => {
   const existingUser = ref<IExistingUser | null>(null);
   const errorStatus = ref<number>(0);
   const errorMessage = ref<string>("");
-  const isProjectCreator = ref<boolean>(false);
 
   const logIn = async (email: string, password: string): Promise<void> => {
     try {
@@ -85,35 +84,13 @@ export const useAuthStore = defineStore("auth", () => {
     return false;
   };
 
-  const checkProjectCreator = async (projectId: number) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return console.log("Token not found");
-
-      const response = await axios.post(
-        `${API_URL}/check_project_creator`,
-        { projectId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data, "Check Project Creator")
-    } catch (error) {
-      console.log("Some kind of server error: ", error);
-    }
-  };
-
   return {
     errorStatus,
     errorMessage,
-    isProjectCreator,
     success,
     existingUser,
     logIn,
     createAccount,
     checkAuthentication,
-    checkProjectCreator
   };
 });

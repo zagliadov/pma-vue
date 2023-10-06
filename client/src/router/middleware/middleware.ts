@@ -1,6 +1,9 @@
 import { useAssigneeStore } from "@/store/modules/assignee";
 import { useAuthStore } from "@/store/modules/auth";
 import { useProjectStore } from "@/store/modules/project";
+import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+import { watch } from "vue";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
 
@@ -112,3 +115,25 @@ export const projectViewMiddleware = async (
     next();
   }
 };
+
+export const checkProjectCreatorMiddleware = async (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const router = useRouter();
+  const userStore = useUserStore();
+  const { checkProjectCreator } = userStore;
+  try {
+    watch(
+      () => router.currentRoute.value.params.project_id,
+      async (newProjectId) => {
+        await checkProjectCreator(Number(newProjectId));
+      }
+    );
+    next();
+  } catch (error) {
+    console.error("Error fetching project creator data:", error);
+      next({ name: "login" });
+  }
+}

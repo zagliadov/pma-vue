@@ -127,6 +127,7 @@ export const checkProjectCreator = async (req: any, res: Response) => {
   const { email } = req.userData;
   const { projectId } = req.body;
   try {
+    if (!projectId) return res.end();
     await prisma.$connect();
     const project = await prisma.projectAssignee.findFirst({
       where: {
@@ -137,8 +138,7 @@ export const checkProjectCreator = async (req: any, res: Response) => {
         projectCreator: true,
       },
     });
-
-    if (project && project.projectCreator) {
+    if (project) {
       res.status(200).json({ isProjectCreator: project.projectCreator });
     }
   } catch (error) {

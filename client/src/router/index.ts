@@ -13,8 +13,15 @@ import Projects from "../views/Projects.vue";
 import MySettingsEditProject from "../views/MySettingsEditProject.vue";
 import Information from "../views/Information.vue";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
-import { authMiddleware, editProjectMiddleware, homeMiddleware, loginMiddleware, projectViewMiddleware, projectsDataMiddleware } from "./middleware/middleware";
-
+import {
+  authMiddleware,
+  checkProjectCreatorMiddleware,
+  editProjectMiddleware,
+  homeMiddleware,
+  loginMiddleware,
+  projectViewMiddleware,
+  projectsDataMiddleware,
+} from "./middleware/middleware";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,7 +67,7 @@ const router = createRouter({
       name: "project_view",
       meta: { requiresAuth: true },
       component: ProjectTable,
-      beforeEnter: [authMiddleware, projectViewMiddleware],
+      beforeEnter: [authMiddleware, checkProjectCreatorMiddleware, projectViewMiddleware],
     },
     {
       path: "/:email/workspace/:workspace_id/project/:project_id/timeline",

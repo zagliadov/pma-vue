@@ -41,7 +41,7 @@ const projectId = getProjectIdFromCurrentPath(router);
               <AssigneeName :assignee="assignee" />
             </div>
             <RemoveAssigneeButton
-              v-if="userStore.isProjectCreator"
+              v-if="userStore.isProjectCreator && !assignee.projectCreator"
               :assigneeId="assignee.id"
               :hoveredAssignee="hoveredAssignee"
               :projectId="projectId"
