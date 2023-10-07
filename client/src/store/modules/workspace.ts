@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import axios from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IWorkspace } from "../interfaces.ts";
 
@@ -11,43 +11,79 @@ export const useWorkspaceStore = defineStore("workspace", () => {
   const errorStatus = ref<number>(0);
   const successStatus = ref<number>(0);
 
-  const getWorkspaces = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  /**
+   * Retrieves a list of workspaces associated with the authenticated user.
+   *
+   * @throws {Error} If the user is not authenticated, the request fails, or a server error occurs.
+   * @returns {Promise<void>} A Promise that resolves with the list of workspaces.
+   */
+  const getWorkspaces = async (): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
     try {
-      const response = await axios.post(
-        `${API_URL}/workspace/get_workspaces`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      workspaces.value = response?.data?.workspaces;
-    } catch (error) {
-      console.log(error);
+      const response: AxiosResponse<{ workspaces: IWorkspace[] }> =
+        await axios.post(
+          `${API_URL}/workspace/get_workspaces`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      if (response.status === 200) {
+        workspaces.value = response?.data?.workspaces;
+        console.log(
+          "Successfully retrieved a list of workspaces associated with the authenticated user."
+        );
+      }
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to get workspaces:");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
     }
   };
 
-  const createWorkspace = async (workspaceName: string) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  /**
+   * Creates a new workspace with the specified name for the authenticated user.
+   *
+   * @param {string} workspaceName - The name of the new workspace to be created.
+   * @throws {Error} If the user is not authenticated, the request fails, or a server error occurs.
+   * @returns {Promise<void>} A Promise that resolves once the workspace is successfully created.
+   */
+  const createWorkspace = async (workspaceName: string): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
     try {
-      const response = await axios.post(
-        `${API_URL}/workspace/create_workspace`,
-        { workspaceName },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      successStatus.value = response?.status;
-      workspaces.value = response?.data?.workspaces;
-    } catch (error: any) {
-      errorMessage.value = error?.response?.data?.message;
-      errorStatus.value = error?.response?.status;
+      const response: AxiosResponse<{ workspaces: IWorkspace[] }> =
+        await axios.post(
+          `${API_URL}/workspace/create_workspace`,
+          { workspaceName },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      if (response.status === 200) {
+        successStatus.value = response?.status;
+        workspaces.value = response?.data?.workspaces;
+        console.log(
+          "Successfully created a new workspace with the specified name for an authenticated user."
+        );
+      }
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to create workspaces:");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
     }
   };
 
