@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 import { ref } from "vue";
 import { useAuthStore } from "./auth";
 import { storeToRefs } from "pinia";
@@ -22,37 +22,22 @@ export const useUserStore = defineStore("user", () => {
   const dateFormat = ref<string>(existingUser?.value?.dateFormat || "");
   const isProjectCreator = ref<boolean>(false);
 
-  const updatePersonalInformation = async (data: IPersonalInformation) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    try {
-      await axios.post(`${API_URL}/user/update_personal_information`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   /**
-   * Uploads a photo and updates the existing user's data.
+   * Updates the user's personal information with the provided data.
    *
-   * @param file - The file to upload.
-   * @returns The updated existing user's data, or undefined if there's an issue.
+   * @param {IPersonalInformation} data - The personal information data to be updated.
+   * @throws {Error} If a server error occurs or the request fails.
+   * @returns {Promise<void>} A Promise that resolves once the personal information is updated.
    */
-  const uploadPhoto = async (
-    file: File
-  ): Promise<IExistingUser | undefined> => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  const updatePersonalInformation = async (
+    data: IPersonalInformation
+  ): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
     try {
-      const formData = new FormData();
-      formData.append("File", file);
-      const response = await axios.post<{ existingUser: IExistingUser }>(
-        `${API_URL}/user/upload_photo`,
-        formData,
+      const response: AxiosResponse<{ status: number }> = await axios.post(
+        `${API_URL}/user/update_personal_information`,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,12 +45,53 @@ export const useUserStore = defineStore("user", () => {
         }
       );
       if (response.status === 200) {
-        return (existingUser.value = response.data.existingUser);
-      } else {
-        console.log("Failed to upload photo");
+        console.log("Personal information updated successfully.");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to update personal information.");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
+    }
+  };
+
+  /**
+   * Uploads a photo and updates the existing user's data.
+   * @param file - The file to upload.
+   * @returns The updated existing user's data, or undefined if there's an issue.
+   */
+  const uploadPhoto = async (
+    file: File
+  ): Promise<IExistingUser | undefined> => {
+    const token: string | null = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
+    try {
+      const formData: FormData = new FormData();
+      formData.append("File", file);
+      const response: AxiosResponse<{ existingUser: IExistingUser }> =
+        await axios.post(`${API_URL}/user/upload_photo`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      if (response.status === 200) {
+        existingUser.value = response.data.existingUser;
+        console.log(
+          "Successfully uploaded photo and updated existing user details."
+        );
+        return response.data.existingUser;
+      }
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to upload photo.");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
     }
   };
 
@@ -75,46 +101,72 @@ export const useUserStore = defineStore("user", () => {
    * @returns The updated existing user's data, or undefined if there's an issue.
    */
   const removeAvatar = async (): Promise<IExistingUser | undefined> => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    const token: string | null = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
     try {
-      const response = await axios.post<{ existingUser: IExistingUser }>(
-        `${API_URL}/user/remove_avatar_filename`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response: AxiosResponse<{ existingUser: IExistingUser }> =
+        await axios.post(
+          `${API_URL}/user/remove_avatar_filename`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       if (response.status === 200) {
-        if (existingUser.value) {
-          return (existingUser.value = response.data.existingUser);
-        }
-      } else {
-        console.log("Failed to remove avatar");
+        existingUser.value = response.data.existingUser;
+        console.log(
+          "Successfully deleted an existing user's avatar and updated their data."
+        );
+        return response.data.existingUser;
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to remove avatar.");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
     }
   };
 
-  const checkProjectCreator = async (projectId: number) => {
+  /**
+   * Checks if the current user is the project creator for a specific project.
+   *
+   * @param {number} projectId - The ID of the project to check.
+   * @throws {Error} If the user is not authenticated or a server error occurs.
+   * @returns {Promise<void>} A Promise that resolves with the result of the check.
+   */
+  const checkProjectCreator = async (projectId: number): Promise<void> => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return console.log("Token not found");
-      const response = await axios.post(
-        `${API_URL}/user/check_project_creator`,
-        { projectId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      isProjectCreator.value = response?.data?.isProjectCreator;
-    } catch (error) {
-      console.log("Some kind of server error: ", error);
+      const token: string | null = localStorage.getItem("token");
+      if (!token) throw new Error("User is not authenticated");
+      const response: AxiosResponse<{ isProjectCreator: boolean }> =
+        await axios.post(
+          `${API_URL}/user/check_project_creator`,
+          { projectId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      if (response.status === 200) {
+        isProjectCreator.value = response?.data?.isProjectCreator;
+        console.log(
+          "Successfully checks whether the current user is the creator of a specific project."
+        );
+      }
+    } catch (error: AxiosError | unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        throw new Error("Failed to check project creator:");
+      } else {
+        console.error("Server error:", error);
+        throw new Error("Some server error occurred.");
+      }
     }
   };
 
