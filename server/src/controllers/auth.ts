@@ -92,7 +92,7 @@ const createJwtToken = (id: number, name: string, email: string) => {
       name,
       email,
     };
-    const secret = process.env.JWT_SECRET as string;
+    const secret = process.env.SECRET as string;
     if (!secret) {
       throw new Error("JWT_SECRET is not defined in environment variables.");
     }
@@ -150,7 +150,7 @@ export const verifyToken = async (req: any, res: any) => {
       return res.status(401).json({ message: "Authentication failed" });
     const decodedToken: any = await jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.SECRET as string
     );
     const expirationTime = decodedToken.exp;
     const currentTime = Date.now() / 1000;

@@ -31,12 +31,10 @@ export const useWorkspaceStore = defineStore("workspace", () => {
             },
           }
         );
-      if (response.status === 200) {
-        workspaces.value = response?.data?.workspaces;
-        console.log(
-          "Successfully retrieved a list of workspaces associated with the authenticated user."
-        );
-      }
+      workspaces.value = response?.data?.workspaces;
+      console.log(
+        "Successfully retrieved a list of workspaces associated with the authenticated user."
+      );
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -69,13 +67,11 @@ export const useWorkspaceStore = defineStore("workspace", () => {
             },
           }
         );
-      if (response.status === 200) {
-        successStatus.value = response?.status;
-        workspaces.value = response?.data?.workspaces;
-        console.log(
-          "Successfully created a new workspace with the specified name for an authenticated user."
-        );
-      }
+      successStatus.value = response?.status;
+      workspaces.value = response?.data?.workspaces;
+      console.log(
+        "Successfully created a new workspace with the specified name for an authenticated user."
+      );
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);

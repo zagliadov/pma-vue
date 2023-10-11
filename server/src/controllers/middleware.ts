@@ -34,7 +34,7 @@ export const verifyToken = async (
     }
     const decodedToken: JwtPayload | string = await jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.SECRET as string
     );
     const expirationTime = (decodedToken as JwtPayload).exp;
     const currentTime = Date.now() / 1000;

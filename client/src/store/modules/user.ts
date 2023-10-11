@@ -35,18 +35,12 @@ export const useUserStore = defineStore("user", () => {
     const token: string | null = localStorage.getItem("token");
     if (!token) throw new Error("User is not authenticated");
     try {
-      const response: AxiosResponse<{ status: number }> = await axios.post(
-        `${API_URL}/user/update_personal_information`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        console.log("Personal information updated successfully.");
-      }
+      await axios.post(`${API_URL}/user/update_personal_information`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Personal information updated successfully.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -77,13 +71,11 @@ export const useUserStore = defineStore("user", () => {
             Authorization: `Bearer ${token}`,
           },
         });
-      if (response.status === 200) {
-        existingUser.value = response.data.existingUser;
-        console.log(
-          "Successfully uploaded photo and updated existing user details."
-        );
-        return response.data.existingUser;
-      }
+      existingUser.value = response.data.existingUser;
+      console.log(
+        "Successfully uploaded photo and updated existing user details."
+      );
+      return response.data.existingUser;
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -114,13 +106,11 @@ export const useUserStore = defineStore("user", () => {
             },
           }
         );
-      if (response.status === 200) {
-        existingUser.value = response.data.existingUser;
-        console.log(
-          "Successfully deleted an existing user's avatar and updated their data."
-        );
-        return response.data.existingUser;
-      }
+      existingUser.value = response.data.existingUser;
+      console.log(
+        "Successfully deleted an existing user's avatar and updated their data."
+      );
+      return response.data.existingUser;
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -153,12 +143,10 @@ export const useUserStore = defineStore("user", () => {
             },
           }
         );
-      if (response.status === 200) {
-        isProjectCreator.value = response?.data?.isProjectCreator;
-        console.log(
-          "Successfully checks whether the current user is the creator of a specific project."
-        );
-      }
+      isProjectCreator.value = response?.data?.isProjectCreator;
+      console.log(
+        "Successfully checks whether the current user is the creator of a specific project."
+      );
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);

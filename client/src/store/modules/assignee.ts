@@ -37,13 +37,11 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      if (response.status === 200) {
-        membersCount.value = response?.data?.membersCount;
-        members.value = response?.data?.combinedResults;
-        console.log(
-          "You have successfully received all assignees of the project."
-        );
-      }
+      membersCount.value = response?.data?.membersCount;
+      members.value = response?.data?.combinedResults;
+      console.log(
+        "You have successfully received all assignees of the project."
+      );
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -75,10 +73,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
             },
           }
         );
-      if (response.status === 200) {
-        assigneeProjects.value = response?.data?.assigneeProjects;
-        console.log("Successfully received assigned projects.");
-      }
+      assigneeProjects.value = response?.data?.assigneeProjects;
+      console.log("Successfully received assigned projects.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -115,9 +111,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      if (response.status === 200) {
-        console.log("The project assignee was successfully removed.");
-      }
+      console.log("The project assignee was successfully removed.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -142,10 +136,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
         await axios.get(
           `${API_URL}/assignee/get_project_assignees/${projectId}`
         );
-      if (response.status === 200) {
-        projectAssignees.value = response.data.projectAssignees;
-        console.log("Successfully retrieved project assignees.");
-      }
+      projectAssignees.value = response.data.projectAssignees;
+      console.log("Successfully retrieved project assignees.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -171,7 +163,6 @@ export const useAssigneeStore = defineStore("assignee", () => {
     try {
       const token: string | null = localStorage.getItem("token");
       if (!token) throw new Error("User is not authenticated");
-
       const response: AxiosResponse<{ status: boolean }> = await axios.post(
         `${API_URL}/assignee/add_new_assignee_to_project`,
         { projectId, newAssigneeEmail },
@@ -181,9 +172,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      if (response.status === 200) {
-        console.log("Successfully adding a new assignee to a project.");
-      }
+      console.log("Successfully adding a new assignee to a project.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);

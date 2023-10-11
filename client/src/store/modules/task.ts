@@ -4,7 +4,6 @@ import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
 
 export const useTaskStore = defineStore("task", () => {
-  
   /**
    * Creates a new task with the provided user data and attaches files to it for a specific project.
    *
@@ -29,22 +28,16 @@ export const useTaskStore = defineStore("task", () => {
       taskFileArray.forEach((file: File, index: number) => {
         formData.append(`taskFileArray[${index}]`, file);
       });
-      const response: AxiosResponse<{ status: boolean }> = await axios.post(
-        `${API_URL}/task/create_task`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        console.log("The task is successfully created.");
-      }
+      await axios.post(`${API_URL}/task/create_task`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("The task is successfully created.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
-        console.error("Error creating task", error);
+        console.error("Error creating task.", error);
       } else {
         throw new Error("Some server error occurred.");
       }
