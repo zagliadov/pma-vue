@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { ICreateTask } from "../interfaces";
+import { RouteTypeKeys } from "@/types";
 
 export const useTaskStore = defineStore("task", () => {
   /**
@@ -28,7 +29,7 @@ export const useTaskStore = defineStore("task", () => {
       taskFileArray.forEach((file: File, index: number) => {
         formData.append(`taskFileArray[${index}]`, file);
       });
-      await axios.post(`${API_URL}/task/create_task`, formData, {
+      await axios.post(`${API_URL}/${RouteTypeKeys.TASK}/${RouteTypeKeys.CREATE_TASK}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

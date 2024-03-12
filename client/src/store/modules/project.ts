@@ -3,6 +3,8 @@ import { ref } from "vue";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IProject, IAddNewProjectData } from "../interfaces";
+import * as _ from "lodash";
+import { RouteTypeKeys } from "@/types";
 
 export const useProjectStore = defineStore("project", () => {
   const projects = ref<IProject[]>([]);
@@ -22,12 +24,15 @@ export const useProjectStore = defineStore("project", () => {
       const token: string | null = localStorage.getItem("token");
       if (!token) throw new Error("User is not authenticated");
       const response: AxiosResponse<{ allProjects: IProject[] }> =
-        await axios.delete(`${API_URL}/project/delete_project/${projectId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      allProjects.value = response.data.allProjects;
+        await axios.delete(
+          `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.DELETE_PROJECT}/${projectId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      allProjects.value = _.get(response, "data.allProjects");
       console.log(
         "Successful deletion of the project with the specified project ID."
       );
@@ -56,10 +61,10 @@ export const useProjectStore = defineStore("project", () => {
   ): Promise<void> => {
     try {
       const response: AxiosResponse<{ project: IProject }> = await axios.post(
-        `${API_URL}/project/edit_project_name`,
+        `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.EDIT_PROJECT_NAME}`,
         { newName, projectId }
       );
-      project.value = response?.data?.project;
+      project.value = _.get(response, "data.project");
       console.log("Successful editing of the project name.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
@@ -84,7 +89,7 @@ export const useProjectStore = defineStore("project", () => {
     try {
       const response: AxiosResponse<{ allProjects: IProject[] }> =
         await axios.post(
-          `${API_URL}/project/get_all_projects`,
+          `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.GET_ALL_PROJECTS}`,
           {},
           {
             headers: {
@@ -92,7 +97,7 @@ export const useProjectStore = defineStore("project", () => {
             },
           }
         );
-      allProjects.value = response?.data?.allProjects;
+      allProjects.value = _.get(response, "data.allProjects");
       console.log(
         "Successfully retrieve all projects associated with the authenticated user."
       );
@@ -121,7 +126,7 @@ export const useProjectStore = defineStore("project", () => {
     try {
       const response: AxiosResponse<{ totalProjectsCount: number }> =
         await axios.post(
-          `${API_URL}/project/get_total_project_count`,
+          `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.GET_TOTAL_PROJECT_COUNT}`,
           {},
           {
             headers: {
@@ -129,7 +134,8 @@ export const useProjectStore = defineStore("project", () => {
             },
           }
         );
-      totalProjectsCount.value = response?.data?.totalProjectsCount;
+      totalProjectsCount.value = _.get(response, "data.totalProjectsCount");
+
       console.log(
         "Successfully retrieve the total number of projects associated with the authenticated user."
       );
@@ -159,7 +165,7 @@ export const useProjectStore = defineStore("project", () => {
     try {
       const response: AxiosResponse<{ projects: IProject[] }> =
         await axios.post(
-          `${API_URL}/project/get_projects`,
+          `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.GET_PROJECTS}`,
           { workspaceId },
           {
             headers: {
@@ -167,7 +173,7 @@ export const useProjectStore = defineStore("project", () => {
             },
           }
         );
-      projects.value = response.data.projects;
+      projects.value = _.get(response, "data.projects");
       console.log(
         "Successfully retrieved a list of projects associated with the specified workspace."
       );
@@ -196,7 +202,7 @@ export const useProjectStore = defineStore("project", () => {
     if (!token) throw new Error("User is not authenticated");
     try {
       const response: AxiosResponse<{ project: IProject }> = await axios.post(
-        `${API_URL}/project/get_project`,
+        `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.GET_PROJECT}`,
         { projectId },
         {
           headers: {
@@ -205,7 +211,7 @@ export const useProjectStore = defineStore("project", () => {
         }
       );
       console.log("Successfully retrieving a project by its ID.");
-      project.value = response.data.project;
+      project.value = _.get(response, "data.project");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -229,12 +235,16 @@ export const useProjectStore = defineStore("project", () => {
     if (!token) throw new Error("User is not authenticated");
     try {
       const response: AxiosResponse<{ projects: IProject[] }> =
-        await axios.post(`${API_URL}/project/add_new_project`, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      projects.value = response.data.projects;
+        await axios.post(
+          `${API_URL}/${RouteTypeKeys.PROJECT}/${RouteTypeKeys.ADD_NEW_PROJECT}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      projects.value = _.get(response, "data.projects");
       console.log("Successfully added a new project with the provided data.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {

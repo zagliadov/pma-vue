@@ -2,11 +2,13 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
+import * as _ from "lodash";
 import type {
   IAssigneeProjects,
   IMembers,
   IProjectAssignees,
 } from "../interfaces";
+import { RouteTypeKeys } from "@/types";
 
 export const useAssigneeStore = defineStore("assignee", () => {
   const assigneeProjects = ref<IAssigneeProjects[]>([]);
@@ -29,7 +31,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
         membersCount: number;
         combinedResults: IProjectAssignees[];
       }> = await axios.post(
-        `${API_URL}/assignee/get_all_assignee`,
+        `${API_URL}/${RouteTypeKeys.ASSIGNEE}/${RouteTypeKeys.GET_ALL_ASSIGNEE}`,
         {},
         {
           headers: {
@@ -37,8 +39,8 @@ export const useAssigneeStore = defineStore("assignee", () => {
           },
         }
       );
-      membersCount.value = response?.data?.membersCount;
-      members.value = response?.data?.combinedResults;
+      membersCount.value = _.get(response, "data.membersCount", 0);
+      members.value = _.get(response, "data.combinedResults", []);
       console.log(
         "You have successfully received all assignees of the project."
       );
@@ -65,7 +67,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
     try {
       const response: AxiosResponse<{ assigneeProjects: IAssigneeProjects[] }> =
         await axios.post(
-          `${API_URL}/assignee/get_assignee_projects`,
+          `${API_URL}/${RouteTypeKeys.ASSIGNEE}/${RouteTypeKeys.GET_ASSIGNEE_PROJECTS}`,
           {},
           {
             headers: {
@@ -73,7 +75,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
             },
           }
         );
-      assigneeProjects.value = response?.data?.assigneeProjects;
+      assigneeProjects.value = _.get(response, "data.assigneeProjects", []);
       console.log("Successfully received assigned projects.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
@@ -104,7 +106,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
       const token: string | null = localStorage.getItem("token");
       if (!token) throw new Error("User is not authenticated");
       const response: AxiosResponse<{ status: boolean }> = await axios.delete(
-        `${API_URL}/assignee/remove_assignee/${assigneeId}/${assigneeEmail}/from_project/${projectId}`,
+        `${API_URL}/${RouteTypeKeys.ASSIGNEE}/${RouteTypeKeys.REMOVE_ASSIGNEE}/${assigneeId}/${assigneeEmail}/from_project/${projectId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -134,9 +136,9 @@ export const useAssigneeStore = defineStore("assignee", () => {
     try {
       const response: AxiosResponse<{ projectAssignees: IProjectAssignees[] }> =
         await axios.get(
-          `${API_URL}/assignee/get_project_assignees/${projectId}`
+          `${API_URL}/${RouteTypeKeys.ASSIGNEE}/${RouteTypeKeys.GET_PROJECT_ASSIGNEES}/${projectId}`
         );
-      projectAssignees.value = response.data.projectAssignees;
+      projectAssignees.value = _.get(response, "data.projectAssignees", []);
       console.log("Successfully retrieved project assignees.");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
@@ -164,7 +166,7 @@ export const useAssigneeStore = defineStore("assignee", () => {
       const token: string | null = localStorage.getItem("token");
       if (!token) throw new Error("User is not authenticated");
       const response: AxiosResponse<{ status: boolean }> = await axios.post(
-        `${API_URL}/assignee/add_new_assignee_to_project`,
+        `${API_URL}/${RouteTypeKeys.ASSIGNEE}/${RouteTypeKeys.ADD_NEW_ASSIGNEE_TO_PROJECT}`,
         { projectId, newAssigneeEmail },
         {
           headers: {

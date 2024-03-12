@@ -3,6 +3,8 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 import { ref } from "vue";
 import { API_URL } from "../../helpers/constants";
 import type { ICreateAccountRequest, IExistingUser } from "../interfaces";
+import * as _ from "lodash";
+import { RouteTypeKeys } from "@/types";
 
 export const useAuthStore = defineStore("auth", () => {
   const success = ref<boolean>(false);
@@ -17,20 +19,23 @@ export const useAuthStore = defineStore("auth", () => {
         errorStatus: string;
         token: string;
         existingUser: IExistingUser | null;
-      }> = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-      });
+      }> = await axios.post(
+        `${API_URL}/${RouteTypeKeys.AUTH}/${RouteTypeKeys.LOGIN}`,
+        {
+          email,
+          password,
+        }
+      );
       if (response.status === 200) {
-        const token: string = response?.data?.token;
+        const token: string = _.get(response, "data.token");
         localStorage.setItem("token", token);
         success.value = true;
-        existingUser.value = response.data?.existingUser;
+        existingUser.value = _.get(response, "data.existingUser");
       }
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
-        const message: string = error?.response?.data?.message || "";
-        const status: number = error?.response?.status || 0;
+        const message: string = _.get(error, "response.data.message", "");
+        const status: number = _.get(error, "response.status", 0);
         if (message && status) {
           errorMessage.value = message;
           errorStatus.value = status;
@@ -54,11 +59,14 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password,
       };
-      await axios.post(`${API_URL}/auth/create_account`, requestData);
+      await axios.post(
+        `${API_URL}/${RouteTypeKeys.AUTH}/${RouteTypeKeys.CREATE_ACCOUNT}`,
+        requestData
+      );
       success.value = true;
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
-        errorStatus.value = error?.response?.status || 0;
+        errorStatus.value = _.get(error, "response.status", 0);
         errorMessage.value = "User with this email already exists";
       } else {
         throw new Error("Some server error occurred");
@@ -71,7 +79,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (token) {
       const response: AxiosResponse<{ existingUser: IExistingUser }> =
         await axios.post(
-          `${API_URL}/auth/verify_token`,
+          `${API_URL}/${RouteTypeKeys.AUTH}/${RouteTypeKeys.VERIFY_TOKEN}`,
           {},
           {
             headers: {
@@ -80,7 +88,7 @@ export const useAuthStore = defineStore("auth", () => {
           }
         );
       if (response.status === 200) {
-        existingUser.value = response?.data?.existingUser;
+        existingUser.value = _.get(response, "data.existingUser");
         return true;
       } else {
         throw new Error("Some server error occurred");

@@ -1,5 +1,3 @@
-
-
 export enum RouteTypeKeys {
   CREATE_PROJECT = "create_project",
   MY_SETTINGS = "my_settings",
@@ -9,5 +7,34 @@ export enum RouteTypeKeys {
   PROJECTS = "projects",
   MY_SETTINGS_EDIT_PROJECT = "my_settings_edit_project",
   INFORMATION = "information",
-  
+  // project
+  PROJECT = "project",
+  DELETE_PROJECT = "delete_project",
+  EDIT_PROJECT_NAME = "edit_project_name",
+  GET_ALL_PROJECTS = "get_all_projects",
+  GET_TOTAL_PROJECT_COUNT = "get_total_project_count",
+  GET_PROJECTS = "get_projects",
+  GET_PROJECT = "get_project",
+  ADD_NEW_PROJECT = "add_new_project",
+  // assignee
+  ASSIGNEE = "assignee",
+  GET_ALL_ASSIGNEE = "get_all_assignee",
+  GET_ASSIGNEE_PROJECTS = "get_assignee_projects",
+  REMOVE_ASSIGNEE = "remove_assignee",
+  GET_PROJECT_ASSIGNEES = "get_project_assignees",
+  ADD_NEW_ASSIGNEE_TO_PROJECT = "add_new_assignee_to_project",
+  // auth
+  AUTH = "auth",
+  LOGIN = "login",
+  CREATE_ACCOUNT = "create_account",
+  VERIFY_TOKEN = "verify_token",
+  // task
+  TASK = "task",
+  CREATE_TASK = "create_task",
+  // user 
+  USER = "user",
+  UPDATE_PERSONAL_INFORMATION = "update_personal_information",
+  UPLOAD_PHOTO = "upload_photo",
+  REMOVE_AVATAR_FILENAME = "remove_avatar_filename",
+  CHECK_PROJECT_CREATOR = "check_project_creator",
 }

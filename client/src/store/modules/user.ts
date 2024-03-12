@@ -5,21 +5,37 @@ import { useAuthStore } from "./auth";
 import { storeToRefs } from "pinia";
 import { API_URL } from "../../helpers/constants";
 import type { IExistingUser, IPersonalInformation } from "../interfaces";
+import * as _ from "lodash";
 
 export const useUserStore = defineStore("user", () => {
   const authStore = useAuthStore();
   const { existingUser } = storeToRefs(authStore);
-  const firstName = ref<string>(existingUser?.value?.firstName || "");
-  const lastName = ref<string>(existingUser?.value?.lastName || "");
-  const userName = ref<string>(existingUser?.value?.name || "");
-  const phoneNumber = ref<string>(existingUser?.value?.phoneNumber || "");
-  const language = ref<string>(existingUser?.value?.language || "");
-  const timezone = ref<string>(existingUser?.value?.timezone || "");
-  const startOfTheCalendarWeek = ref<string>(
-    existingUser?.value?.startOfTheCalendarWeek || ""
+
+  const firstName = ref<string>(
+    _.get(existingUser, "value.firstName", "Default first name")
   );
-  const timeFormat = ref<string>(existingUser?.value?.timeFormat || "");
-  const dateFormat = ref<string>(existingUser?.value?.dateFormat || "");
+  const lastName = ref<string>(
+    _.get(existingUser, "value.lastName", "Default last name")
+  );
+  const userName = ref<string>(
+    _.get(existingUser, "value.name", "Default name")
+  );
+  const phoneNumber = ref<string>(
+    _.get(existingUser, "value.phoneNumber", "+0000000000")
+  );
+  const language = ref<string>(
+    _.get(existingUser, "value.language", "english")
+  );
+  const timezone = ref<string>(_.get(existingUser, "value.timezone", "usa"));
+  const startOfTheCalendarWeek = ref<string>(
+    _.get(existingUser, "value.startOfTheCalendarWeek", "sunday")
+  );
+  const timeFormat = ref<string>(
+    _.get(existingUser, "value.timeFormat", "25hour")
+  );
+  const dateFormat = ref<string>(
+    _.get(existingUser, "value.dateFormat", "mm.dd.yyyy")
+  );
   const isProjectCreator = ref<boolean>(false);
 
   /**
