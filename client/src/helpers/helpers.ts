@@ -1,4 +1,6 @@
 import { type Router } from "vue-router";
+import * as _ from "lodash";
+import { RouteTypeKeys } from "@/types";
 
 /**
  * Retrieves the project_id parameter from the current route path using the Vue Router.
@@ -7,7 +9,9 @@ import { type Router } from "vue-router";
  * @returns {number} The project_id parameter from the current route path.
  */
 export const getProjectIdFromCurrentPath = (router: Router): number => {
-  const projectId = Number(router?.currentRoute?.value?.params?.project_id);
+  const projectId = Number(
+    _.get(router, "currentRoute.value.params.project_id", 0)
+  );
   return projectId;
 };
 
@@ -18,7 +22,9 @@ export const getProjectIdFromCurrentPath = (router: Router): number => {
  * @returns {number} The workspace_id parameter from the current route path.
  */
 export const getWorkspaceIdFromCurrentPath = (router: Router): number => {
-  const workspaceId = Number(router?.currentRoute?.value?.params?.workspace_id);
+  const workspaceId = Number(
+    _.get(router, "currentRoute.value.params.workspace_id", 0)
+  );
   return workspaceId;
 };
 
@@ -29,7 +35,9 @@ export const getWorkspaceIdFromCurrentPath = (router: Router): number => {
  * @returns {string} The email parameter from the current route path.
  */
 export const getEmailFromCurrentPath = (router: Router): string => {
-  const email = String(router?.currentRoute?.value?.params?.email);
+  const email = String(
+    _.get(router, "currentRoute.value.params.email", "default@gmail.com")
+  );
   return email;
 };
 
@@ -40,8 +48,9 @@ export const getEmailFromCurrentPath = (router: Router): string => {
  * @returns {boolean} True if the current route is "create_project," otherwise false.
  */
 export const isCreateProjectRoute = (router: Router): boolean => {
-  const isProjectRoute = Boolean(
-    router?.currentRoute?.value?.name === "create_project"
+  const isProjectRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.CREATE_PROJECT
   );
   return isProjectRoute;
 };
@@ -53,8 +62,9 @@ export const isCreateProjectRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "my_settings," otherwise false.
  */
 export const isMySettingsRoute = (router: Router): boolean => {
-  const isMySettingsRoute = Boolean(
-    router?.currentRoute?.value?.name === "my_settings"
+  const isMySettingsRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.MY_SETTINGS
   );
   return isMySettingsRoute;
 };
@@ -66,9 +76,9 @@ export const isMySettingsRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "project_view" or "project_timeline_view," otherwise false.
  */
 export const isProjectViewRoute = (router: Router): boolean => {
-  const name = router?.currentRoute?.value?.name;
-  const isProjectViewRoute = Boolean(
-    name === "project_view" || name === "project_timeline_view"
+  const isProjectViewRoute = _.includes(
+    [RouteTypeKeys.PROJECT_VIEW, RouteTypeKeys.PROJECT_TIMELINE_VIEW],
+    _.get(router, "currentRoute.value.name")
   );
   return isProjectViewRoute;
 };
@@ -80,8 +90,9 @@ export const isProjectViewRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "notification," otherwise false.
  */
 export const isNotificationRoute = (router: Router): boolean => {
-  const isNotificationRoute = Boolean(
-    router?.currentRoute?.value?.name === "notification"
+  const isNotificationRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.NOTIFICATION
   );
   return isNotificationRoute;
 };
@@ -93,8 +104,9 @@ export const isNotificationRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "projects," otherwise false.
  */
 export const isProjectsRoute = (router: Router): boolean => {
-  const isProjectsRoute = Boolean(
-    router?.currentRoute?.value?.name === "projects"
+  const isProjectsRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.PROJECTS
   );
   return isProjectsRoute;
 };
@@ -106,8 +118,9 @@ export const isProjectsRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "my_settings_edit_project," otherwise false.
  */
 export const isProjectsEditProjectRoute = (router: Router): boolean => {
-  const isProjectsEditProjectRoute = Boolean(
-    router?.currentRoute?.value?.name === "my_settings_edit_project"
+  const isProjectsEditProjectRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.MY_SETTINGS_EDIT_PROJECT
   );
   return isProjectsEditProjectRoute;
 };
@@ -119,8 +132,9 @@ export const isProjectsEditProjectRoute = (router: Router): boolean => {
  * @returns {boolean} True if the current route is "information," otherwise false.
  */
 export const isInformationRoute = (router: Router): boolean => {
-  const isInformationRoute = Boolean(
-    router?.currentRoute?.value?.name === "information"
+  const isInformationRoute = _.isEqual(
+    _.get(router, "currentRoute.value.name"),
+    RouteTypeKeys.INFORMATION
   );
   return isInformationRoute;
 };
@@ -199,7 +213,7 @@ export const validateEmail = (email: string): boolean => {
  * @returns {string} The input string with the first letter capitalized.
  */
 export const capitalizeFirstLetter = (inputString: string): string => {
-  return inputString.charAt(0).toUpperCase();
+  return _.toUpper(inputString.charAt(0));
 };
 
 /**
@@ -211,13 +225,11 @@ export const capitalizeFirstLetter = (inputString: string): string => {
  */
 export const hexToRgba = (hex: string, opacity: number) => {
   // Remove the "#" symbol from HEX.
-  hex = hex.replace("#", "");
-
+  hex = _.replace(hex, "#", "");
   // Extract the red (R), green (G), and blue (B) components from HEX.
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
-
   // Create an RGBA string with the specified opacity.
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
