@@ -4,6 +4,7 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IWorkspace } from "../interfaces.ts";
 import * as _ from "lodash";
+import { RouteTypeKeys } from "@/types";
 
 export const useWorkspaceStore = defineStore("workspace", () => {
   const workspaces = ref<IWorkspace[]>([]);
@@ -24,7 +25,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     try {
       const response: AxiosResponse<{ workspaces: IWorkspace[] }> =
         await axios.post(
-          `${API_URL}/workspace/get_workspaces`,
+          `${API_URL}/${RouteTypeKeys.WORKSPACES}/${RouteTypeKeys.GET_WORKSPACES}`,
           {},
           {
             headers: {
@@ -60,7 +61,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     try {
       const response: AxiosResponse<{ workspaces: IWorkspace[] }> =
         await axios.post(
-          `${API_URL}/workspace/create_workspace`,
+          `${API_URL}/${RouteTypeKeys.WORKSPACES}/${RouteTypeKeys.CREATE_WORKSPACE}`,
           { workspaceName },
           {
             headers: {
@@ -69,7 +70,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
           }
         );
       successStatus.value = _.get(response, "status");
-      workspaces.value = _.get(response, "data.workspaces");;
+      workspaces.value = _.get(response, "data.workspaces");
       console.log(
         "Successfully created a new workspace with the specified name for an authenticated user."
       );

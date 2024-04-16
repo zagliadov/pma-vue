@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { API_URL } from "../../helpers/constants";
 import type { IExistingUser, IPersonalInformation } from "../interfaces";
 import * as _ from "lodash";
+import { RouteTypeKeys } from "@/types";
 
 export const useUserStore = defineStore("user", () => {
   const authStore = useAuthStore();
@@ -51,7 +52,7 @@ export const useUserStore = defineStore("user", () => {
     const token: string | null = localStorage.getItem("token");
     if (!token) throw new Error("User is not authenticated");
     try {
-      await axios.post(`${API_URL}/user/update_personal_information`, data, {
+      await axios.post(`${API_URL}/${RouteTypeKeys.USER}/${RouteTypeKeys.UPDATE_PERSONAL_INFORMATION}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,16 +83,16 @@ export const useUserStore = defineStore("user", () => {
       const formData: FormData = new FormData();
       formData.append("File", file);
       const response: AxiosResponse<{ existingUser: IExistingUser }> =
-        await axios.post(`${API_URL}/user/upload_photo`, formData, {
+        await axios.post(`${API_URL}/${RouteTypeKeys.USER}/${RouteTypeKeys.UPLOAD_PHOTO}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-      existingUser.value = response.data.existingUser;
+      existingUser.value = _.get(response, "data.existingUser");
       console.log(
         "Successfully uploaded photo and updated existing user details."
       );
-      return response.data.existingUser;
+      return _.get(response, "data.existingUser");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -114,7 +115,7 @@ export const useUserStore = defineStore("user", () => {
     try {
       const response: AxiosResponse<{ existingUser: IExistingUser }> =
         await axios.post(
-          `${API_URL}/user/remove_avatar_filename`,
+          `${API_URL}/${RouteTypeKeys.USER}/${RouteTypeKeys.REMOVE_AVATAR_FILENAME}`,
           {},
           {
             headers: {
@@ -122,11 +123,11 @@ export const useUserStore = defineStore("user", () => {
             },
           }
         );
-      existingUser.value = response.data.existingUser;
+      existingUser.value = _.get(response, "data.existingUser");
       console.log(
         "Successfully deleted an existing user's avatar and updated their data."
       );
-      return response.data.existingUser;
+      return _.get(response, "data.existingUser");
     } catch (error: AxiosError | unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
@@ -151,7 +152,7 @@ export const useUserStore = defineStore("user", () => {
       if (!token) throw new Error("User is not authenticated");
       const response: AxiosResponse<{ isProjectCreator: boolean }> =
         await axios.post(
-          `${API_URL}/user/check_project_creator`,
+          `${API_URL}/${RouteTypeKeys.USER}/${RouteTypeKeys.CHECK_PROJECT_CREATOR}`,
           { projectId },
           {
             headers: {
@@ -159,7 +160,7 @@ export const useUserStore = defineStore("user", () => {
             },
           }
         );
-      isProjectCreator.value = response?.data?.isProjectCreator;
+      isProjectCreator.value = _.get(response, "data.isProjectCreator");
       console.log(
         "Successfully checks whether the current user is the creator of a specific project."
       );

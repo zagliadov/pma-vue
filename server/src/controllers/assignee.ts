@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { handleError } from "../helpers/helpers";
 import {
   createProjectAssignee,
@@ -9,7 +9,6 @@ import {
   getProjectById,
 } from "./query";
 import prisma from "../db";
-import { IProjectAssignees } from "./interfaces";
 
 export const getAllAssignee = async (req: any, res: Response) => {
   const { email } = req.userData;

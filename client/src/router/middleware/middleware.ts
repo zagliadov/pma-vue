@@ -5,6 +5,8 @@ import { useUserStore } from "@/store/modules/user";
 import { useRouter } from "vue-router";
 import { watch } from "vue";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+import { RouteTypeKeys } from "@/types";
+import * as _ from "lodash";
 
 // Middleware function for the home route.
 export const homeMiddleware = async (
@@ -98,8 +100,8 @@ export const projectViewMiddleware = async (
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  if (to.name === "project_view" || to.name === "project_timeline_view") {
-    const projectId: number = Number(to.params.project_id);
+  if (to.name === RouteTypeKeys.PROJECT_VIEW || to.name === RouteTypeKeys.PROJECT_TIMELINE_VIEW) {
+    const projectId: number = Number(_.get(to, "params.project_id"));
     try {
       const projectStore = useProjectStore();
       const { getProject } = projectStore;
@@ -125,7 +127,7 @@ export const checkProjectCreatorMiddleware = async (
   const { checkProjectCreator } = userStore;
   try {
     watch(
-      () => router.currentRoute.value.params.project_id,
+      () => _.get(router, "currentRoute.value.params.project_id"),
       async (newProjectId) => {
         if (!newProjectId) return;
         await checkProjectCreator(Number(newProjectId));
@@ -148,7 +150,7 @@ export const projectAssigneesMiddleware = async (
   const { getProjectAssignees } = assigneeStore;
   try {
     watch(
-      () => router?.currentRoute?.value?.params?.project_id,
+      () => _.get(router, "currentRoute.value.params.project_id"),
       async (newProjectId) => {
         if (!newProjectId) return;
         await getProjectAssignees(Number(newProjectId));

@@ -6,6 +6,8 @@ export enum RouteTypeKeys {
   NOTIFICATION = "notification",
   PROJECTS = "projects",
   WORKSPACES = "workspace",
+  CREATE_WORKSPACE = "create_workspace",
+  GET_WORKSPACES = "get_workspaces",
   MY_SETTINGS_EDIT_PROJECT = "my_settings_edit_project",
   INFORMATION = "information",
   // project
