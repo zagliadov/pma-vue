@@ -5,6 +5,8 @@ export enum RouteTypeKeys {
   PROJECT_TIMELINE_VIEW = "project_timeline_view",
   NOTIFICATION = "notification",
   PROJECTS = "projects",
+  WORKSPACE = "workspace",
+  TIMELINE = "timeline",
   WORKSPACES = "workspace",
   CREATE_WORKSPACE = "create_workspace",
   GET_WORKSPACES = "get_workspaces",
@@ -40,4 +42,15 @@ export enum RouteTypeKeys {
   UPLOAD_PHOTO = "upload_photo",
   REMOVE_AVATAR_FILENAME = "remove_avatar_filename",
   CHECK_PROJECT_CREATOR = "check_project_creator",
+}
+
+export enum RouteNameKeys {
+  MySettings = "My settings",
+  Notification = "Notification",
+  Projects = "Projects",
+  Information = "Information",
+  Profile = "Profile",
+  Members = "Members",
+  MainTable = "Main Table",
+  Timeline = "Timeline",
 }

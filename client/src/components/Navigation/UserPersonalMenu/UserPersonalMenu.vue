@@ -11,6 +11,7 @@ import {
   isMySettingsRoute
 } from "../../../helpers/helpers";
 import type { IExistingUser } from "@/store/interfaces";
+import { RouteNameKeys, RouteTypeKeys } from "@/types";
 
 const authStore = useAuthStore();
 const { existingUser } = storeToRefs(authStore);
@@ -41,43 +42,43 @@ const firstLetterInUpperCase = capitalizeFirstLetter(name);
         <div class="p-4 border-b">
           <RouterLink
             class="flex items-center pt-4"
-            :to="`/my_settings/${getEmailFromCurrentPath(router)}`"
+            :to="`/${RouteTypeKeys.MY_SETTINGS}/${getEmailFromCurrentPath(router)}`"
             :class="{ 'bg-gray-200': isMySettingsRoute(router) }"
             exact
           >
             <IconProfilePersonal />
-            <span class="pl-2">Profile</span>
+            <span class="pl-2">{{ RouteNameKeys.MySettings }}</span>
           </RouterLink>
           <RouterLink
             class="flex items-center pt-4"
-            :to="`/my_settings/${getEmailFromCurrentPath(router)}/notification`"
+            :to="`/${RouteTypeKeys.MY_SETTINGS}/${getEmailFromCurrentPath(router)}/${RouteTypeKeys.NOTIFICATION}`"
             :class="{ 'bg-gray-200': isNotificationRoute(router) }"
             exact
           >
             <IconNotificationPersonal />
-            <span class="pl-2">Notification</span>
+            <span class="pl-2">{{ RouteNameKeys.Notification }}</span>
           </RouterLink>
           <RouterLink
             class="flex items-center pt-4"
-            :to="`/my_settings/${getEmailFromCurrentPath(router)}/projects`"
+            :to="`/${RouteTypeKeys.MY_SETTINGS}/${getEmailFromCurrentPath(router)}/${RouteTypeKeys.PROJECTS}`"
             :class="{ 'bg-gray-200': isProjectsRoute(router) }"
             exact
           >
             <IconSettingPersonal />
-            <span class="pl-2">Settings</span>
+            <span class="pl-2">{{ RouteNameKeys.Projects }}</span>
           </RouterLink>
           <RouterLink
             class="flex items-center pt-4"
-            :to="`/my_settings/${getEmailFromCurrentPath(router)}/information`"
+            :to="`/${RouteTypeKeys.MY_SETTINGS}/${getEmailFromCurrentPath(router)}/${RouteTypeKeys.INFORMATION}`"
             :class="{ 'bg-gray-200': isInformationRoute(router) }"
             exact
           >
             <IconInformationPersonal />
-            <span class="pl-2">information</span>
+            <span class="pl-2">{{ RouteNameKeys.Information }}</span>
           </RouterLink>
         </div>
         <div>
-          <RouterLink class="flex items-center p-3 rounded" :to="`/login`">
+          <RouterLink class="flex items-center p-3 rounded" :to="`/${RouteTypeKeys.LOGIN}`">
             <IconMySettingsLogOut />
             <span class="pl-2 text-error">Log out</span>
           </RouterLink>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getEmailFromCurrentPath } from "@/helpers/helpers";
 import { useRouter } from "vue-router";
+import { RouteTypeKeys } from "@/types";
 
 const { hoveredAssigneeProjectId, id, handleCloseSideMenu, workspaceId } =
   defineProps<{
@@ -13,15 +14,15 @@ const router = useRouter();
 </script>
 
 <template>
-  <div v-if="hoveredAssigneeProjectId === id" class="dropdown dropdown-right">
-    <button tabIndex="{0}">
+  <div v-if="hoveredAssigneeProjectId === id" class="dropdown dropdown-right cursor-pointer w-full flex justify-center">
+    <button tabIndex="{0}" className="ml-[10px]">
       <IconMoreVerticalSettings />
     </button>
-    <div tabindex="{0}" class="dropdown-content z-[1] menu p-5">
+    <div tabindex="{0}" class="dropdown-content z-[1] menu p-10 ml-[-15px]">
       <div class="w-[180px] shadow bg-base-100 rounded">
         <div>
           <RouterLink
-            :to="`/my_settings/${getEmailFromCurrentPath(router)}/projects`"
+            :to="`/${RouteTypeKeys.MY_SETTINGS}/${getEmailFromCurrentPath(router)}/projects`"
             @click="handleCloseSideMenu"
             class="flex items-center justify-between p-3 hover:bg-neutral-content"
           >

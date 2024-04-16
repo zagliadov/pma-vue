@@ -29,7 +29,6 @@ const handleCreateNewSpace = async (newWorkspaceName: any) => {
   errorStatus.value = 0;
   errorMessage.value = "";
   if (workspaceRegex.value.test(newWorkspaceName)) {
-    console.log(newWorkspaceName, "asdf");
     await createWorkspace(newWorkspaceName);
     if (successStatus.value === 200) {
       newWorkspaceName = "";
