@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useUserStore } from "@/store/modules/user";
-import { useWorkspaceStore } from "@/store/modules/workspace";
+import { useAuthStore } from "@/store/modules/auth";
+import { RouteTypeKeys } from "@/types";
 
+import * as _ from "lodash";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import {
@@ -10,7 +12,7 @@ import {
   getRouteParams,
 } from "../../helpers/helpers";
 const userStore = useUserStore();
-const workspaceStore = useWorkspaceStore();
+const authStore = useAuthStore();
 const {
   firstName,
   lastName,
@@ -22,7 +24,7 @@ const {
   timeFormat,
   dateFormat,
 } = storeToRefs(userStore);
-const { workspaces } = storeToRefs(workspaceStore);
+const { existingUser } = storeToRefs(authStore);
 
 const router = useRouter();
 const { updatePersonalInformation } = userStore;
@@ -41,7 +43,8 @@ const handleSaveChanges = async () => {
 };
 const handleNavigateBack = () => {
   const email = getEmailFromCurrentPath(router);
-  router.push(`/${email}/workspace/${workspaces.value[0].id}`);
+  const workspaceId = _.get(existingUser, "value.workspace[0].id");
+  router.push(`/${email}/${RouteTypeKeys.WORKSPACES}/${workspaceId}`);
 };
 </script>
 

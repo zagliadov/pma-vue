@@ -5,6 +5,7 @@ export enum RouteTypeKeys {
   PROJECT_TIMELINE_VIEW = "project_timeline_view",
   NOTIFICATION = "notification",
   PROJECTS = "projects",
+  WORKSPACES = "workspace",
   MY_SETTINGS_EDIT_PROJECT = "my_settings_edit_project",
   INFORMATION = "information",
   // project

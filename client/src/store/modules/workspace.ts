@@ -3,6 +3,7 @@ import { ref } from "vue";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { API_URL } from "../../helpers/constants";
 import type { IWorkspace } from "../interfaces.ts";
+import * as _ from "lodash";
 
 export const useWorkspaceStore = defineStore("workspace", () => {
   const workspaces = ref<IWorkspace[]>([]);
@@ -31,7 +32,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
             },
           }
         );
-      workspaces.value = response?.data?.workspaces;
+      workspaces.value = _.get(response, "data.workspaces");
       console.log(
         "Successfully retrieved a list of workspaces associated with the authenticated user."
       );
@@ -67,8 +68,8 @@ export const useWorkspaceStore = defineStore("workspace", () => {
             },
           }
         );
-      successStatus.value = response?.status;
-      workspaces.value = response?.data?.workspaces;
+      successStatus.value = _.get(response, "status");
+      workspaces.value = _.get(response, "data.workspaces");;
       console.log(
         "Successfully created a new workspace with the specified name for an authenticated user."
       );
