@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useUserStore } from "@/store/modules/user";
+import { useWorkspaceStore } from "@/store/modules/workspace";
 
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import { isMySettingsRoute } from "../../helpers/helpers";
+import {
+  isMySettingsRoute,
+  getEmailFromCurrentPath,
+  getRouteParams,
+} from "../../helpers/helpers";
 const userStore = useUserStore();
+const workspaceStore = useWorkspaceStore();
 const {
   firstName,
   lastName,
@@ -16,6 +22,8 @@ const {
   timeFormat,
   dateFormat,
 } = storeToRefs(userStore);
+const { workspaces } = storeToRefs(workspaceStore);
+
 const router = useRouter();
 const { updatePersonalInformation } = userStore;
 const handleSaveChanges = async () => {
@@ -32,8 +40,9 @@ const handleSaveChanges = async () => {
   });
 };
 const handleNavigateBack = () => {
-  router.go(-1);
-}
+  const email = getEmailFromCurrentPath(router);
+  router.push(`/${email}/workspace/${workspaces.value[0].id}`);
+};
 </script>
 
 <template>
